@@ -22,14 +22,56 @@ const allTrack = [
   { sound: tom, name: "tom" },
 ];
 
+const useKeyboardBindings = (map) => {
+  useEffect(() => {
+    const handlePress = (event) => {
+      const handler = map[event.key];
+
+      if (typeof handler === "function") {
+        handler();
+      } else {
+        return;
+      }
+    };
+
+    window.addEventListener("keydown", handlePress);
+
+    return () => {
+      window.removeEventListener("keydown", handlePress);
+    };
+  }, [map]);
+};
+
+//button
 const BoopButton = (props) => {
   const [play] = useSound(props.sound);
   return <button onClick={play}>{props.soundName}</button>;
 };
 
 export default function Main() {
-  const [keydown, setKeydown] = useState("");
+  const [playboom] = useSound(boom);
+  const [playclap] = useSound(clap);
+  const [playhihat] = useSound(hihat);
+  const [playkick] = useSound(kick);
+  const [playopenhat] = useSound(openhat);
+  const [playride] = useSound(ride);
+  const [playsnare] = useSound(snare);
+  const [playtom] = useSound(tom);
+  const [playtink] = useSound(tink);
 
+  useKeyboardBindings({
+    a: () => playboom(),
+    s: () => playclap(),
+    d: () => playhihat(),
+    f: () => playkick(),
+    g: () => playopenhat(),
+    h: () => playride(),
+    j: () => playsnare(),
+    k: () => playtom(),
+    l: () => playtink(),
+  });
+
+  const [keydown, setKeydown] = useState("");
   function handleKeydown() {
     window.addEventListener(
       "keydown",
@@ -39,7 +81,6 @@ export default function Main() {
       true
     );
   }
-
   handleKeydown();
 
   return (
