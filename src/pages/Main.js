@@ -61,7 +61,6 @@ const Triangle = styled(animated.div)`
   border-bottom: 50px solid ${(props) => props.color};
 `;
 
-//button
 const Button = (props) => {
   const [play] = useSound(props.sound);
   return (
@@ -76,6 +75,13 @@ const Button = (props) => {
   );
 };
 
+const Input = styled.input.attrs({
+  type: "checkbox",
+})`
+  width: 20px;
+  height: 20px;
+`;
+
 export default function Main() {
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -86,6 +92,28 @@ export default function Main() {
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
+  const [playPattern, setPlayPattern] = useState({
+    a: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    s: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    d: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    f: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    g: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    h: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    j: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    k: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    l: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  });
+
+  const handleRecordingchange = (key, index) => {
+    setPlayPattern((pre) => ({
+      ...pre,
+      [key]: [
+        ...pre[key].slice(0, index),
+        1 - pre[key][index],
+        ...pre[key].slice(index + 1),
+      ],
+    }));
+  };
 
   const allTrack = [
     { sound: boom, name: "boom", setEffect: setBoomEffect },
@@ -265,6 +293,20 @@ export default function Main() {
           item ? <Triangle style={style} color="red" /> : ""
         )}
       </Wrapper>
+      {Object.entries(playPattern).map((pattern) => {
+        return (
+          <div key={pattern[0]}>
+            <span>{pattern[0]}</span>
+            {pattern[1].map((graph, i) => (
+              <Input
+                key={i}
+                checked={Boolean(graph)}
+                onChange={() => handleRecordingchange(pattern[0], i)}
+              />
+            ))}
+          </div>
+        );
+      })}
     </>
   );
 }
