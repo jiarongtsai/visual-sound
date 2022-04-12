@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import db from "../utils/firebase-config";
 
 const Img = styled.img`
@@ -12,7 +12,23 @@ export default function Community() {
   const [allworks, setAllworks] = useState([]);
   useEffect(() => {
     onSnapshot(collection(db, "works"), (snapShot) => {
-      setAllworks(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      async function promises() {
+        const unresolved = snapShot.docs.map(async (docItem) => {
+          const docRef = doc(db, "users", docItem.data().author_id);
+          const docSnap = await getDoc(docRef);
+          return {
+            ...docItem.data(),
+            id: docItem.id,
+            author_name: docSnap.data().user_name,
+            author_thumbnail: docSnap.data().user_thumbnail,
+          };
+        });
+
+        const resolved = await Promise.all(unresolved);
+        setAllworks(resolved);
+      }
+
+      promises();
     });
   }, []);
 
@@ -20,10 +36,10 @@ export default function Community() {
     <div>
       {allworks.map((work) => {
         return (
-          <div key={work.author.id}>
+          <div key={work.id}>
             <>
-              <Img src={`https://joeschmoe.io/api/v1/${work.author.name}`} />
-              <p>{work.author.name}</p>
+              <Img src={work.author_thumbnail} />
+              <p>{work.author_name}</p>
             </>
             <>
               <iframe
@@ -42,7 +58,7 @@ export default function Community() {
               <span>⭐️</span>
             </div>
             <>
-              <h3>{work.author.name}</h3>
+              <h3>{work.author_name}</h3>
               <p>{work.description}</p>
             </>
             <div>
