@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import * as Tone from "tone";
 import MySequencer from "../components/squencer/MySequencer";
-// import VisualEngine from "../components/VisualEngine";
+import Modal from "../components/Modal";
 import boom from "../asset/sounds/boom.wav";
 import clap from "../asset/sounds/clap.wav";
 import hihat from "../asset/sounds/hihat.wav";
@@ -11,6 +11,7 @@ import ride from "../asset/sounds/ride.wav";
 import snare from "../asset/sounds/snare.wav";
 import tink from "../asset/sounds/tink.wav";
 import tom from "../asset/sounds/tom.wav";
+import Header from "../components/Header";
 console.clear();
 
 const PlayerProvider = ({ children }) => {
