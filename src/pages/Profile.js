@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import db from "../utils/firebase-config";
+import Header from "../components/Header";
 
 export default function Profile() {
   useEffect(() => {
@@ -13,5 +14,10 @@ export default function Profile() {
     getProfile();
   }, []);
 
-  return <div>Profile</div>;
+  return (
+    <>
+      <Header />
+      <div>Profile</div>
+    </>
+  );
 }

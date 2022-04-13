@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import db from "../utils/firebase-config";
+import Header from "../components/Header";
 
 const Img = styled.img`
   width: 50px;
@@ -33,7 +34,8 @@ export default function Community() {
   }, []);
 
   return (
-    <div>
+    <>
+      <Header />
       {allworks.map((work) => {
         return (
           <div key={work.id}>
@@ -85,6 +87,6 @@ export default function Community() {
           </div>
         );
       })}
-    </div>
+    </>
   );
 }
