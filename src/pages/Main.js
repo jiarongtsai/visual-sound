@@ -38,18 +38,16 @@ const PlayerProvider = ({ children }) => {
 };
 
 export default function Main() {
-  const [playing, setPlaying] = useState(true);
   function handleUpload() {
     console.log("upload me");
   }
 
   return (
     <>
-      <button onClick={() => setPlaying(!playing)}>play/pause</button>
       <button onClick={handleUpload}>upload</button>
       <PlayerProvider>
         {({ soundPlayer }) => {
-          return <MySequencer player={soundPlayer} playing={playing} />;
+          return <MySequencer player={soundPlayer} />;
         }}
       </PlayerProvider>
     </>

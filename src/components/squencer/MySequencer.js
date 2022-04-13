@@ -61,6 +61,13 @@ const Triangle = styled(animated.div)`
 `;
 
 //sequence
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const steps = 16;
 const initialCellState = { triggered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
@@ -76,7 +83,9 @@ const initialState = [
   new Array(16).fill(initialCellState),
 ];
 
-const Sequencer = ({ player, playing }) => {
+const Sequencer = ({ player }) => {
+  const [playing, setPlaying] = useState(true);
+
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
   const [hihatEffect, setHihatEffect] = useState(false);
@@ -348,6 +357,11 @@ const Sequencer = ({ player, playing }) => {
           item ? <Triangle style={style} color="red" /> : ""
         )}
       </Wrapper>
+      <Div>
+        <button>to head</button>
+        <button onClick={() => setPlaying(!playing)}>play/pause</button>
+        <button>clean</button>
+      </Div>
       <Grid sequence={sequence} toggleStep={toggleStep} />
     </>
   );
