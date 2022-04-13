@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import useSound from "use-sound";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
 import boom from "../asset/sounds/boom.wav";
@@ -64,20 +63,6 @@ const Triangle = styled(animated.div)`
   border-bottom: 50px solid ${(props) => props.color};
 `;
 
-const Button = (props) => {
-  const [play] = useSound(props.sound);
-  return (
-    <button
-      onClick={() => {
-        play();
-        props.setEffect((v) => !v);
-      }}
-    >
-      {props.soundName}
-    </button>
-  );
-};
-
 const PlayerProvider = ({ children }) => {
   const [soundPlayer, setSoundPlayer] = useState(null);
   useEffect(() => {
@@ -102,7 +87,7 @@ const PlayerProvider = ({ children }) => {
   return children({ soundPlayer });
 };
 
-const VisualEngine = () => {
+const VisualEngine = ({ player }) => {
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
   const [hihatEffect, setHihatEffect] = useState(false);
@@ -113,51 +98,41 @@ const VisualEngine = () => {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const [playboom] = useSound(boom);
-  const [playclap] = useSound(clap);
-  const [playhihat] = useSound(hihat);
-  const [playkick] = useSound(kick);
-  const [playopenhat] = useSound(openhat);
-  const [playride] = useSound(ride);
-  const [playsnare] = useSound(snare);
-  const [playtom] = useSound(tom);
-  const [playtink] = useSound(tink);
-
   useKeyboardBindings({
     a: () => {
-      playboom();
+      player.player("a").start();
       setBoomEffect((v) => !v);
     },
     s: () => {
-      playclap();
+      player.player("s").start();
       setClapEffect((v) => !v);
     },
     d: () => {
-      playhihat();
+      player.player("d").start();
       setHihatEffect((v) => !v);
     },
     f: () => {
-      playkick();
+      player.player("f").start();
       setKickEffect((v) => !v);
     },
     g: () => {
-      playopenhat();
+      player.player("g").start();
       setOpenhatEffect((v) => !v);
     },
     h: () => {
-      playride();
+      player.player("h").start();
       setRideEffect((v) => !v);
     },
     j: () => {
-      playsnare();
+      player.player("j").start();
       setSnareEffect((v) => !v);
     },
     k: () => {
-      playtom();
+      player.player("k").start();
       setTomEffect((v) => !v);
     },
     l: () => {
-      playtink();
+      player.player("l").start();
       setTinkEffect((v) => !v);
     },
   });
@@ -260,7 +235,7 @@ export default function Main() {
         {({ soundPlayer }) => {
           return (
             <>
-              <VisualEngine />
+              <VisualEngine player={soundPlayer} />
               <MySequencer player={soundPlayer} />
             </>
           );
