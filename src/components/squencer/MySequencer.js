@@ -61,14 +61,6 @@ const Triangle = styled(animated.div)`
 `;
 
 //sequence
-
-const Div = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-`;
-
 const steps = 16;
 const initialCellState = { triggered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
@@ -83,6 +75,13 @@ const initialState = [
   new Array(16).fill(initialCellState),
   new Array(16).fill(initialCellState),
 ];
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+`;
 
 const Sequencer = ({ player }) => {
   const [playing, setPlaying] = useState(false);
@@ -143,10 +142,11 @@ const Sequencer = ({ player }) => {
   };
 
   const nextStep = (time) => {
-    for (let i = 0; i < sequence.length; i++) {
-      for (let j = 0; j < sequence[i].length; j++) {
-        const { triggered, activated } = sequence[i][j];
-        sequence[i][j] = { activated, triggered: j === time };
+    const sequenceCopy = [...sequence];
+    for (let i = 0; i < sequenceCopy.length; i++) {
+      for (let j = 0; j < sequenceCopy[i].length; j++) {
+        const { triggered, activated } = sequenceCopy[i][j];
+        sequenceCopy[i][j] = { activated, triggered: j === time };
         if (triggered && activated) {
           player.player(lineMap[i]).start();
           switch (lineMap[i]) {
@@ -183,7 +183,7 @@ const Sequencer = ({ player }) => {
         }
       }
     }
-    setSequence(sequence);
+    setSequence(sequenceCopy);
   };
 
   useKeyboardBindings(
@@ -331,10 +331,20 @@ const Sequencer = ({ player }) => {
 
   function handleBacktoHead() {
     setCurrentStep(0);
-    if (!playing) {
-      nextStep(0);
-    }
+    if (!playing) nextStep(0);
   }
+
+  function handleCleanUp() {
+    const sequenceCopy = [...sequence];
+    for (let i = 0; i < sequenceCopy.length; i++) {
+      for (let j = 0; j < sequenceCopy[i].length; j++) {
+        const { triggered } = sequenceCopy[i][j];
+        sequenceCopy[i][j] = { activated: false, triggered };
+      }
+    }
+    setSequence(sequenceCopy);
+  }
+
   return (
     <>
       <Wrapper>
@@ -369,7 +379,7 @@ const Sequencer = ({ player }) => {
       <Div>
         <button onClick={handleBacktoHead}>to head</button>
         <button onClick={() => setPlaying(!playing)}>play/pause</button>
-        <button onClick={() => setSequence(initialState)}>clean</button>
+        <button onClick={handleCleanUp}>clean</button>
       </Div>
       <Div>
         <label>{`BPM = ${bpm}`}</label>
