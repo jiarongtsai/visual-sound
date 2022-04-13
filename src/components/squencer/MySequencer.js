@@ -165,44 +165,48 @@ const Sequencer = ({ player, playing }) => {
     setSequence(sequence);
   };
 
-  useKeyboardBindings({
-    a: () => {
-      player.player("a").start();
-      setBoomEffect((v) => !v);
-    },
-    s: () => {
-      player.player("s").start();
-      setClapEffect((v) => !v);
-    },
-    d: () => {
-      player.player("d").start();
-      setHihatEffect((v) => !v);
-    },
-    f: () => {
-      player.player("f").start();
-      setKickEffect((v) => !v);
-    },
-    g: () => {
-      player.player("g").start();
-      setOpenhatEffect((v) => !v);
-    },
-    h: () => {
-      player.player("h").start();
-      setRideEffect((v) => !v);
-    },
-    j: () => {
-      player.player("j").start();
-      setSnareEffect((v) => !v);
-    },
-    k: () => {
-      player.player("k").start();
-      setTomEffect((v) => !v);
-    },
-    l: () => {
-      player.player("l").start();
-      setTinkEffect((v) => !v);
-    },
-  });
+  useKeyboardBindings(
+    !playing
+      ? {
+          a: () => {
+            player.player("a").start();
+            setBoomEffect((v) => !v);
+          },
+          s: () => {
+            player.player("s").start();
+            setClapEffect((v) => !v);
+          },
+          d: () => {
+            player.player("d").start();
+            setHihatEffect((v) => !v);
+          },
+          f: () => {
+            player.player("f").start();
+            setKickEffect((v) => !v);
+          },
+          g: () => {
+            player.player("g").start();
+            setOpenhatEffect((v) => !v);
+          },
+          h: () => {
+            player.player("h").start();
+            setRideEffect((v) => !v);
+          },
+          j: () => {
+            player.player("j").start();
+            setSnareEffect((v) => !v);
+          },
+          k: () => {
+            player.player("k").start();
+            setTomEffect((v) => !v);
+          },
+          l: () => {
+            player.player("l").start();
+            setTinkEffect((v) => !v);
+          },
+        }
+      : {}
+  );
 
   const boomTransition = useTransition(boomEffect, {
     config: { mass: 1, tension: 10, friction: 4 },
