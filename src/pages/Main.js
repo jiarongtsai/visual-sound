@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import * as Tone from "tone";
 import MySequencer from "../components/squencer/MySequencer";
-import VisualEngine from "../components/VisualEngine";
+// import VisualEngine from "../components/VisualEngine";
 import boom from "../asset/sounds/boom.wav";
 import clap from "../asset/sounds/clap.wav";
 import hihat from "../asset/sounds/hihat.wav";
@@ -45,12 +45,7 @@ export default function Main() {
       <button onClick={() => setPlaying(!playing)}>click</button>
       <PlayerProvider>
         {({ soundPlayer }) => {
-          return (
-            <>
-              <VisualEngine player={soundPlayer} />
-              <MySequencer player={soundPlayer} playing={playing} />
-            </>
-          );
+          return <MySequencer player={soundPlayer} playing={playing} />;
         }}
       </PlayerProvider>
     </>
