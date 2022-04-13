@@ -12,6 +12,7 @@ import snare from "../asset/sounds/snare.wav";
 import tink from "../asset/sounds/tink.wav";
 import tom from "../asset/sounds/tom.wav";
 import * as Tone from "tone";
+import MySequencer from "../components/squencer/MySequencer";
 console.clear();
 
 const useKeyboardBindings = (map) => {
@@ -38,7 +39,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  height: 25vh;
 `;
 
 const Square = styled(animated.div)`
@@ -77,35 +78,29 @@ const Button = (props) => {
   );
 };
 
-const Input = styled.input.attrs({
-  type: "checkbox",
-})`
-  width: 20px;
-  height: 20px;
-`;
-
-const soundPlayer = new Tone.Players(
-  {
-    a: boom,
-    s: clap,
-    d: hihat,
-    f: kick,
-    g: openhat,
-    h: ride,
-    j: snare,
-    k: tom,
-    l: tink,
-  },
-  () => {
-    console.log("sound loaded");
-    trythis();
-  }
-).toDestination();
-
-console.log(soundPlayer);
-function trythis() {
-  soundPlayer.player("a").start();
-}
+const PlayerProvider = ({ children }) => {
+  const [soundPlayer, setSoundPlayer] = useState(null);
+  useEffect(() => {
+    const soundPlayer = new Tone.Players(
+      {
+        a: boom,
+        s: clap,
+        d: hihat,
+        f: kick,
+        g: openhat,
+        h: ride,
+        j: snare,
+        k: tom,
+        l: tink,
+      },
+      () => {
+        console.log("sound loaded");
+        setSoundPlayer(soundPlayer);
+      }
+    ).toDestination();
+  }, []);
+  return children({ soundPlayer });
+};
 
 export default function Main() {
   const [boomEffect, setBoomEffect] = useState(false);
@@ -117,29 +112,6 @@ export default function Main() {
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
-
-  const [playPattern, setPlayPattern] = useState({
-    a: new Array(16).fill(0),
-    s: new Array(16).fill(0),
-    d: new Array(16).fill(0),
-    f: new Array(16).fill(0),
-    g: new Array(16).fill(0),
-    h: new Array(16).fill(0),
-    j: new Array(16).fill(0),
-    k: new Array(16).fill(0),
-    l: new Array(16).fill(0),
-  });
-
-  const handleRecordingchange = (key, index) => {
-    setPlayPattern((pre) => ({
-      ...pre,
-      [key]: [
-        ...pre[key].slice(0, index),
-        1 - pre[key][index],
-        ...pre[key].slice(index + 1),
-      ],
-    }));
-  };
 
   const allTrack = [
     { sound: boom, name: "boom", setEffect: setBoomEffect },
@@ -223,63 +195,46 @@ export default function Main() {
   const [playtink] = useSound(tink);
 
   useKeyboardBindings({
-    a: () => playboom(),
-    s: () => playclap(),
-    d: () => playhihat(),
-    f: () => playkick(),
-    g: () => playopenhat(),
-    h: () => playride(),
-    j: () => playsnare(),
-    k: () => playtom(),
-    l: () => playtink(),
+    a: () => {
+      playboom();
+      setBoomEffect((v) => !v);
+    },
+    s: () => {
+      playclap();
+      setClapEffect((v) => !v);
+    },
+    d: () => {
+      playhihat();
+      setHihatEffect((v) => !v);
+    },
+    f: () => {
+      playkick();
+      setKickEffect((v) => !v);
+    },
+    g: () => {
+      playopenhat();
+      setOpenhatEffect((v) => !v);
+    },
+    h: () => {
+      playride();
+      setRideEffect((v) => !v);
+    },
+    j: () => {
+      playsnare();
+      setSnareEffect((v) => !v);
+    },
+    k: () => {
+      playtom();
+      setTomEffect((v) => !v);
+    },
+    l: () => {
+      playtink();
+      setTinkEffect((v) => !v);
+    },
   });
-
-  const [keydown, setKeydown] = useState("");
-
-  useEffect(() => {
-    const handleKeydown = (event) => {
-      setKeydown(`key='${event.key}' | code='${event.code}'`);
-      switch (event.key) {
-        case "a":
-          setBoomEffect((v) => !v);
-          break;
-        case "s":
-          setClapEffect((v) => !v);
-          break;
-        case "d":
-          setHihatEffect((v) => !v);
-          break;
-        case "f":
-          setKickEffect((v) => !v);
-          break;
-        case "g":
-          setOpenhatEffect((v) => !v);
-          break;
-        case "h":
-          setRideEffect((v) => !v);
-          break;
-        case "j":
-          setSnareEffect((v) => !v);
-          break;
-        case "k":
-          setTomEffect((v) => !v);
-          break;
-        case "l":
-          setTinkEffect((v) => !v);
-          break;
-        default:
-          return;
-      }
-    };
-    window.addEventListener("keydown", handleKeydown);
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-  }, []);
 
   return (
     <>
-      <div>{keydown}</div>
       {allTrack.map((sound) => {
         return (
           <Button
@@ -319,20 +274,11 @@ export default function Main() {
           item ? <Triangle style={style} color="red" /> : ""
         )}
       </Wrapper>
-      {Object.entries(playPattern).map((pattern) => {
-        return (
-          <div key={pattern[0]}>
-            <span>{pattern[0]}</span>
-            {pattern[1].map((graph, i) => (
-              <Input
-                key={i}
-                checked={Boolean(graph)}
-                onChange={() => handleRecordingchange(pattern[0], i)}
-              />
-            ))}
-          </div>
-        );
-      })}
+      <PlayerProvider>
+        {({ soundPlayer }) => {
+          return <MySequencer player={soundPlayer} />;
+        }}
+      </PlayerProvider>
     </>
   );
 }
