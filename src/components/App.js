@@ -11,6 +11,7 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   width: 50vw;
+  margin: 0 auto;
 `;
 
 function App() {

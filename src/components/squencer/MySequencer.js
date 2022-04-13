@@ -22,13 +22,17 @@ const useKeyboardBindings = (map) => {
 };
 
 const Wrapper = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 25vh;
+  height: 40vh;
 `;
 
 const Square = styled(animated.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 50px;
   height: 50px;
   background: ${(props) => props.color};
@@ -36,6 +40,9 @@ const Square = styled(animated.div)`
 `;
 
 const Ellipse = styled(animated.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 50px;
   height: 50px;
   background: ${(props) => props.color};
@@ -43,6 +50,9 @@ const Ellipse = styled(animated.div)`
 `;
 
 const Triangle = styled(animated.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 0;
   height: 0;
   border-left: 25px solid transparent;
@@ -205,7 +215,35 @@ const Sequencer = ({ player, playing }) => {
             setTinkEffect((v) => !v);
           },
         }
-      : {}
+      : {
+          a: () => {
+            toggleStep(lineMap.indexOf("a"), currentStep);
+          },
+          s: () => {
+            toggleStep(lineMap.indexOf("s"), currentStep);
+          },
+          d: () => {
+            toggleStep(lineMap.indexOf("d"), currentStep);
+          },
+          f: () => {
+            toggleStep(lineMap.indexOf("f"), currentStep);
+          },
+          g: () => {
+            toggleStep(lineMap.indexOf("g"), currentStep);
+          },
+          h: () => {
+            toggleStep(lineMap.indexOf("h"), currentStep);
+          },
+          j: () => {
+            toggleStep(lineMap.indexOf("j"), currentStep);
+          },
+          k: () => {
+            toggleStep(lineMap.indexOf("k"), currentStep);
+          },
+          l: () => {
+            toggleStep(lineMap.indexOf("l"), currentStep);
+          },
+        }
   );
 
   const boomTransition = useTransition(boomEffect, {
@@ -224,21 +262,21 @@ const Sequencer = ({ player, playing }) => {
 
   const hihatTransition = useTransition(hihatEffect, {
     config: { mass: 1, tension: 500, friction: 18 },
-    from: { x: -100, y: 500, opacity: 0 },
-    enter: { x: -100, y: 0, opacity: 0.8 },
-    leave: { x: -100, y: 500, opacity: 0 },
+    from: { x: 0, y: 500, opacity: 0 },
+    enter: { x: -300, y: 0, opacity: 0.8 },
+    leave: { x: 0, y: 500, opacity: 0 },
   });
 
   const kickTransition = useTransition(kickEffect, {
-    from: { x: -100, y: 10, opacity: 0, transform: "scale(0)" },
-    enter: { x: 0, y: 0, opacity: 0.8, transform: "scale(2)" },
-    leave: { x: 100, y: 10, opacity: 0, transform: "scale(0)" },
+    from: { x: -400, y: 100, opacity: 0, transform: "scale(0)" },
+    enter: { x: -200, y: 100, opacity: 0.8, transform: "scale(2)" },
+    leave: { x: 0, y: 100, opacity: 0, transform: "scale(0)" },
   });
 
   const openhatTransition = useTransition(openhatEffect, {
     config: { mass: 1, tension: 500, friction: 18 },
     from: { x: -1000, y: -1000, opacity: 0, transform: "scale(2)" },
-    enter: { x: 0, y: 0, opacity: 0.8, transform: "scale(4)" },
+    enter: { x: -100, y: -50, opacity: 0.8, transform: "scale(4)" },
     leave: { x: 1000, y: 1000, opacity: 0, transform: "scale(2)" },
   });
 
@@ -250,21 +288,21 @@ const Sequencer = ({ player, playing }) => {
 
   const snareTransition = useTransition(snareEffect, {
     from: { x: -1000, y: 300, opacity: 0 },
-    enter: { x: 0, y: 0, opacity: 0.8 },
+    enter: { x: 100, y: 50, opacity: 0.8 },
     leave: { x: 1000, y: 300, opacity: 0 },
   });
 
   const tomTransition = useTransition(tomEffect, {
     config: { mass: 1, tension: 100, friction: 18 },
     from: { x: -100, y: 1000, opacity: 0, transform: "scale(0)" },
-    enter: { x: 0, y: -100, opacity: 0.8, transform: "scale(2)" },
-    leave: { x: 100, y: 1000, opacity: 0, transform: "scale(0)" },
+    enter: { x: 100, y: 100, opacity: 0.8, transform: "scale(2)" },
+    leave: { x: 300, y: 1000, opacity: 0, transform: "scale(0)" },
   });
 
   const tinkTransition = useTransition(tinkEffect, {
-    from: { x: 0, y: 500, opacity: 0 },
-    enter: { x: 0, y: -50, opacity: 0.8 },
-    leave: { x: 0, y: 500, opacity: 0 },
+    from: { x: 300, y: 500, opacity: 0 },
+    enter: { x: 200, y: 50, opacity: 0.8 },
+    leave: { x: 300, y: 500, opacity: 0 },
   });
 
   useEffect(() => {

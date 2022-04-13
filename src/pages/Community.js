@@ -75,13 +75,13 @@ export default function Community() {
                     );
                   })}
               </>
-              <a href="">{`view all ${work.commentsCount} comments`}</a>
+              <a href="">{`view all ${work.comments_count} comments`}</a>
             </div>
             <>
               <input name="content" />
               <button>send</button>
             </>
-            <p>{work.timestamp.toDate().toDateString()}</p>
+            <p>{work.created_time.toDate().toDateString()}</p>
           </div>
         );
       })}
