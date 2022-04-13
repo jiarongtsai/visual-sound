@@ -11,6 +11,8 @@ import ride from "../asset/sounds/ride.wav";
 import snare from "../asset/sounds/snare.wav";
 import tink from "../asset/sounds/tink.wav";
 import tom from "../asset/sounds/tom.wav";
+import * as Tone from "tone";
+console.clear();
 
 const useKeyboardBindings = (map) => {
   useEffect(() => {
@@ -82,6 +84,29 @@ const Input = styled.input.attrs({
   height: 20px;
 `;
 
+const soundPlayer = new Tone.Players(
+  {
+    a: boom,
+    s: clap,
+    d: hihat,
+    f: kick,
+    g: openhat,
+    h: ride,
+    j: snare,
+    k: tom,
+    l: tink,
+  },
+  () => {
+    console.log("sound loaded");
+    trythis();
+  }
+).toDestination();
+
+console.log(soundPlayer);
+function trythis() {
+  soundPlayer.player("a").start();
+}
+
 export default function Main() {
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -92,6 +117,7 @@ export default function Main() {
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
+
   const [playPattern, setPlayPattern] = useState({
     a: new Array(16).fill(0),
     s: new Array(16).fill(0),
