@@ -20,11 +20,8 @@ const useKeyboardBindings = (map) => {
   useEffect(() => {
     const handlePress = (event) => {
       const handler = map[event.key];
-
       if (typeof handler === "function") {
         handler();
-      } else {
-        return;
       }
     };
 
@@ -79,7 +76,7 @@ const Sequencer = ({ player, playing }) => {
         setCurrentStep((currentStep + 1) % steps);
         nextStep(currentStep);
       }
-    }, 100 + Math.random() * 20);
+    }, 200);
     return () => {
       clearTimeout(timer);
     };
