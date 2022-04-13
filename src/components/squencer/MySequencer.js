@@ -16,9 +16,9 @@ const initialState = [
   new Array(16).fill(initialCellState),
 ];
 
-const Sequencer = ({ player }) => {
+const Sequencer = ({ player, playing }) => {
   const [sequence, setSequence] = useState(initialState);
-  const [playing, setPlaying] = useState(true);
+
   const [currentStep, setCurrentStep] = useState(0);
 
   const toggleStep = (line, step) => {
@@ -56,7 +56,6 @@ const Sequencer = ({ player }) => {
 
   return (
     <>
-      <button onClick={() => setPlaying(!playing)}>click</button>
       <Grid sequence={sequence} toggleStep={toggleStep} />
     </>
   );

@@ -229,14 +229,17 @@ const VisualEngine = ({ player }) => {
 };
 
 export default function Main() {
+  const [playing, setPlaying] = useState(true);
+
   return (
     <>
+      <button onClick={() => setPlaying(!playing)}>click</button>
       <PlayerProvider>
         {({ soundPlayer }) => {
           return (
             <>
               <VisualEngine player={soundPlayer} />
-              <MySequencer player={soundPlayer} />
+              <MySequencer player={soundPlayer} playing={playing} />
             </>
           );
         }}
