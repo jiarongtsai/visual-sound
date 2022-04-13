@@ -102,7 +102,7 @@ const PlayerProvider = ({ children }) => {
   return children({ soundPlayer });
 };
 
-export default function Main() {
+const VisualEngine = () => {
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
   const [hihatEffect, setHihatEffect] = useState(false);
@@ -113,17 +113,54 @@ export default function Main() {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const allTrack = [
-    { sound: boom, name: "boom", setEffect: setBoomEffect },
-    { sound: clap, name: "clap", setEffect: setClapEffect },
-    { sound: hihat, name: "hihat", setEffect: setHihatEffect },
-    { sound: kick, name: "kick", setEffect: setKickEffect },
-    { sound: openhat, name: "openhat", setEffect: setOpenhatEffect },
-    { sound: ride, name: "ride", setEffect: setRideEffect },
-    { sound: snare, name: "snare", setEffect: setSnareEffect },
-    { sound: tom, name: "tom", setEffect: setTomEffect },
-    { sound: tink, name: "tink", setEffect: setTinkEffect },
-  ];
+  const [playboom] = useSound(boom);
+  const [playclap] = useSound(clap);
+  const [playhihat] = useSound(hihat);
+  const [playkick] = useSound(kick);
+  const [playopenhat] = useSound(openhat);
+  const [playride] = useSound(ride);
+  const [playsnare] = useSound(snare);
+  const [playtom] = useSound(tom);
+  const [playtink] = useSound(tink);
+
+  useKeyboardBindings({
+    a: () => {
+      playboom();
+      setBoomEffect((v) => !v);
+    },
+    s: () => {
+      playclap();
+      setClapEffect((v) => !v);
+    },
+    d: () => {
+      playhihat();
+      setHihatEffect((v) => !v);
+    },
+    f: () => {
+      playkick();
+      setKickEffect((v) => !v);
+    },
+    g: () => {
+      playopenhat();
+      setOpenhatEffect((v) => !v);
+    },
+    h: () => {
+      playride();
+      setRideEffect((v) => !v);
+    },
+    j: () => {
+      playsnare();
+      setSnareEffect((v) => !v);
+    },
+    k: () => {
+      playtom();
+      setTomEffect((v) => !v);
+    },
+    l: () => {
+      playtink();
+      setTinkEffect((v) => !v);
+    },
+  });
 
   const boomTransition = useTransition(boomEffect, {
     config: { mass: 1, tension: 10, friction: 4 },
@@ -183,100 +220,50 @@ export default function Main() {
     enter: { x: 0, y: -50, opacity: 0.8 },
     leave: { x: 0, y: 500, opacity: 0 },
   });
+  return (
+    <Wrapper>
+      {boomTransition((style, item) =>
+        item ? <Ellipse style={style} color="steelblue" /> : ""
+      )}
+      {clapTransition((style, item) =>
+        item ? <Triangle style={style} color="yellow" /> : ""
+      )}
+      {hihatTransition((style, item) =>
+        item ? <Triangle style={style} color="darkorange" /> : ""
+      )}
+      {kickTransition((style, item) =>
+        item ? <Square style={style} color="green" /> : ""
+      )}
+      {openhatTransition((style, item) =>
+        item ? <Triangle style={style} color="gold" /> : ""
+      )}
+      {rideTransition((style, item) =>
+        item ? <Square style={style} color="purple" /> : ""
+      )}
+      {snareTransition((style, item) =>
+        item ? <Square style={style} color="blue" /> : ""
+      )}
+      {tomTransition((style, item) =>
+        item ? <Ellipse style={style} color="slategray" /> : ""
+      )}
+      {tinkTransition((style, item) =>
+        item ? <Triangle style={style} color="red" /> : ""
+      )}
+    </Wrapper>
+  );
+};
 
-  const [playboom] = useSound(boom);
-  const [playclap] = useSound(clap);
-  const [playhihat] = useSound(hihat);
-  const [playkick] = useSound(kick);
-  const [playopenhat] = useSound(openhat);
-  const [playride] = useSound(ride);
-  const [playsnare] = useSound(snare);
-  const [playtom] = useSound(tom);
-  const [playtink] = useSound(tink);
-
-  useKeyboardBindings({
-    a: () => {
-      playboom();
-      setBoomEffect((v) => !v);
-    },
-    s: () => {
-      playclap();
-      setClapEffect((v) => !v);
-    },
-    d: () => {
-      playhihat();
-      setHihatEffect((v) => !v);
-    },
-    f: () => {
-      playkick();
-      setKickEffect((v) => !v);
-    },
-    g: () => {
-      playopenhat();
-      setOpenhatEffect((v) => !v);
-    },
-    h: () => {
-      playride();
-      setRideEffect((v) => !v);
-    },
-    j: () => {
-      playsnare();
-      setSnareEffect((v) => !v);
-    },
-    k: () => {
-      playtom();
-      setTomEffect((v) => !v);
-    },
-    l: () => {
-      playtink();
-      setTinkEffect((v) => !v);
-    },
-  });
-
+export default function Main() {
   return (
     <>
-      {allTrack.map((sound) => {
-        return (
-          <Button
-            setEffect={sound.setEffect}
-            sound={sound.sound}
-            soundName={sound.name}
-            key={sound.name}
-          />
-        );
-      })}
-      <Wrapper>
-        {boomTransition((style, item) =>
-          item ? <Ellipse style={style} color="steelblue" /> : ""
-        )}
-        {clapTransition((style, item) =>
-          item ? <Triangle style={style} color="yellow" /> : ""
-        )}
-        {hihatTransition((style, item) =>
-          item ? <Triangle style={style} color="darkorange" /> : ""
-        )}
-        {kickTransition((style, item) =>
-          item ? <Square style={style} color="green" /> : ""
-        )}
-        {openhatTransition((style, item) =>
-          item ? <Triangle style={style} color="gold" /> : ""
-        )}
-        {rideTransition((style, item) =>
-          item ? <Square style={style} color="purple" /> : ""
-        )}
-        {snareTransition((style, item) =>
-          item ? <Square style={style} color="blue" /> : ""
-        )}
-        {tomTransition((style, item) =>
-          item ? <Ellipse style={style} color="slategray" /> : ""
-        )}
-        {tinkTransition((style, item) =>
-          item ? <Triangle style={style} color="red" /> : ""
-        )}
-      </Wrapper>
       <PlayerProvider>
         {({ soundPlayer }) => {
-          return <MySequencer player={soundPlayer} />;
+          return (
+            <>
+              <VisualEngine />
+              <MySequencer player={soundPlayer} />
+            </>
+          );
         }}
       </PlayerProvider>
     </>
