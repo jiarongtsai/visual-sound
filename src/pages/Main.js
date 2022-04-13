@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import useSound from "use-sound";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
 import boom from "../asset/sounds/boom.wav";
@@ -12,6 +11,7 @@ import snare from "../asset/sounds/snare.wav";
 import tink from "../asset/sounds/tink.wav";
 import tom from "../asset/sounds/tom.wav";
 import * as Tone from "tone";
+import MySequencer from "../components/squencer/MySequencer";
 console.clear();
 
 const useKeyboardBindings = (map) => {
@@ -38,7 +38,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  height: 25vh;
 `;
 
 const Square = styled(animated.div)`
@@ -63,51 +63,31 @@ const Triangle = styled(animated.div)`
   border-bottom: 50px solid ${(props) => props.color};
 `;
 
-const Button = (props) => {
-  const [play] = useSound(props.sound);
-  return (
-    <button
-      onClick={() => {
-        play();
-        props.setEffect((v) => !v);
-      }}
-    >
-      {props.soundName}
-    </button>
-  );
+const PlayerProvider = ({ children }) => {
+  const [soundPlayer, setSoundPlayer] = useState(null);
+  useEffect(() => {
+    const soundPlayer = new Tone.Players(
+      {
+        a: boom,
+        s: clap,
+        d: hihat,
+        f: kick,
+        g: openhat,
+        h: ride,
+        j: snare,
+        k: tom,
+        l: tink,
+      },
+      () => {
+        console.log("sound loaded");
+        setSoundPlayer(soundPlayer);
+      }
+    ).toDestination();
+  }, []);
+  return children({ soundPlayer });
 };
 
-const Input = styled.input.attrs({
-  type: "checkbox",
-})`
-  width: 20px;
-  height: 20px;
-`;
-
-const soundPlayer = new Tone.Players(
-  {
-    a: boom,
-    s: clap,
-    d: hihat,
-    f: kick,
-    g: openhat,
-    h: ride,
-    j: snare,
-    k: tom,
-    l: tink,
-  },
-  () => {
-    console.log("sound loaded");
-    trythis();
-  }
-).toDestination();
-
-console.log(soundPlayer);
-function trythis() {
-  soundPlayer.player("a").start();
-}
-
-export default function Main() {
+const VisualEngine = ({ player }) => {
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
   const [hihatEffect, setHihatEffect] = useState(false);
@@ -118,40 +98,44 @@ export default function Main() {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const [playPattern, setPlayPattern] = useState({
-    a: new Array(16).fill(0),
-    s: new Array(16).fill(0),
-    d: new Array(16).fill(0),
-    f: new Array(16).fill(0),
-    g: new Array(16).fill(0),
-    h: new Array(16).fill(0),
-    j: new Array(16).fill(0),
-    k: new Array(16).fill(0),
-    l: new Array(16).fill(0),
+  useKeyboardBindings({
+    a: () => {
+      player.player("a").start();
+      setBoomEffect((v) => !v);
+    },
+    s: () => {
+      player.player("s").start();
+      setClapEffect((v) => !v);
+    },
+    d: () => {
+      player.player("d").start();
+      setHihatEffect((v) => !v);
+    },
+    f: () => {
+      player.player("f").start();
+      setKickEffect((v) => !v);
+    },
+    g: () => {
+      player.player("g").start();
+      setOpenhatEffect((v) => !v);
+    },
+    h: () => {
+      player.player("h").start();
+      setRideEffect((v) => !v);
+    },
+    j: () => {
+      player.player("j").start();
+      setSnareEffect((v) => !v);
+    },
+    k: () => {
+      player.player("k").start();
+      setTomEffect((v) => !v);
+    },
+    l: () => {
+      player.player("l").start();
+      setTinkEffect((v) => !v);
+    },
   });
-
-  const handleRecordingchange = (key, index) => {
-    setPlayPattern((pre) => ({
-      ...pre,
-      [key]: [
-        ...pre[key].slice(0, index),
-        1 - pre[key][index],
-        ...pre[key].slice(index + 1),
-      ],
-    }));
-  };
-
-  const allTrack = [
-    { sound: boom, name: "boom", setEffect: setBoomEffect },
-    { sound: clap, name: "clap", setEffect: setClapEffect },
-    { sound: hihat, name: "hihat", setEffect: setHihatEffect },
-    { sound: kick, name: "kick", setEffect: setKickEffect },
-    { sound: openhat, name: "openhat", setEffect: setOpenhatEffect },
-    { sound: ride, name: "ride", setEffect: setRideEffect },
-    { sound: snare, name: "snare", setEffect: setSnareEffect },
-    { sound: tom, name: "tom", setEffect: setTomEffect },
-    { sound: tink, name: "tink", setEffect: setTinkEffect },
-  ];
 
   const boomTransition = useTransition(boomEffect, {
     config: { mass: 1, tension: 10, friction: 4 },
@@ -211,128 +195,52 @@ export default function Main() {
     enter: { x: 0, y: -50, opacity: 0.8 },
     leave: { x: 0, y: 500, opacity: 0 },
   });
+  return (
+    <Wrapper>
+      {boomTransition((style, item) =>
+        item ? <Ellipse style={style} color="steelblue" /> : ""
+      )}
+      {clapTransition((style, item) =>
+        item ? <Triangle style={style} color="yellow" /> : ""
+      )}
+      {hihatTransition((style, item) =>
+        item ? <Triangle style={style} color="darkorange" /> : ""
+      )}
+      {kickTransition((style, item) =>
+        item ? <Square style={style} color="green" /> : ""
+      )}
+      {openhatTransition((style, item) =>
+        item ? <Triangle style={style} color="gold" /> : ""
+      )}
+      {rideTransition((style, item) =>
+        item ? <Square style={style} color="purple" /> : ""
+      )}
+      {snareTransition((style, item) =>
+        item ? <Square style={style} color="blue" /> : ""
+      )}
+      {tomTransition((style, item) =>
+        item ? <Ellipse style={style} color="slategray" /> : ""
+      )}
+      {tinkTransition((style, item) =>
+        item ? <Triangle style={style} color="red" /> : ""
+      )}
+    </Wrapper>
+  );
+};
 
-  const [playboom] = useSound(boom);
-  const [playclap] = useSound(clap);
-  const [playhihat] = useSound(hihat);
-  const [playkick] = useSound(kick);
-  const [playopenhat] = useSound(openhat);
-  const [playride] = useSound(ride);
-  const [playsnare] = useSound(snare);
-  const [playtom] = useSound(tom);
-  const [playtink] = useSound(tink);
-
-  useKeyboardBindings({
-    a: () => playboom(),
-    s: () => playclap(),
-    d: () => playhihat(),
-    f: () => playkick(),
-    g: () => playopenhat(),
-    h: () => playride(),
-    j: () => playsnare(),
-    k: () => playtom(),
-    l: () => playtink(),
-  });
-
-  const [keydown, setKeydown] = useState("");
-
-  useEffect(() => {
-    const handleKeydown = (event) => {
-      setKeydown(`key='${event.key}' | code='${event.code}'`);
-      switch (event.key) {
-        case "a":
-          setBoomEffect((v) => !v);
-          break;
-        case "s":
-          setClapEffect((v) => !v);
-          break;
-        case "d":
-          setHihatEffect((v) => !v);
-          break;
-        case "f":
-          setKickEffect((v) => !v);
-          break;
-        case "g":
-          setOpenhatEffect((v) => !v);
-          break;
-        case "h":
-          setRideEffect((v) => !v);
-          break;
-        case "j":
-          setSnareEffect((v) => !v);
-          break;
-        case "k":
-          setTomEffect((v) => !v);
-          break;
-        case "l":
-          setTinkEffect((v) => !v);
-          break;
-        default:
-          return;
-      }
-    };
-    window.addEventListener("keydown", handleKeydown);
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-  }, []);
-
+export default function Main() {
   return (
     <>
-      <div>{keydown}</div>
-      {allTrack.map((sound) => {
-        return (
-          <Button
-            setEffect={sound.setEffect}
-            sound={sound.sound}
-            soundName={sound.name}
-            key={sound.name}
-          />
-        );
-      })}
-      <Wrapper>
-        {boomTransition((style, item) =>
-          item ? <Ellipse style={style} color="steelblue" /> : ""
-        )}
-        {clapTransition((style, item) =>
-          item ? <Triangle style={style} color="yellow" /> : ""
-        )}
-        {hihatTransition((style, item) =>
-          item ? <Triangle style={style} color="darkorange" /> : ""
-        )}
-        {kickTransition((style, item) =>
-          item ? <Square style={style} color="green" /> : ""
-        )}
-        {openhatTransition((style, item) =>
-          item ? <Triangle style={style} color="gold" /> : ""
-        )}
-        {rideTransition((style, item) =>
-          item ? <Square style={style} color="purple" /> : ""
-        )}
-        {snareTransition((style, item) =>
-          item ? <Square style={style} color="blue" /> : ""
-        )}
-        {tomTransition((style, item) =>
-          item ? <Ellipse style={style} color="slategray" /> : ""
-        )}
-        {tinkTransition((style, item) =>
-          item ? <Triangle style={style} color="red" /> : ""
-        )}
-      </Wrapper>
-      {Object.entries(playPattern).map((pattern) => {
-        return (
-          <div key={pattern[0]}>
-            <span>{pattern[0]}</span>
-            {pattern[1].map((graph, i) => (
-              <Input
-                key={i}
-                checked={Boolean(graph)}
-                onChange={() => handleRecordingchange(pattern[0], i)}
-              />
-            ))}
-          </div>
-        );
-      })}
+      <PlayerProvider>
+        {({ soundPlayer }) => {
+          return (
+            <>
+              <VisualEngine player={soundPlayer} />
+              <MySequencer player={soundPlayer} />
+            </>
+          );
+        }}
+      </PlayerProvider>
     </>
   );
 }
