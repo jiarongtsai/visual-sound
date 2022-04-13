@@ -66,6 +66,7 @@ const Div = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 1rem;
 `;
 
 const steps = 16;
@@ -84,7 +85,7 @@ const initialState = [
 ];
 
 const Sequencer = ({ player }) => {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -96,6 +97,7 @@ const Sequencer = ({ player }) => {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
+  const [bpm, setBpm] = useState(120);
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -315,12 +317,13 @@ const Sequencer = ({ player }) => {
   });
 
   useEffect(() => {
+    const timeOutspeed = ((-40 * (bpm - 60)) / 9 + 1000).toFixed(0);
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
         nextStep(currentStep);
       }
-    }, 200);
+    }, timeOutspeed);
     return () => {
       clearTimeout(timer);
     };
@@ -332,7 +335,6 @@ const Sequencer = ({ player }) => {
       nextStep(0);
     }
   }
-
   return (
     <>
       <Wrapper>
@@ -368,6 +370,17 @@ const Sequencer = ({ player }) => {
         <button onClick={handleBacktoHead}>to head</button>
         <button onClick={() => setPlaying(!playing)}>play/pause</button>
         <button onClick={() => setSequence(initialState)}>clean</button>
+      </Div>
+      <Div>
+        <label>{`BPM = ${bpm}`}</label>
+        <input
+          type="range"
+          min="60"
+          max="240"
+          value={bpm}
+          step="1"
+          onChange={(e) => setBpm(e.target.value)}
+        />
       </Div>
       <Grid sequence={sequence} toggleStep={toggleStep} />
     </>
