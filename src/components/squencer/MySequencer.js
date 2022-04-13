@@ -326,6 +326,13 @@ const Sequencer = ({ player }) => {
     };
   }, [currentStep, playing]);
 
+  function handleBacktoHead() {
+    setCurrentStep(0);
+    if (!playing) {
+      nextStep(0);
+    }
+  }
+
   return (
     <>
       <Wrapper>
@@ -358,9 +365,9 @@ const Sequencer = ({ player }) => {
         )}
       </Wrapper>
       <Div>
-        <button>to head</button>
+        <button onClick={handleBacktoHead}>to head</button>
         <button onClick={() => setPlaying(!playing)}>play/pause</button>
-        <button>clean</button>
+        <button onClick={() => setSequence(initialState)}>clean</button>
       </Div>
       <Grid sequence={sequence} toggleStep={toggleStep} />
     </>
