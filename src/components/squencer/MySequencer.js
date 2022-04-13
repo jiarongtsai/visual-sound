@@ -205,7 +205,35 @@ const Sequencer = ({ player, playing }) => {
             setTinkEffect((v) => !v);
           },
         }
-      : {}
+      : {
+          a: () => {
+            toggleStep(lineMap.indexOf("a"), currentStep);
+          },
+          s: () => {
+            toggleStep(lineMap.indexOf("s"), currentStep);
+          },
+          d: () => {
+            toggleStep(lineMap.indexOf("d"), currentStep);
+          },
+          f: () => {
+            toggleStep(lineMap.indexOf("f"), currentStep);
+          },
+          g: () => {
+            toggleStep(lineMap.indexOf("g"), currentStep);
+          },
+          h: () => {
+            toggleStep(lineMap.indexOf("h"), currentStep);
+          },
+          j: () => {
+            toggleStep(lineMap.indexOf("j"), currentStep);
+          },
+          k: () => {
+            toggleStep(lineMap.indexOf("k"), currentStep);
+          },
+          l: () => {
+            toggleStep(lineMap.indexOf("l"), currentStep);
+          },
+        }
   );
 
   const boomTransition = useTransition(boomEffect, {
