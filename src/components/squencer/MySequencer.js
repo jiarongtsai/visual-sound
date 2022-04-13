@@ -16,17 +16,36 @@ const initialState = [
   new Array(16).fill(initialCellState),
 ];
 
+const useKeyboardBindings = (map) => {
+  useEffect(() => {
+    const handlePress = (event) => {
+      const handler = map[event.key];
+
+      if (typeof handler === "function") {
+        handler();
+      } else {
+        return;
+      }
+    };
+
+    window.addEventListener("keydown", handlePress);
+
+    return () => {
+      window.removeEventListener("keydown", handlePress);
+    };
+  }, [map]);
+};
+
 const Sequencer = ({ player, playing }) => {
   const [sequence, setSequence] = useState(initialState);
-
   const [currentStep, setCurrentStep] = useState(0);
 
   const toggleStep = (line, step) => {
     const sequenceCopy = [...sequence];
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
-    console.log("toggled");
     setSequence(sequenceCopy);
+    player.player(lineMap[line]).start();
   };
 
   const nextStep = (time) => {
@@ -41,6 +60,18 @@ const Sequencer = ({ player, playing }) => {
     }
     setSequence(sequence);
   };
+
+  useKeyboardBindings({
+    a: () => {},
+    s: () => {},
+    d: () => {},
+    f: () => {},
+    g: () => {},
+    h: () => {},
+    j: () => {},
+    k: () => {},
+    l: () => {},
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
