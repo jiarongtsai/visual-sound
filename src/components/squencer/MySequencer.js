@@ -85,6 +85,40 @@ const Sequencer = ({ player, playing }) => {
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
     setSequence(sequenceCopy);
+    if (!playing) {
+      player.player(lineMap[line]).start();
+      switch (lineMap[line]) {
+        case "a":
+          setBoomEffect((v) => !v);
+          break;
+        case "s":
+          setClapEffect((v) => !v);
+          break;
+        case "d":
+          setHihatEffect((v) => !v);
+          break;
+        case "f":
+          setKickEffect((v) => !v);
+          break;
+        case "g":
+          setOpenhatEffect((v) => !v);
+          break;
+        case "h":
+          setRideEffect((v) => !v);
+          break;
+        case "j":
+          setSnareEffect((v) => !v);
+          break;
+        case "k":
+          setTomEffect((v) => !v);
+          break;
+        case "l":
+          setTinkEffect((v) => !v);
+          break;
+        default:
+          return;
+      }
+    }
   };
 
   const nextStep = (time) => {
@@ -94,6 +128,37 @@ const Sequencer = ({ player, playing }) => {
         sequence[i][j] = { activated, triggered: j === time };
         if (triggered && activated) {
           player.player(lineMap[i]).start();
+          switch (lineMap[i]) {
+            case "a":
+              setBoomEffect((v) => !v);
+              break;
+            case "s":
+              setClapEffect((v) => !v);
+              break;
+            case "d":
+              setHihatEffect((v) => !v);
+              break;
+            case "f":
+              setKickEffect((v) => !v);
+              break;
+            case "g":
+              setOpenhatEffect((v) => !v);
+              break;
+            case "h":
+              setRideEffect((v) => !v);
+              break;
+            case "j":
+              setSnareEffect((v) => !v);
+              break;
+            case "k":
+              setTomEffect((v) => !v);
+              break;
+            case "l":
+              setTinkEffect((v) => !v);
+              break;
+            default:
+              return;
+          }
         }
       }
     }
