@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 import * as Tone from "tone";
+
 import MySequencer from "../components/squencer/MySequencer";
 import Modal from "../components/Modal";
 import boom from "../asset/sounds/boom.wav";
@@ -39,13 +40,12 @@ const PlayerProvider = ({ children }) => {
 };
 
 export default function Main() {
-  function handleUpload() {
-    console.log("upload me");
-  }
-
+  const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      <button onClick={handleUpload}>upload</button>
+      {openModal ? <Modal setOpenModal={setOpenModal} /> : ""}
+      <Header />
+      <button onClick={() => setOpenModal(true)}>upload</button>
       <PlayerProvider>
         {({ soundPlayer }) => {
           return <MySequencer player={soundPlayer} />;
