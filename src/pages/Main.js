@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import * as Tone from "tone";
 
 import MySequencer from "../components/squencer/MySequencer";
-import Modal from "../components/Modal";
+
 import boom from "../asset/sounds/boom.wav";
 import clap from "../asset/sounds/clap.wav";
 import hihat from "../asset/sounds/hihat.wav";
@@ -40,12 +40,9 @@ const PlayerProvider = ({ children }) => {
 };
 
 export default function Main() {
-  const [openModal, setOpenModal] = useState(false);
   return (
     <>
-      {openModal ? <Modal setOpenModal={setOpenModal} /> : ""}
       <Header />
-      <button onClick={() => setOpenModal(true)}>upload</button>
       <PlayerProvider>
         {({ soundPlayer }) => {
           return <MySequencer player={soundPlayer} />;

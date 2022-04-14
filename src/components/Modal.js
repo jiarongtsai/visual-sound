@@ -13,6 +13,7 @@ const Div = styled.div`
   margin: 1rem;
 `;
 const ModalCover = styled.div`
+  top: 0;
   position: fixed;
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.2);
@@ -32,7 +33,7 @@ const ModalContent = styled.div`
 
 const ModalText = styled.p`
   z-index: 999;
-  margin-top: 10vh;
+  margin-top: 5vh;
 `;
 
 const ModalCloseButton = styled.button`
@@ -69,7 +70,7 @@ const TagDelete = styled.span`
   cursor: pointer;
 `;
 
-export default function Modal({ setOpenModal }) {
+export default function Modal({ setOpenModal, sequenceJSON }) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -104,8 +105,7 @@ export default function Modal({ setOpenModal }) {
       tags: tags,
       collected_by: [],
       liked_by: [],
-      // cannot store array of array in firestore
-      // sheetmusic: [[], [], [], []],
+      sheetmusic: sequenceJSON,
     };
 
     const docRef = await addDoc(collection(db, "works"), data);
@@ -126,6 +126,14 @@ export default function Modal({ setOpenModal }) {
         </Div>
         <Div>
           <label>tags</label>
+          <p>Tag your post, and separeted by comma</p>
+          <input
+            name="tags"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => handleTagInput(e)}
+            placeholder="Add tags..."
+          />
           <TagsContainer>
             {tags.map((tag) => (
               <TagWrapper key={tag}>
@@ -134,13 +142,6 @@ export default function Modal({ setOpenModal }) {
               </TagWrapper>
             ))}
           </TagsContainer>
-          <input
-            name="tags"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={(e) => handleTagInput(e)}
-            placeholder="Tag your post, and separeted by comma"
-          />
         </Div>
         <div>
           <ModalConfirmButton onClick={uploadtoFirebase}>
