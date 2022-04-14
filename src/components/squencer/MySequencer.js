@@ -2,24 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
 import Grid from "./grid";
-
-//visual
-const useKeyboardBindings = (map) => {
-  useEffect(() => {
-    const handlePress = (event) => {
-      const handler = map[event.key];
-      if (typeof handler === "function") {
-        handler();
-      }
-    };
-
-    window.addEventListener("keydown", handlePress);
-
-    return () => {
-      window.removeEventListener("keydown", handlePress);
-    };
-  }, [map]);
-};
+import Modal from "../Modal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -84,6 +67,7 @@ const Div = styled.div`
 `;
 
 const Sequencer = ({ player }) => {
+  const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
 
   const [boomEffect, setBoomEffect] = useState(false);
@@ -96,15 +80,49 @@ const Sequencer = ({ player }) => {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
+  const data = sessionStorage.getItem("sequenceJSON");
+
+  function transformStoredSequence(storedData) {
+    const storedSequence = JSON.parse(storedData);
+    for (let i = 0; i < storedSequence.length; i++) {
+      for (let j = 0; j < storedSequence[i].length; j++) {
+        const { activated } = storedSequence[i][j];
+        storedSequence[i][j] = { activated, triggered: false };
+      }
+    }
+    return storedSequence;
+  }
+
   const [bpm, setBpm] = useState(120);
-  const [sequence, setSequence] = useState(initialState);
+  const [sequence, setSequence] = useState(
+    data ? transformStoredSequence(data) : initialState
+  );
   const [currentStep, setCurrentStep] = useState(0);
+  //visual
+  const useKeyboardBindings = (map) => {
+    useEffect(() => {
+      const handlePress = (event) => {
+        const handler = map[event.key];
+        if (typeof handler === "function" && !openModal) {
+          handler();
+        }
+      };
+
+      window.addEventListener("keydown", handlePress);
+
+      return () => {
+        window.removeEventListener("keydown", handlePress);
+      };
+    }, [map]);
+  };
 
   const toggleStep = (line, step) => {
     const sequenceCopy = [...sequence];
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
     setSequence(sequenceCopy);
+
+    sessionStorage.setItem("sequenceJSON", handleSequenceData());
     if (!playing) {
       player.player(lineMap[line]).start();
       switch (lineMap[line]) {
@@ -184,6 +202,8 @@ const Sequencer = ({ player }) => {
       }
     }
     setSequence(sequenceCopy);
+
+    sessionStorage.setItem("sequenceJSON", handleSequenceData());
   };
 
   useKeyboardBindings(
@@ -343,10 +363,31 @@ const Sequencer = ({ player }) => {
       }
     }
     setSequence(sequenceCopy);
+    sessionStorage.setItem("sequenceJSON", handleSequenceData());
+  }
+
+  function handleSequenceData() {
+    const sequenceCopy = [...sequence];
+    for (let i = 0; i < sequenceCopy.length; i++) {
+      for (let j = 0; j < sequenceCopy[i].length; j++) {
+        const { activated } = sequenceCopy[i][j];
+        sequenceCopy[i][j] = { activated };
+      }
+    }
+    return JSON.stringify(sequenceCopy);
   }
 
   return (
     <>
+      {openModal ? (
+        <Modal
+          setOpenModal={setOpenModal}
+          sequenceJSON={handleSequenceData()}
+        />
+      ) : (
+        ""
+      )}
+      <button onClick={() => setOpenModal(true)}>upload</button>
       <Wrapper>
         {boomTransition((style, item) =>
           item ? <Ellipse style={style} color="steelblue" /> : ""
