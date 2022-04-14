@@ -26,7 +26,7 @@ const Firebase = {
     const snapShot = await getDocs(collection(this.db(), "works"));
     const allworks = await Promise.all(
       snapShot.docs.map(async (item) => {
-        const userInfo = await this.getUserDetail(item.data().author_id);
+        const userInfo = await this.getUserBasicInfo(item.data().author_id);
         return {
           ...item.data(),
           ...userInfo,
@@ -35,7 +35,7 @@ const Firebase = {
     );
     return allworks;
   },
-  async getUserDetail(id) {
+  async getUserBasicInfo(id) {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
 
@@ -43,6 +43,15 @@ const Firebase = {
       id: id,
       author_name: docSnap.data().user_name,
       author_thumbnail: docSnap.data().user_thumbnail,
+    };
+  },
+  async getProfile(id) {
+    const docRef = doc(this.db(), "users", id);
+    const docSnap = await getDoc(docRef);
+
+    return {
+      id: id,
+      ...docSnap.data(),
     };
   },
 };
