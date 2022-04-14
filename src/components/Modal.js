@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import db from "../utils/firebase-config";
 
+console.clear();
+
 const Div = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,11 +49,48 @@ const ModalConfirmButton = styled.button`
   height: 5vh;
 `;
 
+const TagsContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const TagWrapper = styled.div`
+  background-color: gray;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0 0.5rem;
+  margin: 0.5rem;
+  display: flex;
+`;
+
+const TagDelete = styled.span`
+  margin-left: 0.5em;
+  cursor: pointer;
+`;
+
 export default function Modal({ setOpenModal }) {
   const [inputs, setInputs] = useState({});
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
 
   function handleInputs(e) {
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
+  }
+
+  function handleTagInput(e) {
+    const { key } = e;
+    const trimmedInput = tagInput.trim();
+
+    if (key === "," && trimmedInput.length && !tags.includes(trimmedInput)) {
+      e.preventDefault();
+      setTags([...tags, trimmedInput]);
+      setTagInput("");
+    }
+  }
+
+  function deleteTag(value) {
+    setTags(tags.filter((tag) => tag != value));
   }
 
   async function uploadtoFirebase() {
@@ -62,7 +101,7 @@ export default function Modal({ setOpenModal }) {
       image_url: "",
       video_url: "",
       created_time: Timestamp.fromDate(new Date(Date.now())),
-      tags: [],
+      tags: tags,
       collected_by: [],
       liked_by: [],
       // cannot store array of array in firestore
@@ -87,10 +126,20 @@ export default function Modal({ setOpenModal }) {
         </Div>
         <Div>
           <label>tags</label>
+          <TagsContainer>
+            {tags.map((tag) => (
+              <TagWrapper key={tag}>
+                {tag}
+                <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
+              </TagWrapper>
+            ))}
+          </TagsContainer>
           <input
             name="tags"
-            value={inputs.tags || []}
-            onChange={handleInputs}
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => handleTagInput(e)}
+            placeholder="Tag your post, and separeted by comma"
           />
         </Div>
         <div>
