@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import db from "../utils/firebase-config";
+import styled from "styled-components";
+import { Firebase } from "../utils/firebase";
 import Header from "../components/Header";
 
+const Img = styled.img`
+  width: 50px;
+  border-radius: 50%;
+`;
+
 export default function Profile() {
+  const [profile, setProfile] = useState({});
   useEffect(() => {
-    const getProfile = async () => {
-      const users = await getDocs(collection(db, "users"));
-      users.forEach((doc) => {
-        console.log(doc.id, doc.data());
-      });
-    };
-    getProfile();
+    Firebase.getProfile("oWhlyRTSEMPFknaRnA5MNNB8iZC2").then((data) =>
+      setProfile(data)
+    );
   }, []);
 
   return (
     <>
       <Header />
-      <div>Profile</div>
+      <div>
+        <Img src={profile.user_thumbnail} />
+        <p>{profile.user_name}</p>
+        <p>{profile.user_bio}</p>
+      </div>
+      <hr />
     </>
   );
 }
