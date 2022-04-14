@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import db from "../utils/firebase-config";
 import Header from "../components/Header";
+import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
 const Img = styled.img`
@@ -44,7 +45,11 @@ export default function Community() {
               <Img src={work.author_thumbnail} />
               <p>{work.author_name}</p>
             </>
-            <SequencePlayer />
+            <PlayerProvider>
+              {({ soundPlayer }) => {
+                return <SequencePlayer player={soundPlayer} />;
+              }}
+            </PlayerProvider>
             <div>
               <span>❤️</span>
               <span>💬</span>
