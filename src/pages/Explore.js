@@ -16,19 +16,10 @@ export default function Explore() {
     <>
       <Header />
       <div>Explore</div>
+      <input />
+      <button>Search</button>
       {exploreworks.map((work) => {
-        return (
-          <div key={work.id}>
-            <video
-              width="400"
-              height="200"
-              controls
-              src="https://media.geeksforgeeks.org/wp-content/uploads/20190616234019/Canvas.move_.mp4"
-            >
-              Browser not supported
-            </video>{" "}
-          </div>
-        );
+        return <div key={work.id}>Video</div>;
       })}
     </>
   );

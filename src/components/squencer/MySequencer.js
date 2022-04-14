@@ -373,6 +373,7 @@ const Sequencer = ({ player }) => {
         <Modal
           setOpenModal={setOpenModal}
           sequenceJSON={handleSequenceData(sequence)}
+          bpm={bpm}
         />
       ) : (
         ""
