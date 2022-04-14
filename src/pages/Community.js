@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import db from "../utils/firebase-config";
 import Header from "../components/Header";
+import SequencePlayer from "../components/SequencePlayer";
 
 const Img = styled.img`
   width: 50px;
@@ -43,17 +44,7 @@ export default function Community() {
               <Img src={work.author_thumbnail} />
               <p>{work.author_name}</p>
             </>
-            <>
-              <iframe
-                width="560"
-                height="315"
-                src="https://www.youtube.com/embed/QwwBBZs2rb0"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </>
+            <SequencePlayer />
             <div>
               <span>❤️</span>
               <span>💬</span>
