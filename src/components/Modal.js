@@ -70,7 +70,7 @@ const TagDelete = styled.span`
   cursor: pointer;
 `;
 
-export default function Modal({ setOpenModal, sequenceJSON }) {
+export default function Modal({ setOpenModal, sequenceJSON, bpm }) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -106,6 +106,7 @@ export default function Modal({ setOpenModal, sequenceJSON }) {
       collected_by: [],
       liked_by: [],
       sheetmusic: sequenceJSON,
+      bpm: bpm,
     };
 
     const docRef = await addDoc(collection(db, "works"), data);

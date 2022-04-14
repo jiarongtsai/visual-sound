@@ -11,6 +11,12 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
+const Div = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
 export default function Community() {
   const [allworks, setAllworks] = useState([]);
   useEffect(() => {
@@ -40,17 +46,21 @@ export default function Community() {
       <Header />
       {allworks.map((work) => {
         return (
-          <div key={work.id}>
-            <>
+          <div
+            key={work.id}
+            style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
+          >
+            <Div>
               <Img src={work.author_thumbnail} />
               <p>{work.author_name}</p>
-            </>
+            </Div>
             <PlayerProvider>
               {({ soundPlayer }) => {
                 return (
                   <SequencePlayer
                     player={soundPlayer}
                     sheetmusic={work.sheetmusic}
+                    bpm={work.bpm}
                   />
                 );
               }}
@@ -60,10 +70,10 @@ export default function Community() {
               <span>💬</span>
               <span>⭐️</span>
             </div>
-            <>
+            <Div>
               <h3>{work.author_name}</h3>
               <p>{work.description}</p>
-            </>
+            </Div>
             <div>
               <>
                 {work.commentsLatest &&
