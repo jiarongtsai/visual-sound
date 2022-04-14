@@ -45,26 +45,8 @@ const Triangle = styled(animated.div)`
 const steps = 16;
 const initialCellState = { triggered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
-const initialState = [
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-];
 
-const Div = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-`;
-
-export default function SequencePlayer({ player }) {
+export default function SequencePlayer({ player, sheetmusic }) {
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
 
@@ -89,8 +71,8 @@ export default function SequencePlayer({ player }) {
     return storedSequence;
   }
 
-  const [bpm, setBpm] = useState(120);
-  const [sequence, setSequence] = useState(initialState);
+  const [bpm, setBpm] = useState(180);
+  const [sequence, setSequence] = useState(transformStoredSequence(sheetmusic));
   const [currentStep, setCurrentStep] = useState(0);
   //visual
   const useKeyboardBindings = (map) => {
@@ -340,34 +322,37 @@ export default function SequencePlayer({ player }) {
   }, [currentStep, playing]);
 
   return (
-    <Wrapper>
-      {boomTransition((style, item) =>
-        item ? <Ellipse style={style} color="steelblue" /> : ""
-      )}
-      {clapTransition((style, item) =>
-        item ? <Triangle style={style} color="yellow" /> : ""
-      )}
-      {hihatTransition((style, item) =>
-        item ? <Triangle style={style} color="darkorange" /> : ""
-      )}
-      {kickTransition((style, item) =>
-        item ? <Square style={style} color="green" /> : ""
-      )}
-      {openhatTransition((style, item) =>
-        item ? <Triangle style={style} color="gold" /> : ""
-      )}
-      {rideTransition((style, item) =>
-        item ? <Square style={style} color="purple" /> : ""
-      )}
-      {snareTransition((style, item) =>
-        item ? <Square style={style} color="blue" /> : ""
-      )}
-      {tomTransition((style, item) =>
-        item ? <Ellipse style={style} color="slategray" /> : ""
-      )}
-      {tinkTransition((style, item) =>
-        item ? <Triangle style={style} color="red" /> : ""
-      )}
-    </Wrapper>
+    <>
+      <Wrapper>
+        {boomTransition((style, item) =>
+          item ? <Ellipse style={style} color="steelblue" /> : ""
+        )}
+        {clapTransition((style, item) =>
+          item ? <Triangle style={style} color="yellow" /> : ""
+        )}
+        {hihatTransition((style, item) =>
+          item ? <Triangle style={style} color="darkorange" /> : ""
+        )}
+        {kickTransition((style, item) =>
+          item ? <Square style={style} color="green" /> : ""
+        )}
+        {openhatTransition((style, item) =>
+          item ? <Triangle style={style} color="gold" /> : ""
+        )}
+        {rideTransition((style, item) =>
+          item ? <Square style={style} color="purple" /> : ""
+        )}
+        {snareTransition((style, item) =>
+          item ? <Square style={style} color="blue" /> : ""
+        )}
+        {tomTransition((style, item) =>
+          item ? <Ellipse style={style} color="slategray" /> : ""
+        )}
+        {tinkTransition((style, item) =>
+          item ? <Triangle style={style} color="red" /> : ""
+        )}
+      </Wrapper>
+      <button onClick={() => setPlaying(!playing)}>Play/Pause</button>
+    </>
   );
 }

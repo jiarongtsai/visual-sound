@@ -47,7 +47,12 @@ export default function Community() {
             </>
             <PlayerProvider>
               {({ soundPlayer }) => {
-                return <SequencePlayer player={soundPlayer} />;
+                return (
+                  <SequencePlayer
+                    player={soundPlayer}
+                    sheetmusic={work.sheetmusic}
+                  />
+                );
               }}
             </PlayerProvider>
             <div>
