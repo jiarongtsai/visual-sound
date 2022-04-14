@@ -80,8 +80,6 @@ const Sequencer = ({ player }) => {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const data = sessionStorage.getItem("sequenceJSON");
-
   function transformStoredSequence(storedData) {
     const storedSequence = JSON.parse(storedData);
     for (let i = 0; i < storedSequence.length; i++) {
@@ -94,9 +92,7 @@ const Sequencer = ({ player }) => {
   }
 
   const [bpm, setBpm] = useState(120);
-  const [sequence, setSequence] = useState(
-    data ? transformStoredSequence(data) : initialState
-  );
+  const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
   //visual
   const useKeyboardBindings = (map) => {
@@ -121,8 +117,6 @@ const Sequencer = ({ player }) => {
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
     setSequence(sequenceCopy);
-
-    sessionStorage.setItem("sequenceJSON", handleSequenceData());
     if (!playing) {
       player.player(lineMap[line]).start();
       switch (lineMap[line]) {
@@ -202,8 +196,6 @@ const Sequencer = ({ player }) => {
       }
     }
     setSequence(sequenceCopy);
-
-    sessionStorage.setItem("sequenceJSON", handleSequenceData());
   };
 
   useKeyboardBindings(
@@ -363,18 +355,16 @@ const Sequencer = ({ player }) => {
       }
     }
     setSequence(sequenceCopy);
-    sessionStorage.setItem("sequenceJSON", handleSequenceData());
   }
 
-  function handleSequenceData() {
-    const sequenceCopy = [...sequence];
-    for (let i = 0; i < sequenceCopy.length; i++) {
-      for (let j = 0; j < sequenceCopy[i].length; j++) {
-        const { activated } = sequenceCopy[i][j];
-        sequenceCopy[i][j] = { activated };
+  function handleSequenceData(currentSequence) {
+    for (let i = 0; i < currentSequence.length; i++) {
+      for (let j = 0; j < currentSequence[i].length; j++) {
+        const { activated } = currentSequence[i][j];
+        currentSequence[i][j] = { activated };
       }
     }
-    return JSON.stringify(sequenceCopy);
+    return JSON.stringify(currentSequence);
   }
 
   return (
@@ -382,7 +372,7 @@ const Sequencer = ({ player }) => {
       {openModal ? (
         <Modal
           setOpenModal={setOpenModal}
-          sequenceJSON={handleSequenceData()}
+          sequenceJSON={handleSequenceData(sequence)}
         />
       ) : (
         ""
