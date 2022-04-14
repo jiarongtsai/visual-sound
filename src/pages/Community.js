@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
-import db from "../utils/firebase-config";
+import { Firebase } from "../utils/firebase";
 import Header from "../components/Header";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
@@ -20,34 +19,16 @@ const Div = styled.div`
 export default function Community() {
   const [allworks, setAllworks] = useState([]);
   useEffect(() => {
-    onSnapshot(collection(db, "works"), (snapShot) => {
-      async function promises() {
-        const unresolved = snapShot.docs.map(async (docItem) => {
-          const docRef = doc(db, "users", docItem.data().author_id);
-          const docSnap = await getDoc(docRef);
-          return {
-            ...docItem.data(),
-            id: docItem.id,
-            author_name: docSnap.data().user_name,
-            author_thumbnail: docSnap.data().user_thumbnail,
-          };
-        });
-
-        const resolved = await Promise.all(unresolved);
-        setAllworks(resolved);
-      }
-
-      promises();
-    });
+    Firebase.getAllworks().then((data) => setAllworks(data));
   }, []);
 
   return (
     <>
       <Header />
-      {allworks.map((work) => {
+      {allworks.map((work, i) => {
         return (
           <div
-            key={work.id}
+            key={i}
             style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
           >
             <Div>
