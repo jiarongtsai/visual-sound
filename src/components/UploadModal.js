@@ -4,6 +4,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import db from "../utils/firebase-config";
 
 console.clear();
+const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 const Div = styled.div`
   display: flex;
@@ -70,7 +71,7 @@ const TagDelete = styled.span`
   cursor: pointer;
 `;
 
-export default function Modal({ setOpenModal, sequenceJSON, bpm }) {
+export default function UploadModal({ setOpenModal, sequenceJSON, bpm }) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -96,7 +97,7 @@ export default function Modal({ setOpenModal, sequenceJSON, bpm }) {
 
   async function uploadtoFirebase() {
     const data = {
-      author_id: "oWhlyRTSEMPFknaRnA5MNNB8iZC2",
+      author_id: UserID,
       description: inputs.description,
       comments_count: 0,
       image_url: "",
