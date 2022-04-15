@@ -109,9 +109,7 @@ export default function UploadModal({ setOpenModal, sequenceJSON, bpm }) {
       sheetmusic: sequenceJSON,
       bpm: bpm,
     };
-
-    const docRef = await addDoc(collection(db, "works"), data);
-    console.log(docRef.id);
+    await addDoc(collection(db, "works"), data);
   }
 
   return (

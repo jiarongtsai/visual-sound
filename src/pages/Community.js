@@ -4,6 +4,7 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import WorkModal from "../components/WorkModal";
+import { onSnapshot, query, orderBy, where, limit } from "firebase/firestore";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -22,7 +23,35 @@ export default function Community() {
   const [allworks, setAllworks] = useState([]);
   const [workModalID, setWorkModalID] = useState("");
   useEffect(() => {
-    Firebase.getFollowingWorks(userID).then((data) => setAllworks(data));
+    // Firebase.getFollowingWorks(userID).then((data) => setAllworks(data));
+    (async () => {
+      const followingList = await Firebase.getFollowingList(userID);
+      const queryCondition = query(
+        Firebase.worksRef(),
+        where("author_id", "in", followingList),
+        orderBy("created_time", "desc"),
+        limit(20)
+      );
+      const docsSnap = onSnapshot(queryCondition, async (snapshot) => {
+        const result = await Promise.all(
+          snapshot.docs.map(async (item) => {
+            const authorInfo = await Firebase.getUserBasicInfo(
+              item.data().author_id
+            );
+            return {
+              id: item.id,
+              ...item.data(),
+              ...authorInfo,
+            };
+          })
+        );
+        setAllworks(result);
+      });
+    })();
+
+    return () => {
+      // docsSnap();
+    };
   }, []);
   return (
     <>
