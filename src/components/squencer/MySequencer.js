@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTransition, animated } from "react-spring";
 import styled from "styled-components";
 import Grid from "./grid";
-import Modal from "../Modal";
+import UploadModal from "../UploadModal";
 
 const Wrapper = styled.div`
   position: relative;
@@ -370,7 +370,7 @@ const Sequencer = ({ player }) => {
   return (
     <>
       {openModal ? (
-        <Modal
+        <UploadModal
           setOpenModal={setOpenModal}
           sequenceJSON={handleSequenceData(sequence)}
           bpm={bpm}
