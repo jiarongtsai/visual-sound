@@ -10,6 +10,10 @@ import {
   orderBy,
   limit,
   onSnapshot,
+  setDoc,
+  addDoc,
+  Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -112,6 +116,16 @@ const Firebase = {
       ...authorInfo,
     };
   },
+  async addComment(uid, id, content, count) {
+    await addDoc(collection(this.db(), `works/${id}/comments`), {
+      author_id: uid,
+      content: content,
+      created_time: Timestamp.fromDate(new Date(Date.now())),
+    });
+    await updateDoc(doc(this.db(), "works", id), {
+      comments_count: count,
+    });
+  },
   getCommentSnapshot(id) {
     const docsRef = collection(this.db(), `works/${id}/comments`);
     const docsSnap = onSnapshot(docsRef, async (snapshot) => {
@@ -124,7 +138,6 @@ const Firebase = {
           };
         })
       );
-      console.log(result);
     });
   },
 };
