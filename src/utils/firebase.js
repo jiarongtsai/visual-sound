@@ -47,7 +47,32 @@ const Firebase = {
     );
     return allworks;
   },
+  async getFollowingList(id) {
+    const docRef = doc(this.db(), "users", id);
+    const docSnap = await getDoc(docRef);
 
+    return docSnap.data().following;
+  },
+  async getFollowingWorks(id) {
+    const followingList = await this.getFollowingList(id);
+    const queryCondition = query(
+      this.worksRef(),
+      where("author_id", "in", followingList),
+      orderBy("created_time", "desc"),
+      limit(20)
+    );
+    const snapShot = await getDocs(queryCondition);
+    const allworks = await Promise.all(
+      snapShot.docs.map(async (item) => {
+        const userInfo = await this.getUserBasicInfo(item.data().author_id);
+        return {
+          ...item.data(),
+          ...userInfo,
+        };
+      })
+    );
+    return allworks;
+  },
   async getUserBasicInfo(id) {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
@@ -70,6 +95,7 @@ const Firebase = {
   async getUserWorks(id) {
     const queryByUser = query(
       collection(this.db(), "works"),
+      orderBy("created_time", "desc"),
       where("author_id", "==", id)
     );
     const querySnapshot = await getDocs(queryByUser);
