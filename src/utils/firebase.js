@@ -7,6 +7,8 @@ import {
   getDoc,
   query,
   where,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -24,8 +26,16 @@ const Firebase = {
   db() {
     return getFirestore(this.app);
   },
+  worksRef() {
+    return collection(this.db(), "works");
+  },
   async getAllworks() {
-    const snapShot = await getDocs(collection(this.db(), "works"));
+    const queryCondition = query(
+      this.worksRef(),
+      orderBy("created_time", "desc"),
+      limit(20)
+    );
+    const snapShot = await getDocs(queryCondition);
     const allworks = await Promise.all(
       snapShot.docs.map(async (item) => {
         const userInfo = await this.getUserBasicInfo(item.data().author_id);
@@ -37,6 +47,7 @@ const Firebase = {
     );
     return allworks;
   },
+
   async getUserBasicInfo(id) {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);

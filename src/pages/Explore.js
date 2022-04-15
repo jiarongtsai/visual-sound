@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
 import { Firebase } from "../utils/firebase";
+import { PlayerProvider } from "../components/PlayerProvider";
+import SequencePlayer from "../components/SequencePlayer";
+
 export default function Explore() {
   const [exploreworks, setExploreworks] = useState([]);
   useEffect(() => {
-    const getProfile = async () => {
-      const works = await getDocs(collection(Firebase.db(), "works"));
-      setExploreworks(works.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-    getProfile();
+    Firebase.getAllworks().then((data) => setExploreworks(data));
   }, []);
 
   return (
@@ -16,8 +14,22 @@ export default function Explore() {
       <div>Explore</div>
       <input />
       <button>Search</button>
-      {exploreworks.map((work) => {
-        return <div key={work.id}>Video</div>;
+      {exploreworks.map((work, i) => {
+        return (
+          <div key={i}>
+            <PlayerProvider>
+              {({ soundPlayer }) => {
+                return (
+                  <SequencePlayer
+                    player={soundPlayer}
+                    sheetmusic={work.sheetmusic}
+                    bpm={work.bpm}
+                  />
+                );
+              }}
+            </PlayerProvider>
+          </div>
+        );
       })}
     </>
   );
