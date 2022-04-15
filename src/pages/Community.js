@@ -4,6 +4,8 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
+const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+
 const Img = styled.img`
   width: 50px;
   border-radius: 50%;
@@ -18,7 +20,7 @@ const Div = styled.div`
 export default function Community() {
   const [allworks, setAllworks] = useState([]);
   useEffect(() => {
-    Firebase.getAllworks().then((data) => setAllworks(data));
+    Firebase.getFollowingWorks(userID).then((data) => setAllworks(data));
   }, []);
 
   return (
