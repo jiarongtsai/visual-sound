@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
-import Header from "../components/Header";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
@@ -24,7 +23,6 @@ export default function Community() {
 
   return (
     <>
-      <Header />
       {allworks.map((work, i) => {
         return (
           <div

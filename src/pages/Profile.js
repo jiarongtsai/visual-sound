@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
-import Header from "../components/Header";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 console.clear();
@@ -24,7 +23,6 @@ export default function Profile() {
 
   return (
     <>
-      <Header />
       <div>
         <Img src={profile.user_thumbnail} />
         <p>{profile.user_name}</p>

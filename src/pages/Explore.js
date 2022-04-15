@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { Firebase } from "../utils/firebase";
-import Header from "../components/Header";
 export default function Explore() {
   const [exploreworks, setExploreworks] = useState([]);
   useEffect(() => {
@@ -14,7 +13,6 @@ export default function Explore() {
 
   return (
     <>
-      <Header />
       <div>Explore</div>
       <input />
       <button>Search</button>
