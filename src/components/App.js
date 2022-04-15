@@ -4,10 +4,12 @@ import Main from "../pages/Main";
 import Profile from "../pages/Profile";
 import Community from "../pages/Community";
 import Explore from "../pages/Explore";
+import Header from "./Header";
 
 function App() {
   return (
     <>
+      <Header />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="profile" element={<Profile />} />
