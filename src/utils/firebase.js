@@ -5,6 +5,8 @@ import {
   getDocs,
   doc,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -53,6 +55,16 @@ const Firebase = {
       id: id,
       ...docSnap.data(),
     };
+  },
+  async getUserWorks(id) {
+    const queryByUser = query(
+      collection(this.db(), "works"),
+      where("author_id", "==", id)
+    );
+    const querySnapshot = await getDocs(queryByUser);
+    const userWorks = querySnapshot.docs.map((doc) => doc.data());
+
+    return userWorks;
   },
 };
 
