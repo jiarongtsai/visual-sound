@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
+import WorkModal from "../components/WorkModal";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -19,16 +20,21 @@ const Div = styled.div`
 
 export default function Community() {
   const [allworks, setAllworks] = useState([]);
+  const [workModalID, setWorkModalID] = useState("");
   useEffect(() => {
     Firebase.getFollowingWorks(userID).then((data) => setAllworks(data));
   }, []);
-
   return (
     <>
-      {allworks.map((work, i) => {
+      {workModalID ? (
+        <WorkModal workModalID={workModalID} setWorkModalID={setWorkModalID} />
+      ) : (
+        ""
+      )}
+      {allworks.map((work) => {
         return (
           <div
-            key={i}
+            key={work.id}
             style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
           >
             <Div>
@@ -69,7 +75,10 @@ export default function Community() {
                     );
                   })}
               </>
-              <a href="">{`view all ${work.comments_count} comments`}</a>
+              <a
+                style={{ cursor: "pointer" }}
+                onClick={() => setWorkModalID(work.id)}
+              >{`view all ${work.comments_count} comments`}</a>
             </div>
             <>
               <input name="content" />

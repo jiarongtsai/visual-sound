@@ -9,6 +9,7 @@ import {
   where,
   orderBy,
   limit,
+  onSnapshot,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -40,6 +41,7 @@ const Firebase = {
       snapShot.docs.map(async (item) => {
         const userInfo = await this.getUserBasicInfo(item.data().author_id);
         return {
+          id: item.id,
           ...item.data(),
           ...userInfo,
         };
@@ -66,6 +68,7 @@ const Firebase = {
       snapShot.docs.map(async (item) => {
         const userInfo = await this.getUserBasicInfo(item.data().author_id);
         return {
+          id: item.id,
           ...item.data(),
           ...userInfo,
         };
@@ -78,7 +81,6 @@ const Firebase = {
     const docSnap = await getDoc(docRef);
 
     return {
-      id: id,
       author_name: docSnap.data().user_name,
       author_thumbnail: docSnap.data().user_thumbnail,
     };
@@ -87,10 +89,7 @@ const Firebase = {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
 
-    return {
-      id: id,
-      ...docSnap.data(),
-    };
+    return docSnap.data();
   },
   async getUserWorks(id) {
     const queryByUser = query(
@@ -103,6 +102,33 @@ const Firebase = {
 
     return userWorks;
   },
+  async getWork(id) {
+    const docRef = doc(this.db(), "works", id);
+    const docSnap = await getDoc(docRef);
+    const authorInfo = await this.getUserBasicInfo(docSnap.data().author_id);
+
+    return {
+      ...docSnap.data(),
+      ...authorInfo,
+    };
+  },
+  getCommentSnapshot(id) {
+    const docsRef = collection(this.db(), `works/${id}/comments`);
+    const docsSnap = onSnapshot(docsRef, async (snapshot) => {
+      const result = await Promise.all(
+        snapshot.docs.map(async (item) => {
+          const authorInfo = await this.getUserBasicInfo(item.data().author_id);
+          return {
+            ...item.data(),
+            ...authorInfo,
+          };
+        })
+      );
+      console.log(result);
+    });
+  },
 };
+
+Firebase.getCommentSnapshot("EwXrArvblksIkVxZ4jSf");
 
 export { Firebase };

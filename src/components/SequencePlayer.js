@@ -58,6 +58,7 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
   const [tinkEffect, setTinkEffect] = useState(false);
 
   function transformStoredSequence(storedData) {
+    if (!storedData) return;
     const storedSequence = JSON.parse(storedData);
     for (let i = 0; i < storedSequence.length; i++) {
       for (let j = 0; j < storedSequence[i].length; j++) {
@@ -173,6 +174,8 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
     enter: { x: 200, y: 50, opacity: 0.8 },
     leave: { x: 300, y: 500, opacity: 0 },
   });
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const timeOutspeed = ((-40 * (bpm - 60)) / 9 + 1000).toFixed(0);

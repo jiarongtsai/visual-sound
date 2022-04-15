@@ -16,6 +16,7 @@ export default function Profile() {
   const [userWorks, setUserWorks] = useState([]);
   useEffect(() => {
     Firebase.getProfile(userID).then((data) => setProfile(data));
+
     Firebase.getUserWorks(userID).then((data) => {
       setUserWorks(data);
     });
