@@ -151,6 +151,26 @@ const Firebase = {
       created_time: Timestamp.fromDate(new Date(Date.now())),
     });
   },
+  async searchWorks(term) {
+    const queryCondition = query(
+      this.worksRef(),
+      where("tags", "array-contains", term),
+      orderBy("created_time", "desc"),
+      limit(20)
+    );
+    const snapshot = await getDocs(queryCondition);
+    const result = Promise.all(
+      snapshot.docs.map(async (item) => {
+        const authorInfo = await this.getUserBasicInfo(item.data().author_id);
+        return {
+          id: item.id,
+          ...item.data(),
+          ...authorInfo,
+        };
+      })
+    );
+    return result;
+  },
 };
 
 export { Firebase };
