@@ -1,7 +1,6 @@
 import { React, useState } from "react";
 import styled from "styled-components";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
-import db from "../utils/firebase-config";
+import { Firebase } from "../utils/firebase";
 
 console.clear();
 const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
@@ -95,21 +94,26 @@ export default function UploadModal({ setOpenModal, sequenceJSON, bpm }) {
     setTags(tags.filter((tag) => tag != value));
   }
 
-  async function uploadtoFirebase() {
+  function uploadtoFirebase() {
     const data = {
       author_id: UserID,
       description: inputs.description,
       comments_count: 0,
       image_url: "",
       video_url: "",
-      created_time: Timestamp.fromDate(new Date(Date.now())),
       tags: tags,
       collected_by: [],
       liked_by: [],
       sheetmusic: sequenceJSON,
       bpm: bpm,
     };
-    await addDoc(collection(db, "works"), data);
+    Firebase.addNewWork(data).then(() => {
+      setInputs({});
+      setTags([]);
+      setTagInput("");
+      setOpenModal(false);
+      alert("updated");
+    });
   }
 
   return (

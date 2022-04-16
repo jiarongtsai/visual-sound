@@ -175,8 +175,6 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
     leave: { x: 300, y: 500, opacity: 0 },
   });
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     const timeOutspeed = ((-40 * (bpm - 60)) / 9 + 1000).toFixed(0);
     const timer = setTimeout(() => {

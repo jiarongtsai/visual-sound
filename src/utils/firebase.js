@@ -9,8 +9,6 @@ import {
   where,
   orderBy,
   limit,
-  onSnapshot,
-  setDoc,
   addDoc,
   Timestamp,
   updateDoc,
@@ -146,6 +144,12 @@ const Firebase = {
       })
     );
     return latestComments;
+  },
+  async addNewWork(data) {
+    await addDoc(this.worksRef(), {
+      ...data,
+      created_time: Timestamp.fromDate(new Date(Date.now())),
+    });
   },
 };
 

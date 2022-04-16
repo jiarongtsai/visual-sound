@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
+import { PlayerProvider } from "../components/PlayerProvider";
+import SequencePlayer from "../components/SequencePlayer";
+
 console.clear();
 const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -19,8 +22,17 @@ const ModalCover = styled.div`
 
 const ModalContent = styled.div`
   background-color: white;
-  width: 70vw;
+  width: 80vw;
   height: 70vh;
+  display: flex;
+`;
+
+const ModalContentVisual = styled.div`
+  flex-basis: 60%;
+`;
+
+const ModalContentText = styled.div`
+  flex-basis: 30%;
   overflow: scroll;
 `;
 
@@ -29,9 +41,10 @@ const ModalText = styled.p`
 `;
 
 const ModalCloseButton = styled.button`
+  flex-basis: 5%;
   background-color: red;
-  width: 10vw;
-  height: 5vh;
+  height: 2rem;
+  cursor: pointer;
 `;
 
 const TagsContainer = styled.div`
@@ -62,7 +75,6 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
 
   useEffect(() => {
     Firebase.getWork(workModalID).then((data) => setWork(data));
-    //snapshot
     const queryCondition = query(
       collection(Firebase.db(), `works/${workModalID}/comments`),
       orderBy("created_time")
@@ -88,8 +100,6 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
   }, []);
 
   useEffect(() => {
-    // fixme
-
     endRef.current?.scrollIntoView({
       behavior: "smooth",
     });
@@ -105,53 +115,53 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
   return (
     <ModalCover>
       <ModalContent>
-        {/* <PlayerProvider>
-          {({ soundPlayer }) => {
-            return (
-              <SequencePlayer
-                player={soundPlayer}
-                sheetmusic={work.sheetmusic}
-                bpm={work.bpm}
-              />
-            );
-          }}
-        </PlayerProvider> */}
-        <ModalText>{work.description}</ModalText>
-        <TagsContainer>
-          {work.tags?.map((tag) => (
-            <TagWrapper key={tag}>{tag}</TagWrapper>
-          ))}
-        </TagsContainer>
-        <>
-          <div>
-            {comments.map((comment) => {
+        <ModalContentVisual>
+          <PlayerProvider>
+            {({ soundPlayer }) => {
               return (
-                <div key={comment.id}>
-                  <Img src={comment.author_thumbnail} />
-                  <p>{comment.author_name}</p>
-                  <p>{comment.content}</p>
-                </div>
+                <SequencePlayer
+                  player={soundPlayer}
+                  sheetmusic={work.sheetmusic}
+                  bpm={work.bpm}
+                />
               );
-            })}
-          </div>
-          <input
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
             }}
-          />
-          <button onClick={sendComment}>send</button>
-        </>
-        <div>
-          <ModalCloseButton
-            onClick={() => {
-              setWorkModalID("");
-            }}
-          >
-            close
-          </ModalCloseButton>
-        </div>
-        <div ref={endRef}></div>
+          </PlayerProvider>
+          <ModalText>{work.description}</ModalText>
+          <TagsContainer>
+            {work.tags?.map((tag) => (
+              <TagWrapper key={tag}>{tag}</TagWrapper>
+            ))}
+          </TagsContainer>
+        </ModalContentVisual>
+        <ModalContentText>
+          {comments.map((comment) => {
+            return (
+              <div key={comment.id}>
+                <Img src={comment.author_thumbnail} />
+                <p>{comment.author_name}</p>
+                <p>{comment.content}</p>
+              </div>
+            );
+          })}
+          <>
+            <input
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+              }}
+            />
+            <button onClick={sendComment}>send</button>
+          </>
+          <div ref={endRef}></div>
+        </ModalContentText>
+        <ModalCloseButton
+          onClick={() => {
+            setWorkModalID("");
+          }}
+        >
+          X
+        </ModalCloseButton>
       </ModalContent>
     </ModalCover>
   );
