@@ -4,7 +4,15 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import WorkModal from "../components/WorkModal";
-import { onSnapshot, query, orderBy, where, limit } from "firebase/firestore";
+import {
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  limit,
+  getDocs,
+  collection,
+} from "firebase/firestore";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -23,7 +31,6 @@ export default function Community() {
   const [allworks, setAllworks] = useState([]);
   const [workModalID, setWorkModalID] = useState("");
   useEffect(() => {
-    // Firebase.getFollowingWorks(userID).then((data) => setAllworks(data));
     (async () => {
       const followingList = await Firebase.getFollowingList(userID);
       const queryCondition = query(
@@ -38,6 +45,16 @@ export default function Community() {
             const authorInfo = await Firebase.getUserBasicInfo(
               item.data().author_id
             );
+            const queryComment = query(
+              collection(Firebase.db(), `works/${item.id}/comments`),
+              orderBy("created_time", "desc"),
+              limit(2)
+            );
+            const latestComments = await getDocs(queryComment);
+            const result = latestComments.docs.map((doc) => {
+              return doc.data();
+            });
+            console.log(result);
             return {
               id: item.id,
               ...item.data(),
@@ -91,7 +108,7 @@ export default function Community() {
               <p>{work.description}</p>
             </Div>
             <div>
-              <>
+              <div>
                 {work.commentsLatest &&
                   work.commentsLatest.map((comment) => {
                     return (
@@ -103,16 +120,12 @@ export default function Community() {
                       </div>
                     );
                   })}
-              </>
+              </div>
               <a
                 style={{ cursor: "pointer" }}
                 onClick={() => setWorkModalID(work.id)}
               >{`view all ${work.comments_count} comments`}</a>
             </div>
-            <>
-              <input name="content" />
-              <button>send</button>
-            </>
             <p>{work.created_time.toDate().toDateString()}</p>
           </div>
         );
