@@ -44,6 +44,18 @@ const Triangle = styled(animated.div)`
 //sequence
 const steps = 16;
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
+const initialCellState = { triggered: false, activated: false };
+const initialState = [
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+  new Array(16).fill(initialCellState),
+];
 
 export default function SequencePlayer({ player, sheetmusic, bpm }) {
   const [playing, setPlaying] = useState(false);
@@ -57,6 +69,11 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
+  const [sequence, setSequence] = useState(
+    transformStoredSequence(sheetmusic) || initialState
+  );
+  const [currentStep, setCurrentStep] = useState(0);
+
   function transformStoredSequence(storedData) {
     if (!storedData) return;
     const storedSequence = JSON.parse(storedData);
@@ -68,8 +85,6 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
     }
     return storedSequence;
   }
-  const [sequence, setSequence] = useState(transformStoredSequence(sheetmusic));
-  const [currentStep, setCurrentStep] = useState(0);
 
   const nextStep = (time) => {
     const sequenceCopy = [...sequence];

@@ -68,13 +68,18 @@ const Img = styled.img`
 `;
 
 export default function WorkModal({ workModalID, setWorkModalID }) {
-  const [work, setWork] = useState({});
+  const [work, setWork] = useState([]);
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const endRef = useRef(null);
 
   useEffect(() => {
-    Firebase.getWork(workModalID).then((data) => setWork(data));
+    Firebase.getWork(workModalID).then((data) => {
+      setWork([data]);
+    });
+  }, []);
+
+  useEffect(() => {
     const queryCondition = query(
       collection(Firebase.db(), `works/${workModalID}/comments`),
       orderBy("created_time")
@@ -116,23 +121,29 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
     <ModalCover>
       <ModalContent>
         <ModalContentVisual>
-          <PlayerProvider>
-            {({ soundPlayer }) => {
-              return (
-                <SequencePlayer
-                  player={soundPlayer}
-                  sheetmusic={work.sheetmusic}
-                  bpm={work.bpm}
-                />
-              );
-            }}
-          </PlayerProvider>
-          <ModalText>{work.description}</ModalText>
-          <TagsContainer>
-            {work.tags?.map((tag) => (
-              <TagWrapper key={tag}>{tag}</TagWrapper>
-            ))}
-          </TagsContainer>
+          {work.map((item) => {
+            return (
+              <>
+                <PlayerProvider>
+                  {({ soundPlayer }) => {
+                    return (
+                      <SequencePlayer
+                        player={soundPlayer}
+                        sheetmusic={item.sheetmusic}
+                        bpm={item.bpm}
+                      />
+                    );
+                  }}
+                </PlayerProvider>
+                <ModalText>{item.description}</ModalText>
+                <TagsContainer>
+                  {item.tags?.map((tag) => (
+                    <TagWrapper key={tag}>{tag}</TagWrapper>
+                  ))}
+                </TagsContainer>
+              </>
+            );
+          })}
         </ModalContentVisual>
         <ModalContentText>
           {comments.map((comment) => {
