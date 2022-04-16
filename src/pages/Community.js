@@ -4,15 +4,6 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import WorkModal from "../components/WorkModal";
-import {
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  limit,
-  getDocs,
-  collection,
-} from "firebase/firestore";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -31,44 +22,9 @@ export default function Community() {
   const [allworks, setAllworks] = useState([]);
   const [workModalID, setWorkModalID] = useState("");
   useEffect(() => {
-    (async () => {
-      const followingList = await Firebase.getFollowingList(userID);
-      const queryCondition = query(
-        Firebase.worksRef(),
-        where("author_id", "in", followingList),
-        orderBy("created_time", "desc"),
-        limit(20)
-      );
-      const docsSnap = onSnapshot(queryCondition, async (snapshot) => {
-        const result = await Promise.all(
-          snapshot.docs.map(async (item) => {
-            const authorInfo = await Firebase.getUserBasicInfo(
-              item.data().author_id
-            );
-            const queryComment = query(
-              collection(Firebase.db(), `works/${item.id}/comments`),
-              orderBy("created_time", "desc"),
-              limit(2)
-            );
-            const latestComments = await getDocs(queryComment);
-            const result = latestComments.docs.map((doc) => {
-              return doc.data();
-            });
-            console.log(result);
-            return {
-              id: item.id,
-              ...item.data(),
-              ...authorInfo,
-            };
-          })
-        );
-        setAllworks(result);
-      });
-    })();
-
-    return () => {
-      // docsSnap();
-    };
+    Firebase.getFollowingWorks(userID).then((data) => {
+      setAllworks(data);
+    });
   }, []);
   return (
     <>
@@ -109,17 +65,16 @@ export default function Community() {
             </Div>
             <div>
               <div>
-                {work.commentsLatest &&
-                  work.commentsLatest.map((comment) => {
-                    return (
-                      <div key={work.id}>
-                        <span>
-                          <strong>{comment.name}</strong>
-                        </span>
-                        <span>{comment.content}</span>
-                      </div>
-                    );
-                  })}
+                {work.latestComments?.map((comment) => {
+                  return (
+                    <div key={comment.id}>
+                      <span>
+                        <strong>{comment.author_name}</strong>
+                      </span>
+                      <span>{comment.content}</span>
+                    </div>
+                  );
+                })}
               </div>
               <a
                 style={{ cursor: "pointer" }}

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
-import { scryRenderedComponentsWithType } from "react-dom/test-utils";
 console.clear();
 const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 

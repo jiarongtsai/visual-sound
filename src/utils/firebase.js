@@ -71,10 +71,12 @@ const Firebase = {
     const allworks = await Promise.all(
       snapShot.docs.map(async (item) => {
         const userInfo = await this.getUserBasicInfo(item.data().author_id);
+        const latestComments = await this.getLatestComments(item.id);
         return {
           id: item.id,
           ...item.data(),
           ...userInfo,
+          latestComments: latestComments,
         };
       })
     );
@@ -126,22 +128,25 @@ const Firebase = {
       comments_count: count,
     });
   },
-  getCommentSnapshot(id) {
-    const docsRef = collection(this.db(), `works/${id}/comments`);
-    const docsSnap = onSnapshot(docsRef, async (snapshot) => {
-      const result = await Promise.all(
-        snapshot.docs.map(async (item) => {
-          const authorInfo = await this.getUserBasicInfo(item.data().author_id);
-          return {
-            ...item.data(),
-            ...authorInfo,
-          };
-        })
-      );
-    });
+  async getLatestComments(id) {
+    const queryCondition = query(
+      collection(this.db(), `works/${id}/comments`),
+      orderBy("created_time", "desc"),
+      limit(2)
+    );
+    const querySnapshot = await getDocs(queryCondition);
+    const latestComments = await Promise.all(
+      querySnapshot.docs.map(async (item) => {
+        const authorInfo = await this.getUserBasicInfo(item.data().author_id);
+        return {
+          id: item.id,
+          ...item.data(),
+          ...authorInfo,
+        };
+      })
+    );
+    return latestComments;
   },
 };
-
-Firebase.getCommentSnapshot("EwXrArvblksIkVxZ4jSf");
 
 export { Firebase };
