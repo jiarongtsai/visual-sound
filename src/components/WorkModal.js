@@ -68,7 +68,7 @@ const Img = styled.img`
 `;
 
 export default function WorkModal({ workModalID, setWorkModalID }) {
-  const [work, setWork] = useState([]);
+  const [work, setWork] = useState({});
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
@@ -79,7 +79,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
     Firebase.getWork(workModalID).then((data) => {
       setLike(data.liked_by.includes(userID));
       setCollect(data.collected_by.includes(userID));
-      setWork([data]);
+      setWork(data);
     });
   }, []);
 
@@ -150,38 +150,32 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
     <ModalCover>
       <ModalContent>
         <ModalContentVisual>
-          {work.map((item) => {
-            return (
-              <div key={item.id}>
-                <PlayerProvider>
-                  {({ soundPlayer }) => {
-                    return (
-                      <SequencePlayer
-                        player={soundPlayer}
-                        sheetmusic={item.sheetmusic}
-                        bpm={item.bpm}
-                      />
-                    );
-                  }}
-                </PlayerProvider>
-                <ModalText>{item.description}</ModalText>
-                <TagsContainer>
-                  {item.tags?.map((tag) => (
-                    <TagWrapper key={tag}>{tag}</TagWrapper>
-                  ))}
-                </TagsContainer>
+          <div key={work.id}>
+            <PlayerProvider>
+              {({ soundPlayer }) => {
+                return (
+                  <SequencePlayer
+                    player={soundPlayer}
+                    sheetmusic={work.sheetmusic}
+                    bpm={work.bpm}
+                  />
+                );
+              }}
+            </PlayerProvider>
+            <ModalText>{work.description}</ModalText>
+            <TagsContainer>
+              {work.tags?.map((tag) => (
+                <TagWrapper key={tag}>{tag}</TagWrapper>
+              ))}
+            </TagsContainer>
 
-                <button onClick={() => handleLike(item.id, item.liked_by)}>
-                  {`${like ? "liked" : "like"}`}
-                </button>
-                <button
-                  onClick={() => handleCollect(item.id, item.collected_by)}
-                >
-                  {`${collect ? "collected" : "collect"}`}
-                </button>
-              </div>
-            );
-          })}
+            <button onClick={() => handleLike(work.id, work.liked_by)}>
+              {`${like ? "liked" : "like"}`}
+            </button>
+            <button onClick={() => handleCollect(work.id, work.collected_by)}>
+              {`${collect ? "collected" : "collect"}`}
+            </button>
+          </div>
         </ModalContentVisual>
         <ModalContentText>
           {comments.map((comment) => {
