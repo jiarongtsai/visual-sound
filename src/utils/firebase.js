@@ -102,7 +102,12 @@ const Firebase = {
       where("author_id", "==", id)
     );
     const querySnapshot = await getDocs(queryByUser);
-    const userWorks = querySnapshot.docs.map((doc) => doc.data());
+    const userWorks = querySnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
 
     return userWorks;
   },
