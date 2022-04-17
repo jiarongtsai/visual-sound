@@ -6,7 +6,7 @@ import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
 console.clear();
-const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 const ModalCover = styled.div`
   top: 0;
@@ -71,10 +71,14 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
   const [work, setWork] = useState([]);
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
+  const [like, setLike] = useState(false);
+  const [collect, setCollect] = useState(false);
   const endRef = useRef(null);
 
   useEffect(() => {
     Firebase.getWork(workModalID).then((data) => {
+      setLike(data.liked_by.includes(userID));
+      setCollect(data.collected_by.includes(userID));
       setWork([data]);
     });
   }, []);
@@ -112,8 +116,33 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
 
   function sendComment() {
     const count = comments.length + 1 || 0;
-    Firebase.addComment(UserID, workModalID, input, count).then(() => {
+    Firebase.addComment(userID, workModalID, input, count).then(() => {
       setInput("");
+    });
+  }
+
+  function handleLike(id, list) {
+    if (!like) {
+      Firebase.likeWork(userID, id, list).then(() => {
+        setLike(!like);
+      });
+      return;
+    }
+
+    Firebase.unlikeWork(userID, id, list).then(() => {
+      setLike(!like);
+    });
+  }
+
+  function handleCollect(id, list) {
+    if (!collect) {
+      Firebase.collectWork(userID, id, list).then(() => {
+        setCollect(!collect);
+        return;
+      });
+    }
+    Firebase.uncollectWork(userID, id, list).then(() => {
+      setCollect(!collect);
     });
   }
 
@@ -123,7 +152,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
         <ModalContentVisual>
           {work.map((item) => {
             return (
-              <>
+              <div key={item.id}>
                 <PlayerProvider>
                   {({ soundPlayer }) => {
                     return (
@@ -141,7 +170,16 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
                     <TagWrapper key={tag}>{tag}</TagWrapper>
                   ))}
                 </TagsContainer>
-              </>
+
+                <button onClick={() => handleLike(item.id, item.liked_by)}>
+                  {`${like ? "liked" : "like"}`}
+                </button>
+                <button
+                  onClick={() => handleCollect(item.id, item.collected_by)}
+                >
+                  {`${collect ? "collected" : "collect"}`}
+                </button>
+              </div>
             );
           })}
         </ModalContentVisual>
