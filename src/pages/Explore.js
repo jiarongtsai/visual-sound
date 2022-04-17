@@ -8,8 +8,13 @@ export default function Explore() {
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
   const [workModalID, setWorkModalID] = useState("");
+  const [lastVisible, setLastVisible] = useState(null);
+
   useEffect(() => {
-    Firebase.getAllworks().then((data) => setExploreworks(data));
+    Firebase.getAllworks().then(({ allworks, lastVisibleWork }) => {
+      setExploreworks(allworks);
+      setLastVisible(lastVisibleWork);
+    });
   }, []);
 
   function handleSearch() {
@@ -17,6 +22,19 @@ export default function Explore() {
       setExploreworks(data);
       setInput("");
     });
+  }
+
+  function handleLoadingData(lastVisibleData) {
+    Firebase.LoadingNextWorks(lastVisibleData).then(
+      ({ allworks, lastVisibleWork }) => {
+        setExploreworks([...exploreworks, ...allworks]);
+        if (allworks.length < 5) {
+          setLastVisible(null);
+          return;
+        }
+        setLastVisible(lastVisibleWork);
+      }
+    );
   }
 
   return (
@@ -48,6 +66,9 @@ export default function Explore() {
           </div>
         );
       })}
+      <button onClick={() => handleLoadingData(lastVisible)}>{`${
+        lastVisible ? "Load More" : "No More Data"
+      }`}</button>
     </>
   );
 }

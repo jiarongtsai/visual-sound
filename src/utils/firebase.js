@@ -13,6 +13,7 @@ import {
   Timestamp,
   updateDoc,
   onSnapshot,
+  startAfter,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -37,8 +38,9 @@ const Firebase = {
     const queryCondition = query(
       this.worksRef(),
       orderBy("created_time", "desc"),
-      limit(20)
+      limit(5)
     );
+
     const snapShot = await getDocs(queryCondition);
     const allworks = await Promise.all(
       snapShot.docs.map(async (item) => {
@@ -50,7 +52,30 @@ const Firebase = {
         };
       })
     );
-    return allworks;
+    const lastVisibleWork = snapShot.docs[snapShot.docs.length - 1];
+    return { allworks, lastVisibleWork };
+  },
+  async LoadingNextWorks(lastVisible) {
+    const queryCondition = query(
+      this.worksRef(),
+      orderBy("created_time", "desc"),
+      startAfter(lastVisible),
+      limit(5)
+    );
+
+    const snapShot = await getDocs(queryCondition);
+    const allworks = await Promise.all(
+      snapShot.docs.map(async (item) => {
+        const userInfo = await this.getUserBasicInfo(item.data().author_id);
+        return {
+          id: item.id,
+          ...item.data(),
+          ...userInfo,
+        };
+      })
+    );
+    const lastVisibleWork = snapShot.docs[snapShot.docs.length - 1];
+    return { allworks, lastVisibleWork };
   },
   async getFollowingList(id) {
     const docRef = doc(this.db(), "users", id);
