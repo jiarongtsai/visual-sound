@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
@@ -8,13 +8,37 @@ export default function Explore() {
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
   const [workModalID, setWorkModalID] = useState("");
-  const [lastVisible, setLastVisible] = useState(null);
+  const endofPageRef = useRef();
+  const pagingRef = useRef(null);
+  let isFetching = true;
 
   useEffect(() => {
     Firebase.getAllworks().then(({ allworks, lastVisibleWork }) => {
       setExploreworks(allworks);
-      setLastVisible(lastVisibleWork);
+      pagingRef.current = lastVisibleWork;
+      isFetching = false;
     });
+  }, []);
+
+  useEffect(() => {
+    const pagingObserver = new IntersectionObserver((entries) => {
+      if (entries[0].intersectionRatio <= 0) return;
+      if (isFetching) return;
+      if (!pagingRef.current) return;
+      isFetching = true;
+      Firebase.LoadingNextWorks(pagingRef.current).then(
+        ({ allworks, lastVisibleWork }) => {
+          setExploreworks((pre) => [...pre, ...allworks]);
+          if (allworks.length < 5) {
+            pagingRef.current = null;
+            return;
+          }
+          pagingRef.current = lastVisibleWork;
+          isFetching = false;
+        }
+      );
+    });
+    pagingObserver.observe(endofPageRef.current);
   }, []);
 
   function handleSearch() {
@@ -22,19 +46,6 @@ export default function Explore() {
       setExploreworks(data);
       setInput("");
     });
-  }
-
-  function handleLoadingData(lastVisibleData) {
-    Firebase.LoadingNextWorks(lastVisibleData).then(
-      ({ allworks, lastVisibleWork }) => {
-        setExploreworks([...exploreworks, ...allworks]);
-        if (allworks.length < 5) {
-          setLastVisible(null);
-          return;
-        }
-        setLastVisible(lastVisibleWork);
-      }
-    );
   }
 
   return (
@@ -66,9 +77,7 @@ export default function Explore() {
           </div>
         );
       })}
-      <button onClick={() => handleLoadingData(lastVisible)}>{`${
-        lastVisible ? "Load More" : "No More Data"
-      }`}</button>
+      <div ref={endofPageRef}></div>
     </>
   );
 }
