@@ -197,7 +197,5 @@ const Firebase = {
     return result;
   },
 };
-const uid = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
-const id = "EwXrArvblksIkVxZ4jSf";
 
 export { Firebase };
