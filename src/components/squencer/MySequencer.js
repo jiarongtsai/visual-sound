@@ -67,6 +67,7 @@ const Div = styled.div`
 `;
 
 const Sequencer = ({ player }) => {
+  const [isUploaded, setIsUploaded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
 
@@ -79,17 +80,6 @@ const Sequencer = ({ player }) => {
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
-
-  function transformStoredSequence(storedData) {
-    const storedSequence = JSON.parse(storedData);
-    for (let i = 0; i < storedSequence.length; i++) {
-      for (let j = 0; j < storedSequence[i].length; j++) {
-        const { activated } = storedSequence[i][j];
-        storedSequence[i][j] = { activated, triggered: false };
-      }
-    }
-    return storedSequence;
-  }
 
   const [bpm, setBpm] = useState(120);
   const [sequence, setSequence] = useState(initialState);
@@ -341,6 +331,24 @@ const Sequencer = ({ player }) => {
     };
   }, [currentStep, playing]);
 
+  useEffect(() => {
+    if (isUploaded) {
+      handleCleanUp();
+      setBpm(120);
+      setCurrentStep(0);
+      setBoomEffect(false);
+      setClapEffect(false);
+      setHihatEffect(false);
+      setKickEffect(false);
+      setOpenhatEffect(false);
+      setRideEffect(false);
+      setSnareEffect(false);
+      setTomEffect(false);
+      setTinkEffect(false);
+      setIsUploaded(false);
+    }
+  }, [isUploaded]);
+
   function handleBacktoHead() {
     setCurrentStep(0);
     if (!playing) nextStep(0);
@@ -374,6 +382,7 @@ const Sequencer = ({ player }) => {
           setOpenModal={setOpenModal}
           sequenceJSON={handleSequenceData(sequence)}
           bpm={bpm}
+          setIsUploaded={setIsUploaded}
         />
       ) : (
         ""
@@ -410,7 +419,9 @@ const Sequencer = ({ player }) => {
       </Wrapper>
       <Div>
         <button onClick={handleBacktoHead}>to head</button>
-        <button onClick={() => setPlaying(!playing)}>play/pause</button>
+        <button onClick={() => setPlaying(!playing)}>{`${
+          playing ? "Pause" : "Play"
+        }`}</button>
         <button onClick={handleCleanUp}>clean</button>
       </Div>
       <Div>

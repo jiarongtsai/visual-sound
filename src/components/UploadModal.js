@@ -69,7 +69,12 @@ const TagDelete = styled.span`
   cursor: pointer;
 `;
 
-export default function UploadModal({ setOpenModal, sequenceJSON, bpm }) {
+export default function UploadModal({
+  setOpenModal,
+  sequenceJSON,
+  bpm,
+  setIsUploaded,
+}) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -111,7 +116,7 @@ export default function UploadModal({ setOpenModal, sequenceJSON, bpm }) {
       setTags([]);
       setTagInput("");
       setOpenModal(false);
-      alert("updated");
+      setIsUploaded(true);
     });
   }
 
