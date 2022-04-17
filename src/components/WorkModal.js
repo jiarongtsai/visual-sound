@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
-import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
-console.clear();
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 const ModalCover = styled.div`
@@ -84,27 +82,26 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
   }, []);
 
   useEffect(() => {
-    const queryCondition = query(
-      collection(Firebase.db(), `works/${workModalID}/comments`),
-      orderBy("created_time")
+    const onSnapshotComments = Firebase.onSnapshotComments(
+      workModalID,
+      async (snapshot) => {
+        const result = await Promise.all(
+          snapshot.docs.map(async (item) => {
+            const authorInfo = await Firebase.getUserBasicInfo(
+              item.data().author_id
+            );
+            return {
+              id: item.id,
+              ...item.data(),
+              ...authorInfo,
+            };
+          })
+        );
+        setComments(result);
+      }
     );
-    const docsSnap = onSnapshot(queryCondition, async (snapshot) => {
-      const result = await Promise.all(
-        snapshot.docs.map(async (item) => {
-          const authorInfo = await Firebase.getUserBasicInfo(
-            item.data().author_id
-          );
-          return {
-            id: item.id,
-            ...item.data(),
-            ...authorInfo,
-          };
-        })
-      );
-      setComments(result);
-    });
     return () => {
-      docsSnap();
+      onSnapshotComments();
     };
   }, []);
 

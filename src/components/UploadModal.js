@@ -2,7 +2,6 @@ import { React, useState } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 
-console.clear();
 const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 const Div = styled.div`

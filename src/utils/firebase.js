@@ -12,6 +12,7 @@ import {
   addDoc,
   Timestamp,
   updateDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -214,6 +215,13 @@ const Firebase = {
       })
     );
     return result;
+  },
+  onSnapshotComments(id, callback) {
+    const queryCondition = query(
+      collection(Firebase.db(), `works/${id}/comments`),
+      orderBy("created_time")
+    );
+    return onSnapshot(queryCondition, callback);
   },
 };
 
