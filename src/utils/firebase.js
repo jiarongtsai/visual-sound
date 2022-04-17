@@ -118,7 +118,6 @@ const Firebase = {
       where("collected_by", "array-contains", uid)
     );
     const snapshot = await getDocs(queryCondition);
-    console.log(snapshot);
     const collectedWorks = snapshot.docs.map((doc) => {
       return {
         id: doc.id,
@@ -155,12 +154,10 @@ const Firebase = {
       collected_by: [...currentCollectedByList, uid],
     });
   },
-  async uncollectWork(uid, id, currentcollectedByList) {
-    const newcollectedByList = currentcollectedByList.filter(
-      (id) => id !== uid
-    );
+  async uncollectWork(uid, id, currentCollectedByList) {
+    const newCollectByList = currentCollectedByList.filter((id) => id !== uid);
     await updateDoc(doc(this.db(), "works", id), {
-      collected_by: newcollectedByList,
+      collected_by: newCollectByList,
     });
   },
   async addComment(uid, id, content, count) {

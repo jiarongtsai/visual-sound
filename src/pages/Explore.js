@@ -18,9 +18,6 @@ export default function Explore() {
       setInput("");
     });
   }
-  function handleClickWorkModal(id) {
-    setWorkModalID(id);
-  }
 
   return (
     <>

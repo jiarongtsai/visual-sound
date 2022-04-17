@@ -65,8 +65,8 @@ export default function Community() {
         const newCollectList = [...collect];
         newCollectList[i] = !newCollectList[i];
         setCollect(newCollectList);
-        return;
       });
+      return;
     }
     Firebase.uncollectWork(userID, id, list).then(() => {
       const newCollectList = [...collect];
