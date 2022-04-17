@@ -47,7 +47,7 @@ export default function Explore() {
               }}
             </PlayerProvider>
             <br />
-            <button onClick={() => handleClickWorkModal(work.id)}>more</button>
+            <button onClick={() => setWorkModalID(work.id)}>more</button>
           </div>
         );
       })}

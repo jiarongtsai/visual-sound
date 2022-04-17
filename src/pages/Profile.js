@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
+import WorkModal from "../components/WorkModal";
 console.clear();
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -22,8 +23,15 @@ export default function Profile() {
     });
   }, []);
 
+  const [workModalID, setWorkModalID] = useState("");
+
   return (
     <>
+      {workModalID ? (
+        <WorkModal workModalID={workModalID} setWorkModalID={setWorkModalID} />
+      ) : (
+        ""
+      )}
       <div>
         <Img src={profile.user_thumbnail} />
         <p>{profile.user_name}</p>
@@ -45,6 +53,8 @@ export default function Profile() {
                   );
                 }}
               </PlayerProvider>
+              <br />
+              <button onClick={() => setWorkModalID(work.id)}>more</button>
             </div>
           );
         })}
