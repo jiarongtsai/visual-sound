@@ -95,11 +95,11 @@ const Firebase = {
 
     return docSnap.data();
   },
-  async getUserWorks(id) {
+  async getUserWorks(uid) {
     const queryByUser = query(
       collection(this.db(), "works"),
       orderBy("created_time", "desc"),
-      where("author_id", "==", id)
+      where("author_id", "==", uid)
     );
     const querySnapshot = await getDocs(queryByUser);
     const userWorks = querySnapshot.docs.map((doc) => {
@@ -110,6 +110,23 @@ const Firebase = {
     });
 
     return userWorks;
+  },
+  async getUserCollection(uid) {
+    const queryCondition = query(
+      this.worksRef(),
+      orderBy("created_time", "desc"),
+      where("collected_by", "array-contains", uid)
+    );
+    const snapshot = await getDocs(queryCondition);
+    console.log(snapshot);
+    const collectedWorks = snapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data,
+      };
+    });
+
+    return collectedWorks;
   },
   async getWork(id) {
     const docRef = doc(this.db(), "works", id);

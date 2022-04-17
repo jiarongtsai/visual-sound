@@ -19,7 +19,7 @@ const Block = styled.div`
 export default function Profile() {
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);
-  const [collectedWorks, setcollecteWorks] = useState([]);
+  const [collectedWorks, setCollectedWorks] = useState([]);
   const [workModalID, setWorkModalID] = useState("");
   const [tab, setTab] = useState(0);
   //0: userWork, 1:collectedWork
@@ -28,6 +28,10 @@ export default function Profile() {
 
     Firebase.getUserWorks(userID).then((data) => {
       setUserWorks(data);
+    });
+
+    Firebase.getUserCollection(userID).then((data) => {
+      setCollectedWorks(data);
     });
   }, []);
 
@@ -73,7 +77,27 @@ export default function Profile() {
           );
         })}
       </Block>
-      <Block display={`${tab === 1 ? "initial" : "none"}`}>collection</Block>
+      <Block display={`${tab === 1 ? "initial" : "none"}`}>
+        {collectedWorks.map((work, i) => {
+          return (
+            <div key={i}>
+              <PlayerProvider>
+                {({ soundPlayer }) => {
+                  return (
+                    <SequencePlayer
+                      player={soundPlayer}
+                      sheetmusic={work.sheetmusic}
+                      bpm={work.bpm}
+                    />
+                  );
+                }}
+              </PlayerProvider>
+              <br />
+              <button onClick={() => setWorkModalID(work.id)}>more</button>
+            </div>
+          );
+        })}
+      </Block>
     </>
   );
 }
