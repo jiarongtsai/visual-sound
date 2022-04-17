@@ -133,14 +133,14 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
       setLike(!like);
     });
   }
-
   function handleCollect(id, list) {
     if (!collect) {
       Firebase.collectWork(userID, id, list).then(() => {
         setCollect(!collect);
-        return;
       });
+      return;
     }
+
     Firebase.uncollectWork(userID, id, list).then(() => {
       setCollect(!collect);
     });
