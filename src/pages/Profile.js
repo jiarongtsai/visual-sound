@@ -12,9 +12,17 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
+const Block = styled.div`
+  display: ${(props) => props.display};
+`;
+
 export default function Profile() {
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);
+  const [collectedWorks, setcollecteWorks] = useState([]);
+  const [workModalID, setWorkModalID] = useState("");
+  const [tab, setTab] = useState(0);
+  //0: userWork, 1:collectedWork
   useEffect(() => {
     Firebase.getProfile(userID).then((data) => setProfile(data));
 
@@ -22,8 +30,6 @@ export default function Profile() {
       setUserWorks(data);
     });
   }, []);
-
-  const [workModalID, setWorkModalID] = useState("");
 
   return (
     <>
@@ -38,7 +44,15 @@ export default function Profile() {
         <p>{profile.user_bio}</p>
       </div>
       <hr />
-      <div>
+      <ul style={{ display: "flex", justifyContent: "space-evenly" }}>
+        <li onClick={() => setTab(0)} style={{ cursor: "pointer" }}>
+          My Work
+        </li>
+        <li onClick={() => setTab(1)} style={{ cursor: "pointer" }}>
+          My Collection
+        </li>
+      </ul>
+      <Block display={`${tab === 0 ? "initial" : "none"}`}>
         {userWorks.map((work, i) => {
           return (
             <div key={i}>
@@ -58,7 +72,8 @@ export default function Profile() {
             </div>
           );
         })}
-      </div>
+      </Block>
+      <Block display={`${tab === 1 ? "initial" : "none"}`}>collection</Block>
     </>
   );
 }
