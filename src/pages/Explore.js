@@ -26,6 +26,7 @@ export default function Explore() {
       if (isFetching) return;
       if (!pagingRef.current) return;
       isFetching = true;
+
       Firebase.LoadingNextWorks(pagingRef.current).then(
         ({ allworks, lastVisibleWork }) => {
           setExploreworks((pre) => [...pre, ...allworks]);
@@ -34,15 +35,18 @@ export default function Explore() {
             return;
           }
           pagingRef.current = lastVisibleWork;
-          isFetching = false;
         }
       );
+
+      isFetching = false;
     });
     pagingObserver.observe(endofPageRef.current);
   }, []);
 
   function handleSearch() {
-    Firebase.searchWorks(input).then((data) => {
+    isFetching = true;
+    pagingRef.current = null;
+    Firebase.searchWorks(input.trim()).then((data) => {
       setExploreworks(data);
       setInput("");
     });
