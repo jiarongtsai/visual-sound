@@ -4,7 +4,6 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import WorkModal from "../components/WorkModal";
-console.clear();
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 const Img = styled.img`
