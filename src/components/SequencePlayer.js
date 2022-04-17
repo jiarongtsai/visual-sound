@@ -234,7 +234,9 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
           item ? <Triangle style={style} color="red" /> : ""
         )}
       </Wrapper>
-      <button onClick={() => setPlaying(!playing)}>Play/Pause</button>
+      <button onClick={() => setPlaying(!playing)}>{`${
+        playing ? "pause" : "play"
+      }`}</button>
     </>
   );
 }
