@@ -112,9 +112,34 @@ const Firebase = {
     const authorInfo = await this.getUserBasicInfo(docSnap.data().author_id);
 
     return {
+      id: docSnap.id,
       ...docSnap.data(),
       ...authorInfo,
     };
+  },
+  async likeWork(uid, id, currentLikedByList) {
+    await updateDoc(doc(this.db(), "works", id), {
+      liked_by: [...currentLikedByList, uid],
+    });
+  },
+  async unlikeWork(uid, id, currentLikedByList) {
+    const newLikeByList = currentLikedByList.filter((id) => id !== uid);
+    await updateDoc(doc(this.db(), "works", id), {
+      liked_by: newLikeByList,
+    });
+  },
+  async collectWork(uid, id, currentCollectedByList) {
+    await updateDoc(doc(this.db(), "works", id), {
+      collected_by: [...currentCollectedByList, uid],
+    });
+  },
+  async uncollectWork(uid, id, currentcollectedByList) {
+    const newcollectedByList = currentcollectedByList.filter(
+      (id) => id !== uid
+    );
+    await updateDoc(doc(this.db(), "works", id), {
+      collected_by: newcollectedByList,
+    });
   },
   async addComment(uid, id, content, count) {
     await addDoc(collection(this.db(), `works/${id}/comments`), {
@@ -172,5 +197,7 @@ const Firebase = {
     return result;
   },
 };
+const uid = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+const id = "EwXrArvblksIkVxZ4jSf";
 
 export { Firebase };
