@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
@@ -10,46 +11,44 @@ export default function Explore() {
   const [workModalID, setWorkModalID] = useState("");
   const endofPageRef = useRef();
   const pagingRef = useRef(null);
-  let isFetching = true;
+  let isFetching = false;
 
-  useEffect(() => {
-    Firebase.getAllworks().then(({ allworks, lastVisibleWork }) => {
-      setExploreworks(allworks);
-      pagingRef.current = lastVisibleWork;
-      isFetching = false;
-    });
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  let queryTerm = searchParams.get("query");
 
   useEffect(() => {
     const pagingObserver = new IntersectionObserver((entries) => {
       if (entries[0].intersectionRatio <= 0) return;
       if (isFetching) return;
-      if (!pagingRef.current) return;
       isFetching = true;
 
-      Firebase.LoadingNextWorks(pagingRef.current).then(
-        ({ allworks, lastVisibleWork }) => {
-          setExploreworks((pre) => [...pre, ...allworks]);
-          if (allworks.length < 5) {
-            pagingRef.current = null;
-            return;
-          }
-          pagingRef.current = lastVisibleWork;
+      function fetchWorks() {
+        if (queryTerm) {
+          return Firebase.searchWorks(queryTerm, pagingRef.current);
         }
-      );
+        return Firebase.getAllworks(pagingRef.current);
+      }
 
-      isFetching = false;
+      fetchWorks().then(({ fetchWorks, lastVisibleWork }) => {
+        setExploreworks((pre) => [...pre, ...fetchWorks]);
+        pagingRef.current = lastVisibleWork;
+        isFetching = false;
+      });
     });
     pagingObserver.observe(endofPageRef.current);
-  }, []);
+    return () => {
+      pagingObserver.unobserve(endofPageRef.current);
+    };
+  }, [queryTerm]);
 
-  function handleSearch() {
-    isFetching = true;
+  function handleSubmit(e) {
+    e.preventDefault();
+    let formData = new FormData(e.target);
+    let newQuery = formData.get("query");
+    if (!newQuery) return;
     pagingRef.current = null;
-    Firebase.searchWorks(input.trim()).then((data) => {
-      setExploreworks(data);
-      setInput("");
-    });
+    setSearchParams({ query: newQuery });
+    setExploreworks([]);
   }
 
   return (
@@ -60,8 +59,14 @@ export default function Explore() {
         ""
       )}
       <div>Explore</div>
-      <input value={input} onChange={(e) => setInput(e.target.value)} />
-      <button onClick={handleSearch}>Search</button>
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <input
+          name="query"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button>Search</button>
+      </form>
       {exploreworks.map((work, i) => {
         return (
           <div key={i}>

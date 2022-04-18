@@ -34,16 +34,27 @@ const Firebase = {
   worksRef() {
     return collection(this.db(), "works");
   },
-  async getAllworks() {
-    const queryCondition = query(
-      this.worksRef(),
-      orderBy("created_time", "desc"),
-      limit(5)
-    );
+  pageLimit: 5,
+  async getAllworks(lastVisibleData) {
+    let queryCondition;
+    if (lastVisibleData) {
+      queryCondition = query(
+        this.worksRef(),
+        orderBy("created_time", "desc"),
+        startAfter(lastVisibleData),
+        limit(this.pageLimit)
+      );
+    } else {
+      queryCondition = query(
+        this.worksRef(),
+        orderBy("created_time", "desc"),
+        limit(this.pageLimit)
+      );
+    }
 
-    const snapShot = await getDocs(queryCondition);
-    const allworks = await Promise.all(
-      snapShot.docs.map(async (item) => {
+    const snapshot = await getDocs(queryCondition);
+    const fetchWorks = await Promise.all(
+      snapshot.docs.map(async (item) => {
         const userInfo = await this.getUserBasicInfo(item.data().author_id);
         return {
           id: item.id,
@@ -52,30 +63,41 @@ const Firebase = {
         };
       })
     );
-    const lastVisibleWork = snapShot.docs[snapShot.docs.length - 1];
-    return { allworks, lastVisibleWork };
+    const lastVisibleWork = snapshot.docs[this.pageLimit - 1];
+    return { fetchWorks, lastVisibleWork };
   },
-  async LoadingNextWorks(lastVisible) {
-    const queryCondition = query(
-      this.worksRef(),
-      orderBy("created_time", "desc"),
-      startAfter(lastVisible),
-      limit(5)
-    );
+  async searchWorks(term, lastVisibleData) {
+    let queryCondition;
+    if (lastVisibleData) {
+      queryCondition = query(
+        this.worksRef(),
+        where("tags", "array-contains", term),
+        orderBy("created_time", "desc"),
+        startAfter(lastVisibleData),
+        limit(this.pageLimit)
+      );
+    } else {
+      queryCondition = query(
+        this.worksRef(),
+        where("tags", "array-contains", term),
+        orderBy("created_time", "desc"),
+        limit(this.pageLimit)
+      );
+    }
 
-    const snapShot = await getDocs(queryCondition);
-    const allworks = await Promise.all(
-      snapShot.docs.map(async (item) => {
-        const userInfo = await this.getUserBasicInfo(item.data().author_id);
+    const snapshot = await getDocs(queryCondition);
+    const fetchWorks = await Promise.all(
+      snapshot.docs.map(async (item) => {
+        const authorInfo = await this.getUserBasicInfo(item.data().author_id);
         return {
           id: item.id,
           ...item.data(),
-          ...userInfo,
+          ...authorInfo,
         };
       })
     );
-    const lastVisibleWork = snapShot.docs[snapShot.docs.length - 1];
-    return { allworks, lastVisibleWork };
+    const lastVisibleWork = snapshot.docs[this.pageLimit - 1];
+    return { fetchWorks, lastVisibleWork };
   },
   async getFollowingList(id) {
     const docRef = doc(this.db(), "users", id);
@@ -220,26 +242,6 @@ const Firebase = {
       ...data,
       created_time: Timestamp.fromDate(new Date(Date.now())),
     });
-  },
-  async searchWorks(term) {
-    const queryCondition = query(
-      this.worksRef(),
-      where("tags", "array-contains", term),
-      orderBy("created_time", "desc"),
-      limit(20)
-    );
-    const snapshot = await getDocs(queryCondition);
-    const result = Promise.all(
-      snapshot.docs.map(async (item) => {
-        const authorInfo = await this.getUserBasicInfo(item.data().author_id);
-        return {
-          id: item.id,
-          ...item.data(),
-          ...authorInfo,
-        };
-      })
-    );
-    return result;
   },
   onSnapshotComments(id, callback) {
     const queryCondition = query(
