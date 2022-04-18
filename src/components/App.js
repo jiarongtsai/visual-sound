@@ -1,10 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import Header from "./Header";
 import Main from "../pages/Main";
 import Profile from "../pages/Profile";
 import Community from "../pages/Community";
 import Explore from "../pages/Explore";
-import Header from "./Header";
+import NotFound from "../pages/NotFound";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="profile" element={<Profile />} />
         <Route path="community" element={<Community />} />
         <Route path="explore" element={<Explore />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
