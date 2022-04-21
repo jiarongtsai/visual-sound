@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { useTransition } from "react-spring";
 import styled, { ThemeProvider } from "styled-components";
+import { useScreenshot } from "../customHook/useScreenshot";
 import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import {
@@ -39,6 +40,10 @@ const Div = styled.div`
 `;
 
 const Sequencer = ({ player }) => {
+  const ref = createRef(null);
+  const [image, setImage, takeScreenshot] = useScreenshot();
+  const getImage = () => takeScreenshot(ref.current);
+
   const [isUploaded, setIsUploaded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -365,13 +370,21 @@ const Sequencer = ({ player }) => {
           sequenceJSON={handleSequenceData(sequence)}
           bpm={bpm}
           setIsUploaded={setIsUploaded}
+          image={image}
+          setImage={setImage}
         />
       ) : (
         ""
       )}
+      <div>
+        {image && (
+          <img style={{ width: "20vw" }} src={image} alt={"Screenshot"} />
+        )}
+      </div>
       <button onClick={() => setOpenModal(true)}>upload</button>
+      <button onClick={getImage}>screenshot</button>
       <ThemeProvider theme={themeColor}>
-        <Wrapper>
+        <Wrapper ref={ref}>
           {boomTransition((style, item) =>
             item ? <Ellipse style={style} /> : ""
           )}

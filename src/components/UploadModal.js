@@ -11,8 +11,9 @@ const Div = styled.div`
   align-items: center;
   margin: 1rem;
 `;
-const ModalCover = styled.div`
+const ModalBackground = styled.div`
   top: 0;
+  left: 0;
   position: fixed;
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.2);
@@ -22,12 +23,14 @@ const ModalCover = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-const ModalContent = styled.div`
-  z-index: 990;
+const ModalWhitebroad = styled.div`
   background-color: white;
-  width: 50vw;
-  height: 50vh;
+  display: flex;
+  justify-content: space-between;
+  width: 70vw;
+  height: 70vh;
+  padding: 1rem 2rem;
+  overflow: scroll;
 `;
 
 const ModalText = styled.p`
@@ -38,8 +41,9 @@ const ModalText = styled.p`
 const ModalCloseButton = styled.button`
   z-index: 999;
   background-color: red;
-  width: 10vw;
+  width: 5vw;
   height: 5vh;
+  flex-basis: 50px;
 `;
 
 const ModalConfirmButton = styled.button`
@@ -47,6 +51,7 @@ const ModalConfirmButton = styled.button`
   background-color: green;
   width: 10vw;
   height: 5vh;
+  margin-bottom: 2rem;
 `;
 
 const TagsContainer = styled.div`
@@ -74,6 +79,8 @@ export default function UploadModal({
   sequenceJSON,
   bpm,
   setIsUploaded,
+  image,
+  setImage,
 }) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
@@ -98,72 +105,87 @@ export default function UploadModal({
     setTags(tags.filter((tag) => tag != value));
   }
 
-  function uploadtoFirebase() {
+  async function uploadtoFirebase() {
+    const workRef = Firebase.getNewWorkRef();
+    const workID = workRef.id;
+
+    const blob = await (await fetch(image)).blob();
+    const workFile = new File([blob], `${UserID}_${workID}.png`, {
+      type: "image/png",
+    });
+
+    const imageUrl = await Firebase.uploadFile(workFile);
+    console.log(imageUrl);
     const data = {
       author_id: UserID,
       description: inputs.description,
       comments_count: 0,
-      image_url: "",
-      video_url: "",
+      image_url: imageUrl,
       tags: tags,
       collected_by: [],
       liked_by: [],
       sheetmusic: sequenceJSON,
       bpm: bpm,
     };
-    Firebase.addNewWork(data).then(() => {
+    Firebase.addNewWork(workRef, data).then(() => {
       setInputs({});
       setTags([]);
       setTagInput("");
       setOpenModal(false);
       setIsUploaded(true);
+      setImage(null);
     });
   }
 
   return (
-    <ModalCover>
-      <ModalContent>
-        <ModalText>Modal</ModalText>
-        <Div>
-          <label>description</label>
-          <textarea
-            name="description"
-            value={inputs.description || ""}
-            onChange={handleInputs}
-          />
-        </Div>
-        <Div>
-          <label>tags</label>
-          <p>Tag your post, and separeted by comma</p>
-          <input
-            name="tags"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={(e) => handleTagInput(e)}
-            placeholder="Add tags..."
-          />
-          <TagsContainer>
-            {tags.map((tag) => (
-              <TagWrapper key={tag}>
-                {tag}
-                <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
-              </TagWrapper>
-            ))}
-          </TagsContainer>
-        </Div>
-        <div>
-          <ModalConfirmButton onClick={uploadtoFirebase}>
-            upload
-          </ModalConfirmButton>
+    <>
+      <ModalBackground>
+        <ModalWhitebroad>
+          <div>
+            <ModalText>Modal</ModalText>
+            {image && <img src={image} style={{ width: "50vw" }} />}
+            <Div>
+              <label>description</label>
+              <textarea
+                name="description"
+                rows="5"
+                cols="50"
+                value={inputs.description || ""}
+                onChange={handleInputs}
+              />
+            </Div>
+            <Div>
+              <label>tags</label>
+              <p>Tag your post, and separeted by comma</p>
+              <input
+                name="tags"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => handleTagInput(e)}
+                placeholder="Add tags..."
+              />
+              <TagsContainer>
+                {tags.map((tag) => (
+                  <TagWrapper key={tag}>
+                    {tag}
+                    <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
+                  </TagWrapper>
+                ))}
+              </TagsContainer>
+            </Div>
+            <ModalConfirmButton onClick={uploadtoFirebase}>
+              upload
+            </ModalConfirmButton>
+          </div>
           <ModalCloseButton
             onClick={() => {
               setOpenModal(false);
             }}
           >
-            close
+            X
           </ModalCloseButton>
-        </div>
-      </ModalContent>
-    </ModalCover>
+        </ModalWhitebroad>
+      </ModalBackground>
+    </>
   );
 }

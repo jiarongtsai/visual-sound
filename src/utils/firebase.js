@@ -14,7 +14,10 @@ import {
   updateDoc,
   onSnapshot,
   startAfter,
+  setDoc,
 } from "firebase/firestore";
+
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCAHli85vuDjMNmK3r0_1k3VQvYSysvUFg",
@@ -237,11 +240,21 @@ const Firebase = {
     );
     return latestComments;
   },
-  async addNewWork(data) {
-    await addDoc(this.worksRef(), {
+  async addNewWork(workRef, data) {
+    await setDoc(workRef, {
       ...data,
       created_time: Timestamp.fromDate(new Date(Date.now())),
     });
+  },
+  getNewWorkRef() {
+    return doc(this.worksRef());
+  },
+  async uploadFile(file) {
+    const imageRef = ref(getStorage(), `images/${file.name}`);
+    await uploadBytes(imageRef, file);
+    const imageDownloadURL = await getDownloadURL(imageRef);
+
+    return imageDownloadURL;
   },
   onSnapshotComments(id, callback) {
     const queryCondition = query(
