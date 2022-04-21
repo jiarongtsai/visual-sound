@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTransition } from "react-spring";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import {
@@ -8,6 +8,11 @@ import {
   Square,
   Ellipse,
   Triangle,
+  themeDefault,
+  energe,
+  macaroon,
+  neon,
+  vintage,
 } from "../visualElement/VisualElement";
 
 //sequence
@@ -37,6 +42,7 @@ const Sequencer = ({ player }) => {
   const [isUploaded, setIsUploaded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [themeColor, setThemeColor] = useState(themeDefault);
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -155,81 +161,90 @@ const Sequencer = ({ player }) => {
     setSequence(sequenceCopy);
   };
 
-  useKeyboardBindings(
-    !playing
-      ? {
-          a: () => {
-            player.player("a").start();
-            setBoomEffect((v) => !v);
-          },
-          s: () => {
-            player.player("s").start();
-            setClapEffect((v) => !v);
-          },
-          d: () => {
-            player.player("d").start();
-            setHihatEffect((v) => !v);
-          },
-          f: () => {
-            player.player("f").start();
-            setKickEffect((v) => !v);
-          },
-          g: () => {
-            player.player("g").start();
-            setOpenhatEffect((v) => !v);
-          },
-          h: () => {
-            player.player("h").start();
-            setRideEffect((v) => !v);
-          },
-          j: () => {
-            player.player("j").start();
-            setSnareEffect((v) => !v);
-          },
-          k: () => {
-            player.player("k").start();
-            setTomEffect((v) => !v);
-          },
-          l: () => {
-            player.player("l").start();
-            setTinkEffect((v) => !v);
-          },
-        }
-      : {
-          a: () => {
-            toggleStep(lineMap.indexOf("a"), currentStep);
-          },
-          s: () => {
-            toggleStep(lineMap.indexOf("s"), currentStep);
-          },
-          d: () => {
-            toggleStep(lineMap.indexOf("d"), currentStep);
-          },
-          f: () => {
-            toggleStep(lineMap.indexOf("f"), currentStep);
-          },
-          g: () => {
-            toggleStep(lineMap.indexOf("g"), currentStep);
-          },
-          h: () => {
-            toggleStep(lineMap.indexOf("h"), currentStep);
-          },
-          j: () => {
-            toggleStep(lineMap.indexOf("j"), currentStep);
-          },
-          k: () => {
-            toggleStep(lineMap.indexOf("k"), currentStep);
-          },
-          l: () => {
-            toggleStep(lineMap.indexOf("l"), currentStep);
-          },
-        }
-  );
+  useKeyboardBindings({
+    1: () => setThemeColor(themeDefault),
+    2: () => setThemeColor(energe),
+    3: () => setThemeColor(macaroon),
+    4: () => setThemeColor(neon),
+    5: () => setThemeColor(vintage),
+    a: () => {
+      if (!playing) {
+        player.player("a").start();
+        setBoomEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("a"), currentStep);
+    },
+    s: () => {
+      if (!playing) {
+        player.player("s").start();
+        setClapEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("s"), currentStep);
+    },
+    d: () => {
+      if (!playing) {
+        player.player("d").start();
+        setHihatEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("d"), currentStep);
+    },
+    f: () => {
+      if (!playing) {
+        player.player("f").start();
+        setKickEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("f"), currentStep);
+    },
+    g: () => {
+      if (!playing) {
+        player.player("g").start();
+        setOpenhatEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("g"), currentStep);
+    },
+    h: () => {
+      if (!playing) {
+        player.player("h").start();
+        setRideEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("h"), currentStep);
+    },
+    j: () => {
+      if (playing) {
+        player.player("j").start();
+        setSnareEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("j"), currentStep);
+    },
+    k: () => {
+      if (!playing) {
+        player.player("k").start();
+        setTomEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("k"), currentStep);
+    },
+    l: () => {
+      if (!playing) {
+        player.player("l").start();
+        setTinkEffect((v) => !v);
+        return;
+      }
+      toggleStep(lineMap.indexOf("l"), currentStep);
+    },
+  });
 
   const boomTransition = useTransition(boomEffect, {
     config: { mass: 1, tension: 10, friction: 4 },
     from: { opacity: 0, transform: "scale(0)" },
-    enter: { opacity: 0.5, transform: "scale(4)" },
+    enter: { opacity: 0.8, transform: "scale(4)" },
     leave: { opacity: 0, transform: "scale(0)" },
   });
 
@@ -287,7 +302,6 @@ const Sequencer = ({ player }) => {
 
   useEffect(() => {
     const timeOutspeed = (15 / bpm) * 1000;
-    console.log(timeOutspeed);
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
@@ -356,35 +370,37 @@ const Sequencer = ({ player }) => {
         ""
       )}
       <button onClick={() => setOpenModal(true)}>upload</button>
-      <Wrapper>
-        {boomTransition((style, item) =>
-          item ? <Ellipse style={style} color="steelblue" /> : ""
-        )}
-        {clapTransition((style, item) =>
-          item ? <Triangle style={style} color="yellow" /> : ""
-        )}
-        {hihatTransition((style, item) =>
-          item ? <Triangle style={style} color="darkorange" /> : ""
-        )}
-        {kickTransition((style, item) =>
-          item ? <Square style={style} color="green" /> : ""
-        )}
-        {openhatTransition((style, item) =>
-          item ? <Triangle style={style} color="gold" /> : ""
-        )}
-        {rideTransition((style, item) =>
-          item ? <Square style={style} color="purple" /> : ""
-        )}
-        {snareTransition((style, item) =>
-          item ? <Square style={style} color="blue" /> : ""
-        )}
-        {tomTransition((style, item) =>
-          item ? <Ellipse style={style} color="slategray" /> : ""
-        )}
-        {tinkTransition((style, item) =>
-          item ? <Triangle style={style} color="red" /> : ""
-        )}
-      </Wrapper>
+      <ThemeProvider theme={themeColor}>
+        <Wrapper>
+          {boomTransition((style, item) =>
+            item ? <Ellipse style={style} /> : ""
+          )}
+          {clapTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {hihatTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {kickTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {openhatTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {rideTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {snareTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {tomTransition((style, item) =>
+            item ? <Ellipse style={style} /> : ""
+          )}
+          {tinkTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+        </Wrapper>
+      </ThemeProvider>
       <Div>
         <button onClick={handleBacktoHead}>to head</button>
         <button onClick={() => setPlaying(!playing)}>{`${
