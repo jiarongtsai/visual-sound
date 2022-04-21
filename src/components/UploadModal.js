@@ -81,6 +81,7 @@ export default function UploadModal({
   setIsUploaded,
   image,
   setImage,
+  themeColor,
 }) {
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
@@ -115,7 +116,7 @@ export default function UploadModal({
     });
 
     const imageUrl = await Firebase.uploadFile(workFile);
-    console.log(imageUrl);
+
     const data = {
       author_id: UserID,
       description: inputs.description,
@@ -126,6 +127,7 @@ export default function UploadModal({
       liked_by: [],
       sheetmusic: sequenceJSON,
       bpm: bpm,
+      themeColor: themeColor,
     };
     Firebase.addNewWork(workRef, data).then(() => {
       setInputs({});

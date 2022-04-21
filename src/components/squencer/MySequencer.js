@@ -4,17 +4,8 @@ import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
 import Grid from "./grid";
 import UploadModal from "../UploadModal";
-import {
-  Wrapper,
-  Square,
-  Ellipse,
-  Triangle,
-  themeDefault,
-  energe,
-  macaroon,
-  neon,
-  vintage,
-} from "../visualElement/VisualElement";
+import { Wrapper, Square, Ellipse, Triangle } from "../visual/VisualElement";
+import { colorTheme } from "../visual/colorTheme";
 
 //sequence
 const steps = 16;
@@ -47,7 +38,8 @@ const Sequencer = ({ player }) => {
   const [isUploaded, setIsUploaded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [themeColor, setThemeColor] = useState(themeDefault);
+  const [themeColor, setThemeColor] = useState(colorTheme.themeDefault);
+  const [themeColorNumber, setThemeColorNumber] = useState(0);
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -167,11 +159,26 @@ const Sequencer = ({ player }) => {
   };
 
   useKeyboardBindings({
-    1: () => setThemeColor(themeDefault),
-    2: () => setThemeColor(energe),
-    3: () => setThemeColor(macaroon),
-    4: () => setThemeColor(neon),
-    5: () => setThemeColor(vintage),
+    1: () => {
+      setThemeColor(colorTheme.themeDefault);
+      setThemeColorNumber(0);
+    },
+    2: () => {
+      setThemeColor(colorTheme.energe);
+      setThemeColorNumber(1);
+    },
+    3: () => {
+      setThemeColor(colorTheme.macaroon);
+      setThemeColorNumber(2);
+    },
+    4: () => {
+      setThemeColor(colorTheme.neon);
+      setThemeColorNumber(3);
+    },
+    5: () => {
+      setThemeColor(colorTheme.vintage);
+      setThemeColorNumber(4);
+    },
     a: () => {
       if (!playing) {
         player.player("a").start();
@@ -372,6 +379,7 @@ const Sequencer = ({ player }) => {
           setIsUploaded={setIsUploaded}
           image={image}
           setImage={setImage}
+          themeColor={Object.keys(colorTheme)[themeColorNumber]}
         />
       ) : (
         ""

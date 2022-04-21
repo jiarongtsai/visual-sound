@@ -98,6 +98,7 @@ export default function Community() {
                     player={soundPlayer}
                     sheetmusic={work.sheetmusic}
                     bpm={work.bpm}
+                    themeColor={work.themeColor}
                   />
                 );
               }}

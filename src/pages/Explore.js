@@ -37,7 +37,7 @@ export default function Explore() {
     });
     pagingObserver.observe(endofPageRef.current);
     return () => {
-      pagingObserver.unobserve(endofPageRef.current);
+      endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
     };
   }, [queryTerm]);
 
@@ -77,6 +77,7 @@ export default function Explore() {
                     player={soundPlayer}
                     sheetmusic={work.sheetmusic}
                     bpm={work.bpm}
+                    themeColor={work.themeColor}
                   />
                 );
               }}

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useTransition, animated } from "react-spring";
-import styled from "styled-components";
-import {
-  Wrapper,
-  Square,
-  Ellipse,
-  Triangle,
-} from "./visualElement/VisualElement";
+import { useTransition } from "react-spring";
+import { ThemeProvider } from "styled-components";
+import { Wrapper, Square, Ellipse, Triangle } from "./visual/VisualElement";
+import { colorTheme } from "./visual/colorTheme";
 
 //sequence
 const steps = 16;
@@ -24,7 +20,12 @@ const initialState = [
   new Array(16).fill(initialCellState),
 ];
 
-export default function SequencePlayer({ player, sheetmusic, bpm }) {
+export default function SequencePlayer({
+  player,
+  sheetmusic,
+  bpm,
+  themeColor,
+}) {
   const [playing, setPlaying] = useState(false);
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -172,35 +173,37 @@ export default function SequencePlayer({ player, sheetmusic, bpm }) {
 
   return (
     <>
-      <Wrapper>
-        {boomTransition((style, item) =>
-          item ? <Ellipse style={style} color="steelblue" /> : ""
-        )}
-        {clapTransition((style, item) =>
-          item ? <Triangle style={style} color="yellow" /> : ""
-        )}
-        {hihatTransition((style, item) =>
-          item ? <Triangle style={style} color="darkorange" /> : ""
-        )}
-        {kickTransition((style, item) =>
-          item ? <Square style={style} color="green" /> : ""
-        )}
-        {openhatTransition((style, item) =>
-          item ? <Triangle style={style} color="gold" /> : ""
-        )}
-        {rideTransition((style, item) =>
-          item ? <Square style={style} color="purple" /> : ""
-        )}
-        {snareTransition((style, item) =>
-          item ? <Square style={style} color="blue" /> : ""
-        )}
-        {tomTransition((style, item) =>
-          item ? <Ellipse style={style} color="slategray" /> : ""
-        )}
-        {tinkTransition((style, item) =>
-          item ? <Triangle style={style} color="red" /> : ""
-        )}
-      </Wrapper>
+      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.themeDefault}>
+        <Wrapper>
+          {boomTransition((style, item) =>
+            item ? <Ellipse style={style} /> : ""
+          )}
+          {clapTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {hihatTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {kickTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {openhatTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+          {rideTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {snareTransition((style, item) =>
+            item ? <Square style={style} /> : ""
+          )}
+          {tomTransition((style, item) =>
+            item ? <Ellipse style={style} /> : ""
+          )}
+          {tinkTransition((style, item) =>
+            item ? <Triangle style={style} /> : ""
+          )}
+        </Wrapper>
+      </ThemeProvider>
       <button onClick={() => setPlaying(!playing)}>{`${
         playing ? "pause" : "play"
       }`}</button>
