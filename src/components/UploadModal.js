@@ -129,13 +129,16 @@ export default function UploadModal({
       bpm: bpm,
       themeColor: themeColor,
     };
+
     Firebase.addNewWork(workRef, data).then(() => {
-      setInputs({});
-      setTags([]);
-      setTagInput("");
-      setOpenModal(false);
-      setIsUploaded(true);
-      setImage(null);
+      Firebase.updateTags(tags).then(() => {
+        setInputs({});
+        setTags([]);
+        setTagInput("");
+        setOpenModal(false);
+        setIsUploaded(true);
+        setImage(null);
+      });
     });
   }
 

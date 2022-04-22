@@ -31,13 +31,16 @@ const firebaseConfig = {
 
 const Firebase = {
   app: initializeApp(firebaseConfig),
+  pageLimit: 10,
   db() {
     return getFirestore(this.app);
   },
   worksRef() {
     return collection(this.db(), "works");
   },
-  pageLimit: 10,
+  tagsRef() {
+    return doc(this.db(), "tags", "BprzcEpU3l2hdnlvJQde");
+  },
   async getAllworks(lastVisibleData) {
     let queryCondition;
     if (lastVisibleData) {
@@ -258,10 +261,20 @@ const Firebase = {
   },
   onSnapshotComments(id, callback) {
     const queryCondition = query(
-      collection(Firebase.db(), `works/${id}/comments`),
+      collection(this.db(), `works/${id}/comments`),
       orderBy("created_time")
     );
     return onSnapshot(queryCondition, callback);
+  },
+  async getAllTags() {
+    const docSnap = await getDoc(this.tagsRef());
+
+    return docSnap.data().tags;
+  },
+  async updateTags(updateTags) {
+    const oldTags = await this.getAllTags();
+    const tags = [...new Set([...updateTags, ...oldTags])];
+    await setDoc(this.tagsRef(), { tags });
   },
 };
 

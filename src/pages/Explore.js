@@ -26,7 +26,11 @@ export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
   let queryTerm = searchParams.get("query");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    Firebase.getAllTags().then((data) => {
+      setAlltags(data);
+    });
+  }, []);
 
   useEffect(() => {
     const pagingObserver = new IntersectionObserver((entries) => {
