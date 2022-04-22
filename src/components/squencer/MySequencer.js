@@ -38,8 +38,7 @@ const Sequencer = ({ player }) => {
   const [isUploaded, setIsUploaded] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [themeColor, setThemeColor] = useState(colorTheme.themeDefault);
-  const [themeColorNumber, setThemeColorNumber] = useState(0);
+  const [themeColor, setThemeColor] = useState("themeDefault");
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -159,26 +158,11 @@ const Sequencer = ({ player }) => {
   };
 
   useKeyboardBindings({
-    1: () => {
-      setThemeColor(colorTheme.themeDefault);
-      setThemeColorNumber(0);
-    },
-    2: () => {
-      setThemeColor(colorTheme.energe);
-      setThemeColorNumber(1);
-    },
-    3: () => {
-      setThemeColor(colorTheme.macaroon);
-      setThemeColorNumber(2);
-    },
-    4: () => {
-      setThemeColor(colorTheme.neon);
-      setThemeColorNumber(3);
-    },
-    5: () => {
-      setThemeColor(colorTheme.vintage);
-      setThemeColorNumber(4);
-    },
+    1: () => setThemeColor("themeDefault"),
+    2: () => setThemeColor("energe"),
+    3: () => setThemeColor("macaroon"),
+    4: () => setThemeColor("neon"),
+    5: () => setThemeColor("vintage"),
     a: () => {
       if (!playing) {
         player.player("a").start();
@@ -379,7 +363,7 @@ const Sequencer = ({ player }) => {
           setIsUploaded={setIsUploaded}
           image={image}
           setImage={setImage}
-          themeColor={Object.keys(colorTheme)[themeColorNumber]}
+          themeColor={themeColor}
         />
       ) : (
         ""
@@ -391,7 +375,7 @@ const Sequencer = ({ player }) => {
       </div>
       <button onClick={() => setOpenModal(true)}>upload</button>
       <button onClick={getImage}>screenshot</button>
-      <ThemeProvider theme={themeColor}>
+      <ThemeProvider theme={colorTheme[themeColor]}>
         <Wrapper ref={ref}>
           {boomTransition((style, item) =>
             item ? <Ellipse style={style} /> : ""
