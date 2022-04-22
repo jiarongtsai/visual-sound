@@ -11,12 +11,13 @@ const GridWrapper = styled.div`
 `;
 
 const Square = styled.div`
-  ${"" /* position: absolute; */}
+  position: absolute;
   width: 300px;
   height: 300px;
   background: blue;
   overflow: hidden;
   object-position: 50% 50%;
+  pointer-events: none;
 `;
 
 export { GridWrapper, Square };

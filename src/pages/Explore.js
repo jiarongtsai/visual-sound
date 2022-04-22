@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { PlayerProvider } from "../components/PlayerProvider";
-import SequencePlayer from "../components/SequencePlayer";
+import SequenceMotion from "../components/SequenceMotion";
 import WorkModal from "../components/WorkModal";
 import { GridWrapper, Square } from "../components/GridWrapper";
 import styled from "styled-components";
@@ -14,19 +13,20 @@ const Img = styled.img`
   cursor: pointer;
 `;
 
-const tags = ["happy", "hello", "cool"];
-
 export default function Explore() {
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
   const [workModalID, setWorkModalID] = useState("");
-  const [isShown, setIsShown] = useState(false);
+  const [alltags, setAlltags] = useState([]);
+  const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
   const pagingRef = useRef(null);
   let isFetching = false;
 
   const [searchParams, setSearchParams] = useSearchParams();
   let queryTerm = searchParams.get("query");
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     const pagingObserver = new IntersectionObserver((entries) => {
@@ -43,6 +43,8 @@ export default function Explore() {
 
       fetchWorks().then(({ fetchWorks, lastVisibleWork }) => {
         setExploreworks((pre) => [...pre, ...fetchWorks]);
+        console.log(fetchWorks.length);
+        setIsShown((pre) => [...pre, ...Array(fetchWorks.length).fill(false)]);
         pagingRef.current = lastVisibleWork;
         isFetching = false;
       });
@@ -61,8 +63,8 @@ export default function Explore() {
     pagingRef.current = null;
     setSearchParams({ query: newQuery });
     setExploreworks([]);
+    setIsShown([]);
   }
-
   return (
     <>
       {workModalID ? (
@@ -76,39 +78,43 @@ export default function Explore() {
           name="query"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          list="opts"
         />
+        <datalist id="opts">
+          {alltags.map((tag, i) => (
+            <option key={i}>{tag}</option>
+          ))}
+        </datalist>
         <button>Search</button>
       </form>
-      <div>
-        <select>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-        </select>
-      </div>
       <GridWrapper>
         {exploreworks.map((work, i) => {
           return (
             <div key={i}>
-              {/* <Square>
-                <PlayerProvider>
-                  {({ soundPlayer }) => {
-                    return (
-                      <SequencePlayer
-                        player={soundPlayer}
-                        sheetmusic={work.sheetmusic}
-                        bpm={work.bpm}
-                        themeColor={work.themeColor}
-                      />
-                    );
-                  }}
-                </PlayerProvider>
-              </Square> */}
+              <Square style={{ display: isShown[i] ? "block" : "none" }}>
+                <SequenceMotion
+                  sheetmusic={work.sheetmusic}
+                  bpm={work.bpm}
+                  themeColor={work.themeColor}
+                />
+              </Square>
               <Img
                 src={work.image_url}
                 onClick={() => setWorkModalID(work.id)}
-                onMouseEnter={() => setIsShown(true)}
-                onMouseLeave={() => setIsShown(false)}
+                onMouseEnter={() =>
+                  setIsShown((pre) => [
+                    ...pre.slice(0, i),
+                    true,
+                    ...pre.slice(i + 1),
+                  ])
+                }
+                onMouseLeave={() =>
+                  setIsShown((pre) => [
+                    ...pre.slice(0, i),
+                    false,
+                    ...pre.slice(i + 1),
+                  ])
+                }
               />
             </div>
           );
