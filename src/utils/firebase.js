@@ -37,7 +37,7 @@ const Firebase = {
   worksRef() {
     return collection(this.db(), "works");
   },
-  pageLimit: 5,
+  pageLimit: 10,
   async getAllworks(lastVisibleData) {
     let queryCondition;
     if (lastVisibleData) {
