@@ -1,4 +1,13 @@
+import { getDefaultNormalizer } from "@testing-library/react";
 import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+} from "firebase/auth";
+
 import {
   getFirestore,
   collection,
@@ -32,6 +41,9 @@ const firebaseConfig = {
 const Firebase = {
   app: initializeApp(firebaseConfig),
   pageLimit: 10,
+  auth() {
+    return getAuth(this.app);
+  },
   db() {
     return getFirestore(this.app);
   },
@@ -40,6 +52,38 @@ const Firebase = {
   },
   tagsRef() {
     return doc(this.db(), "tags", "BprzcEpU3l2hdnlvJQde");
+  },
+  //fix me cannot update displayname
+  async register(username, email, password) {
+    const userCredential = await createUserWithEmailAndPassword(
+      this.auth(),
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    await updateProfile(user, { displayName: username });
+
+    const userRef = doc(this.db(), "users", user.uid);
+    await setDoc(userRef, {
+      user_name: username,
+      user_email: user.email,
+      user_bio: "",
+      user_thumbnail: `https://joeschmoe.io/api/v1/${username}`,
+      following: [],
+      followers: [],
+    });
+
+    const uuser = this.auth().currentUser;
+    return uuser;
+  },
+  async login(email, password) {
+    const userCredential = await signInWithEmailAndPassword(
+      this.auth(),
+      email,
+      password
+    );
+    return userCredential.user;
   },
   async getAllworks(lastVisibleData) {
     let queryCondition;
@@ -278,4 +322,7 @@ const Firebase = {
   },
 };
 
+// Firebase.register("roger", "roger@gmail.com", "web123").then((user) => {
+//   console.log(user);
+// });
 export { Firebase };

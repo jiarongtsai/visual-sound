@@ -10,6 +10,7 @@ import Explore from "../pages/Explore";
 import User from "../pages/User";
 import WorkModal from "./WorkModal";
 import WorkView from "../pages/WorkView";
+import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route index element={<Main />} />
           <Route path="community" element={<Community />} />
           <Route path="explore" element={<Explore />} />
+          <Route path="login" element={<Login />} />
           <Route path="/work/:id" element={<WorkView />} />
           <Route path="/user/:invoiceId" element={<User />} />
           <Route path="profile" element={<ProfileLayout />}>
