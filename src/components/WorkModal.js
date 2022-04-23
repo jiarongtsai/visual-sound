@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
+import { useNavigate, useParams } from "react-router-dom";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
@@ -65,7 +66,15 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
-export default function WorkModal({ workModalID, setWorkModalID }) {
+export default function WorkModal() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const buttonRef = useRef(null);
+
+  function onDismiss() {
+    navigate(-1);
+  }
+
   const [work, setWork] = useState({});
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
@@ -74,7 +83,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
   const endRef = useRef(null);
 
   useEffect(() => {
-    Firebase.getWork(workModalID).then((data) => {
+    Firebase.getWork(id).then((data) => {
       setLike(data.liked_by.includes(userID));
       setCollect(data.collected_by.includes(userID));
       setWork(data);
@@ -83,7 +92,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
 
   useEffect(() => {
     const onSnapshotComments = Firebase.onSnapshotComments(
-      workModalID,
+      id,
       async (snapshot) => {
         const result = await Promise.all(
           snapshot.docs.map(async (item) => {
@@ -113,7 +122,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
 
   function sendComment() {
     const count = comments.length + 1 || 0;
-    Firebase.addComment(userID, workModalID, input, count).then(() => {
+    Firebase.addComment(userID, id, input, count).then(() => {
       setInput("");
     });
   }
@@ -143,6 +152,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
     });
   }
 
+  if (!work) return null;
   return (
     <ModalCover>
       <ModalContent>
@@ -196,11 +206,7 @@ export default function WorkModal({ workModalID, setWorkModalID }) {
           </>
           <div ref={endRef}></div>
         </ModalContentText>
-        <ModalCloseButton
-          onClick={() => {
-            setWorkModalID("");
-          }}
-        >
+        <ModalCloseButton ref={buttonRef} onClick={onDismiss}>
           X
         </ModalCloseButton>
       </ModalContent>

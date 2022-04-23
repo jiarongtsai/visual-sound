@@ -1,22 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import SequenceMotion from "../components/SequenceMotion";
-import WorkModal from "../components/WorkModal";
 import { GridWrapper, Square } from "../components/GridWrapper";
-import styled from "styled-components";
 
-const Img = styled.img`
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  cursor: pointer;
-`;
+import { Img } from "../components/element/Img";
 
 export default function Explore() {
+  let location = useLocation();
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
-  const [workModalID, setWorkModalID] = useState("");
   const [alltags, setAlltags] = useState([]);
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
@@ -71,11 +64,6 @@ export default function Explore() {
   }
   return (
     <>
-      {workModalID ? (
-        <WorkModal workModalID={workModalID} setWorkModalID={setWorkModalID} />
-      ) : (
-        ""
-      )}
       <div>Explore</div>
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
@@ -94,7 +82,11 @@ export default function Explore() {
       <GridWrapper>
         {exploreworks.map((work, i) => {
           return (
-            <div key={i}>
+            <Link
+              key={work.id}
+              to={`/work/${work.id}`}
+              state={{ backgroundLocation: location }}
+            >
               <Square style={{ display: isShown[i] ? "block" : "none" }}>
                 <SequenceMotion
                   sheetmusic={work.sheetmusic}
@@ -104,7 +96,6 @@ export default function Explore() {
               </Square>
               <Img
                 src={work.image_url}
-                onClick={() => setWorkModalID(work.id)}
                 onMouseEnter={() =>
                   setIsShown((pre) => [
                     ...pre.slice(0, i),
@@ -120,7 +111,7 @@ export default function Explore() {
                   ])
                 }
               />
-            </div>
+            </Link>
           );
         })}
       </GridWrapper>

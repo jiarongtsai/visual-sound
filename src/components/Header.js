@@ -1,5 +1,5 @@
 import { React } from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 const Nav = styled.nav`
@@ -19,6 +19,7 @@ export default function Header() {
         <Link to="/explore">Explore</Link>
         <Link to="/profile">Profile</Link>
       </Nav>
+      <Outlet />
     </>
   );
 }
