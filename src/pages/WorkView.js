@@ -5,7 +5,8 @@ import { Img } from "../components/element/Img";
 
 export default function WorkView() {
   const [work, setWork] = useState({});
-  let { id } = useParams();
+  const { id } = useParams();
+  console.log(id);
   useEffect(() => {
     Firebase.getWork(id).then((data) => {
       setWork(data);

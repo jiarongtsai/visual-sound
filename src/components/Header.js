@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { AuthContext } from "../auth/Auth";
 import AuthStatus from "../auth/AuthStatus";
 
 const Nav = styled.nav`
@@ -12,8 +11,6 @@ const Nav = styled.nav`
 `;
 
 export default function Header() {
-  const user = useContext(AuthContext);
-  console.log(user);
   return (
     <>
       <h1>Visual Sound - personal project</h1>

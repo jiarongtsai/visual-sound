@@ -3,7 +3,6 @@ import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import SequenceMotion from "../components/SequenceMotion";
 import { GridWrapper, Square } from "../components/GridWrapper";
-
 import { Img } from "../components/element/Img";
 
 export default function Explore() {

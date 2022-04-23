@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
-
+import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../utils/firebase";
 import { GridWrapper } from "../components/GridWrapper";
 import { Img } from "../components/element/Img";
-const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
 
 export default function ProfileCollections() {
+  const user = useContext(AuthContext);
+
   const [collectedWorks, setCollectedWorks] = useState([]);
   const location = useLocation();
   useEffect(() => {
-    Firebase.getUserCollection(userID).then((data) => {
+    Firebase.getUserCollection(user.uid).then((data) => {
       setCollectedWorks(data);
     });
   }, []);

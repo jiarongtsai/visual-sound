@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import { useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import { useLocation, Link } from "react-router-dom";
-
-const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
-
-const Img = styled.img`
-  width: 50px;
-  border-radius: 50%;
-`;
+import { AuthContext } from "../auth/Auth";
+import { Thumbnail } from "../components/element/Thumbnail";
 
 const Div = styled.div`
   display: flex;
@@ -19,21 +14,22 @@ const Div = styled.div`
 `;
 
 export default function Community() {
+  const user = useContext(AuthContext);
   const location = useLocation();
   const [allworks, setAllworks] = useState([]);
   const [like, setLike] = useState([]);
   const [collect, setCollect] = useState([]);
 
   useEffect(() => {
-    Firebase.getFollowingWorks(userID).then((data) => {
+    Firebase.getFollowingWorks(user.uid).then((data) => {
       setAllworks(data);
       data.forEach((item) => {
-        if (item.liked_by.includes(userID)) {
+        if (item.liked_by.includes(user.uid)) {
           setLike((pre) => [...pre, true]);
         } else {
           setLike((pre) => [...pre, false]);
         }
-        if (item.collected_by.includes(userID)) {
+        if (item.collected_by.includes(user.uid)) {
           setCollect((pre) => [...pre, true]);
         } else {
           setCollect((pre) => [...pre, false]);
@@ -44,7 +40,7 @@ export default function Community() {
 
   function handleLike(id, i, list) {
     if (!like[i]) {
-      Firebase.likeWork(userID, id, list).then(() => {
+      Firebase.likeWork(user.uid, id, list).then(() => {
         const newLikeList = [...like];
         newLikeList[i] = !newLikeList[i];
         setLike(newLikeList);
@@ -52,7 +48,7 @@ export default function Community() {
       return;
     }
 
-    Firebase.unlikeWork(userID, id, list).then(() => {
+    Firebase.unlikeWork(user.uid, id, list).then(() => {
       const newLikeList = [...like];
       newLikeList[i] = !newLikeList[i];
       setLike(newLikeList);
@@ -61,14 +57,14 @@ export default function Community() {
 
   function handleCollect(id, i, list) {
     if (!collect[i]) {
-      Firebase.collectWork(userID, id, list).then(() => {
+      Firebase.collectWork(user.uid, id, list).then(() => {
         const newCollectList = [...collect];
         newCollectList[i] = !newCollectList[i];
         setCollect(newCollectList);
       });
       return;
     }
-    Firebase.uncollectWork(userID, id, list).then(() => {
+    Firebase.uncollectWork(user.uid, id, list).then(() => {
       const newCollectList = [...collect];
       newCollectList[i] = !newCollectList[i];
       setCollect(newCollectList);
@@ -83,7 +79,7 @@ export default function Community() {
             key={work.id}
           >
             <Div>
-              <Img src={work.author_thumbnail} />
+              <Thumbnail src={work.author_thumbnail} />
               <p>{work.author_name}</p>
             </Div>
             <Link

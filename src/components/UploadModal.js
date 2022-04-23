@@ -1,8 +1,7 @@
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
-
-const UserID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+import { AuthContext } from "../auth/Auth";
 
 const Div = styled.div`
   display: flex;
@@ -83,6 +82,7 @@ export default function UploadModal({
   setImage,
   themeColor,
 }) {
+  const user = useContext(AuthContext);
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -111,14 +111,14 @@ export default function UploadModal({
     const workID = workRef.id;
 
     const blob = await (await fetch(image)).blob();
-    const workFile = new File([blob], `${UserID}_${workID}.png`, {
+    const workFile = new File([blob], `${user.uid}_${workID}.png`, {
       type: "image/png",
     });
 
     const imageUrl = await Firebase.uploadFile(workFile);
 
     const data = {
-      author_id: UserID,
+      author_id: user.uid,
       description: inputs.description,
       comments_count: 0,
       image_url: imageUrl,

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import { useNavigate, useParams } from "react-router-dom";
-
-const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+import { AuthContext } from "../auth/Auth";
 
 const ModalCover = styled.div`
   top: 0;
@@ -67,6 +66,7 @@ const Img = styled.img`
 `;
 
 export default function WorkModal() {
+  const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const buttonRef = useRef(null);
@@ -84,8 +84,8 @@ export default function WorkModal() {
 
   useEffect(() => {
     Firebase.getWork(id).then((data) => {
-      setLike(data.liked_by.includes(userID));
-      setCollect(data.collected_by.includes(userID));
+      setLike(data.liked_by.includes(user.uid));
+      setCollect(data.collected_by.includes(user.uid));
       setWork(data);
     });
   }, []);
@@ -121,33 +121,33 @@ export default function WorkModal() {
   }, [comments]);
 
   function sendComment() {
-    const count = comments.length + 1 || 0;
-    Firebase.addComment(userID, id, input, count).then(() => {
+    const count = comments.length + 1 || 1;
+    Firebase.addComment(user.uid, id, input, count).then(() => {
       setInput("");
     });
   }
 
   function handleLike(id, list) {
     if (!like) {
-      Firebase.likeWork(userID, id, list).then(() => {
+      Firebase.likeWork(user.uid, id, list).then(() => {
         setLike(!like);
       });
       return;
     }
 
-    Firebase.unlikeWork(userID, id, list).then(() => {
+    Firebase.unlikeWork(user.uid, id, list).then(() => {
       setLike(!like);
     });
   }
   function handleCollect(id, list) {
     if (!collect) {
-      Firebase.collectWork(userID, id, list).then(() => {
+      Firebase.collectWork(user.uid, id, list).then(() => {
         setCollect(!collect);
       });
       return;
     }
 
-    Firebase.uncollectWork(userID, id, list).then(() => {
+    Firebase.uncollectWork(user.uid, id, list).then(() => {
       setCollect(!collect);
     });
   }

@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Outlet, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { Thumbnail } from "../components/element/Thumbnail";
-const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
+import { AuthContext } from "../auth/Auth";
 
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
+  const user = useContext(AuthContext);
 
   const Nav = styled.div`
     display: flex;
@@ -14,7 +15,7 @@ export default function ProfileLayout() {
   `;
 
   useEffect(() => {
-    Firebase.getProfile(userID).then((data) => setProfile(data));
+    Firebase.getProfile(user.uid).then((data) => setProfile(data));
   }, []);
 
   return (
