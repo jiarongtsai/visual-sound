@@ -25,6 +25,12 @@ export default function Login() {
     );
   }
 
+  function loginFB() {
+    Firebase.SignInWithFB().then((result) => {
+      console.log(result);
+    });
+  }
+
   return (
     <>
       <br />
@@ -47,6 +53,8 @@ export default function Login() {
         ></input>
       </div>
       <button onClick={loginFirebase}>Login</button>
+      <button onClick={loginFB}>Login with FB</button>
+      <button onClick={Firebase.SignOut}>Log Out</button>
       <hr />
       <br />
       <div>Register</div>

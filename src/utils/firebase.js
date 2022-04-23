@@ -6,6 +6,9 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
+  FacebookAuthProvider,
+  signInWithPopup,
+  signOut,
 } from "firebase/auth";
 
 import {
@@ -41,8 +44,16 @@ const firebaseConfig = {
 const Firebase = {
   app: initializeApp(firebaseConfig),
   pageLimit: 10,
+  ProviderFB() {
+    return new FacebookAuthProvider();
+  },
   auth() {
     return getAuth(this.app);
+  },
+  authStatus() {
+    onAuthStateChanged(this.auth(), (user) => {
+      console.log(user);
+    });
   },
   db() {
     return getFirestore(this.app);
@@ -53,7 +64,21 @@ const Firebase = {
   tagsRef() {
     return doc(this.db(), "tags", "BprzcEpU3l2hdnlvJQde");
   },
-  //fix me cannot update displayname
+  async addNewUser(user) {
+    const userRef = doc(this.db(), "users", user.uid);
+    await setDoc(userRef, {
+      user_name: user.displayName,
+      user_email: user.email,
+      user_bio: "",
+      user_thumbnail:
+        user.reloadUserInfo.photoUrl ||
+        `https://joeschmoe.io/api/v1/${user.displayName}`,
+      following: [],
+      followers: [],
+    });
+
+    return this.auth().currentUser;
+  },
   async register(username, email, password) {
     const userCredential = await createUserWithEmailAndPassword(
       this.auth(),
@@ -64,18 +89,8 @@ const Firebase = {
 
     await updateProfile(user, { displayName: username });
 
-    const userRef = doc(this.db(), "users", user.uid);
-    await setDoc(userRef, {
-      user_name: username,
-      user_email: user.email,
-      user_bio: "",
-      user_thumbnail: `https://joeschmoe.io/api/v1/${username}`,
-      following: [],
-      followers: [],
-    });
-
-    const uuser = this.auth().currentUser;
-    return uuser;
+    const currentUser = await this.addNewUser(user);
+    return currentUser;
   },
   async login(email, password) {
     const userCredential = await signInWithEmailAndPassword(
@@ -84,6 +99,28 @@ const Firebase = {
       password
     );
     return userCredential.user;
+  },
+  async SignInWithFB() {
+    try {
+      const result = await signInWithPopup(this.auth(), this.ProviderFB());
+      const user = result.user;
+
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const accessToken = credential.accessToken;
+
+      const currentUser = await this.addNewUser(user);
+      return { currentUser, accessToken };
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  async SignOut() {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+    } catch (e) {
+      console.log(e);
+    }
   },
   async getAllworks(lastVisibleData) {
     let queryCondition;

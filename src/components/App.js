@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./Header";
 import Main from "../pages/Main";
 import ProfileLayout from "../pages/ProfileLayout";
@@ -12,6 +12,9 @@ import WorkModal from "./WorkModal";
 import WorkView from "../pages/WorkView";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import { Firebase } from "../utils/firebase";
+
+Firebase.authStatus();
 
 function App() {
   let location = useLocation();
