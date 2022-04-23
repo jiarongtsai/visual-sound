@@ -1,28 +1,12 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { PlayerProvider } from "../components/PlayerProvider";
-import SequencePlayer from "../components/SequencePlayer";
-import WorkModal from "../components/WorkModal";
 import { Outlet, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
+import { Thumbnail } from "../components/element/Thumbnail";
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
-
-const Img = styled.img`
-  width: 50px;
-  border-radius: 50%;
-`;
-
-const Block = styled.div`
-  display: ${(props) => props.display};
-`;
 
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
-  const [userWorks, setUserWorks] = useState([]);
-  const [collectedWorks, setCollectedWorks] = useState([]);
-  const [workModalID, setWorkModalID] = useState("");
-  const [tab, setTab] = useState(0);
-  //0: userWork, 1:collectedWork
 
   const Nav = styled.div`
     display: flex;
@@ -36,7 +20,7 @@ export default function ProfileLayout() {
   return (
     <>
       <div>
-        <Img src={profile.user_thumbnail} />
+        <Thumbnail src={profile.user_thumbnail} />
         <p>{profile.user_name}</p>
         <p>{profile.user_bio}</p>
       </div>
@@ -46,48 +30,6 @@ export default function ProfileLayout() {
         <Link to="collection">Collection</Link>
       </Nav>
       <Outlet />
-      {/* <Block display={`${tab === 0 ? "initial" : "none"}`}>
-        {userWorks.map((work, i) => {
-          return (
-            <div key={i}>
-              <PlayerProvider>
-                {({ soundPlayer }) => {
-                  return (
-                    <SequencePlayer
-                      player={soundPlayer}
-                      sheetmusic={work.sheetmusic}
-                      bpm={work.bpm}
-                    />
-                  );
-                }}
-              </PlayerProvider>
-              <br />
-              <button onClick={() => setWorkModalID(work.id)}>more</button>
-            </div>
-          );
-        })}
-      </Block>
-      <Block display={`${tab === 1 ? "initial" : "none"}`}>
-        {collectedWorks.map((work, i) => {
-          return (
-            <div key={i}>
-              <PlayerProvider>
-                {({ soundPlayer }) => {
-                  return (
-                    <SequencePlayer
-                      player={soundPlayer}
-                      sheetmusic={work.sheetmusic}
-                      bpm={work.bpm}
-                    />
-                  );
-                }}
-              </PlayerProvider>
-              <br />
-              <button onClick={() => setWorkModalID(work.id)}>more</button>
-            </div>
-          );
-        })}
-      </Block> */}
     </>
   );
 }

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-// import { UserContext } from "../context/UserContext";
 
 export default function Login() {
-  //   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [inputs, setInputs] = useState({});
+
+  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {}, []);
 
@@ -14,6 +17,7 @@ export default function Login() {
   function loginFirebase() {
     Firebase.login(inputs.email, inputs.password).then((data) => {
       console.log(data);
+      navigate(from, { replace: true });
     });
   }
 
@@ -21,6 +25,7 @@ export default function Login() {
     Firebase.register(inputs.username, inputs.email, inputs.password).then(
       (data) => {
         console.log(data);
+        navigate(from, { replace: true });
       }
     );
   }
@@ -28,6 +33,7 @@ export default function Login() {
   function loginFB() {
     Firebase.SignInWithFB().then((result) => {
       console.log(result);
+      navigate(from, { replace: true });
     });
   }
 
@@ -54,7 +60,6 @@ export default function Login() {
       </div>
       <button onClick={loginFirebase}>Login</button>
       <button onClick={loginFB}>Login with FB</button>
-      <button onClick={Firebase.SignOut}>Log Out</button>
       <hr />
       <br />
       <div>Register</div>

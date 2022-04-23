@@ -50,11 +50,6 @@ const Firebase = {
   auth() {
     return getAuth(this.app);
   },
-  authStatus() {
-    onAuthStateChanged(this.auth(), (user) => {
-      console.log(user);
-    });
-  },
   db() {
     return getFirestore(this.app);
   },
@@ -112,14 +107,6 @@ const Firebase = {
       return { currentUser, accessToken };
     } catch (error) {
       console.log(error);
-    }
-  },
-  async SignOut() {
-    try {
-      const auth = getAuth();
-      await signOut(auth);
-    } catch (e) {
-      console.log(e);
     }
   },
   async getAllworks(lastVisibleData) {
