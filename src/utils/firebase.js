@@ -175,7 +175,7 @@ const Firebase = {
     const collectedWorks = snapshot.docs.map((doc) => {
       return {
         id: doc.id,
-        ...doc.data,
+        ...doc.data(),
       };
     });
 

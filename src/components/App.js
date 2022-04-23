@@ -2,7 +2,9 @@ import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Header from "./Header";
 import Main from "../pages/Main";
-import Profile from "../pages/Profile";
+import ProfileLayout from "../pages/ProfileLayout";
+import ProfileWorks from "../pages/ProfileWorks";
+import ProfileCollections from "../pages/ProfileCollections";
 import Community from "../pages/Community";
 import Explore from "../pages/Explore";
 import User from "../pages/User";
@@ -18,11 +20,14 @@ function App() {
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<Header />}>
           <Route index element={<Main />} />
-          <Route path="profile" element={<Profile />} />
           <Route path="community" element={<Community />} />
           <Route path="explore" element={<Explore />} />
           <Route path="/work/:id" element={<WorkView />} />
           <Route path="/user/:invoiceId" element={<User />} />
+          <Route path="profile" element={<ProfileLayout />}>
+            <Route index element={<ProfileWorks />} />
+            <Route path="collection" element={<ProfileCollections />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

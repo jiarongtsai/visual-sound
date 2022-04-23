@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import WorkModal from "../components/WorkModal";
 import { useLocation, Link } from "react-router-dom";
 
 const userID = "oWhlyRTSEMPFknaRnA5MNNB8iZC2";
@@ -79,18 +78,19 @@ export default function Community() {
     <>
       {allworks.map((work, i) => {
         return (
-          <Link
+          <div
+            style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
             key={work.id}
-            to={`/work/${work.id}`}
-            state={{ backgroundLocation: location }}
           >
-            <div
-              style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
+            <Div>
+              <Img src={work.author_thumbnail} />
+              <p>{work.author_name}</p>
+            </Div>
+            <Link
+              style={{ cursor: "pointer" }}
+              to={`/work/${work.id}`}
+              state={{ backgroundLocation: location }}
             >
-              <Div>
-                <Img src={work.author_thumbnail} />
-                <p>{work.author_name}</p>
-              </Div>
               <PlayerProvider>
                 {({ soundPlayer }) => {
                   return (
@@ -103,45 +103,46 @@ export default function Community() {
                   );
                 }}
               </PlayerProvider>
-              <div>
-                <button onClick={() => handleLike(work.id, i, work.liked_by)}>
-                  {`${like[i] ? "liked" : "like"}`}
-                </button>
-                <button
-                  onClick={() => handleCollect(work.id, i, work.collected_by)}
-                >
-                  {`${collect[i] ? "collected" : "collect"}`}
-                </button>
-                {/* <button onClick={() => setWorkModalID(work.id)}>
+            </Link>
+            <div>
+              <button onClick={() => handleLike(work.id, i, work.liked_by)}>
+                {`${like[i] ? "liked" : "like"}`}
+              </button>
+              <button
+                onClick={() => handleCollect(work.id, i, work.collected_by)}
+              >
+                {`${collect[i] ? "collected" : "collect"}`}
+              </button>
+              {/* <button onClick={() => setWorkModalID(work.id)}>
                   Add a comment
                 </button> */}
-              </div>
-              <Div>
-                <h3>{work.author_name}</h3>
-                <p>{work.description}</p>
-              </Div>
-              <div>
-                <div>
-                  {work.latestComments?.map((comment) => {
-                    return (
-                      <div key={comment.id}>
-                        <span>
-                          <strong>{comment.author_name}</strong>
-                        </span>
-                        <span>{comment.content}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <a
-                  style={{ cursor: "pointer" }}
-                  // onClick={() => setWorkModalID(work.id)}
-                >{`view all ${work.comments_count} comments`}</a>
-                <br />
-              </div>
-              <p>{work.created_time.toDate().toDateString()}</p>
             </div>
-          </Link>
+            <Div>
+              <h3>{work.author_name}</h3>
+              <p>{work.description}</p>
+            </Div>
+            <div>
+              <div>
+                {work.latestComments?.map((comment) => {
+                  return (
+                    <div key={comment.id}>
+                      <span>
+                        <strong>{comment.author_name}</strong>
+                      </span>
+                      <span>{comment.content}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <Link
+                style={{ cursor: "pointer" }}
+                to={`/work/${work.id}`}
+                state={{ backgroundLocation: location }}
+              >{`view all ${work.comments_count} comments`}</Link>
+              <br />
+            </div>
+            <p>{work.created_time.toDate().toDateString()}</p>
+          </div>
         );
       })}
     </>
