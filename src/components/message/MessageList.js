@@ -27,8 +27,13 @@ const MessageBox = ({ item, setCurrentChatroom }) => {
         <Thumbnail src={item.author_thumbnail} />
         <p>{item.author_name}</p>
       </PersonalInfoWrapper>
-      <p>latest message</p>
-      <p>unread</p>
+      <p>{item.latestMessage.content}</p>
+      <p>{`${
+        item.author_place === item.latestMessage.sender &&
+        !item.latestMessage.has_read
+          ? "unread"
+          : "-----"
+      }`}</p>
       <hr />
     </a>
   );

@@ -32,12 +32,14 @@ export default function Message() {
 
         const result = await Promise.all(
           senders.map(async (sender) => {
+            const latestMessage = await Firebase.getLatestMessage(sender.mid);
             const senderInfo = await Firebase.getUserBasicInfo(sender.id);
             return {
               mid: sender.mid,
               author_id: sender.id,
               author_place: sender.place,
               ...senderInfo,
+              latestMessage,
             };
           })
         );

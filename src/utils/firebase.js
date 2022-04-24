@@ -368,9 +368,6 @@ const Firebase = {
       created_time: Timestamp.fromDate(new Date(Date.now())),
       has_read: false,
     });
-    // await updateDoc(doc(this.db(), "works", id), {
-    //   comments_count: count,
-    // });
   },
   async getAllUsers(list) {
     const allusers = await getDocs(collection(this.db(), "users"));
@@ -392,9 +389,17 @@ const Firebase = {
     });
     return docRef.id;
   },
+  async getLatestMessage(mid) {
+    const queryCondition = query(
+      collection(this.db(), `chatrooms/${mid}/chats`),
+      orderBy("created_time", "desc"),
+      limit(1)
+    );
+    const docRef = await getDocs(queryCondition);
+    return docRef.docs[0].data();
+  },
 };
 
-// Firebase.getAllUsers("eEApp6rcFZUJlikXujdGk6KhLc22");
 // Firebase.onSnapshotChatrooms("eEApp6rcFZUJlikXujdGk6KhLc22");
 // Firebase.register("roger", "roger@gmail.com", "web123").then((user) => {
 //   console.log(user);
