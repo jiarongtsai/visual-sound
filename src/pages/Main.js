@@ -1,4 +1,4 @@
-import { React } from "react";
+import React from "react";
 import MySequencer from "../components/squencer/MySequencer";
 import { PlayerProvider } from "../components/PlayerProvider";
 
