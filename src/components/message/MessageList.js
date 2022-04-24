@@ -18,38 +18,38 @@ const MessageWrapper = styled.div`
   height: 60vh;
 `;
 
-const MessageBox = () => {
+const MessageBox = ({ item, setCurrentChatroom }) => {
   return (
-    <div>
+    <a onClick={() => setCurrentChatroom(item)} style={{ cursor: "pointer" }}>
       <PersonalInfoWrapper>
-        <Thumbnail src="https://joeschmoe.io/api/v1/random" />
-        <p>Bella</p>
+        <Thumbnail src={item.author_thumbnail} />
+        <p>{item.author_name}</p>
       </PersonalInfoWrapper>
       <p>latest message</p>
       <p>unread</p>
-    </div>
+      <hr />
+    </a>
   );
 };
 
-export default function MessageList() {
+export default function MessageList({ messageList, setCurrentChatroom }) {
   return (
     <Wrapper>
       <div>
         <div>User Name</div>
-        <span>chat with ++</span>
-        {/* open a modal, searching for user */}
+        <button>chat with new person ++</button>
       </div>
       <br />
       <MessageWrapper>
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
-        <MessageBox />
+        {messageList.map((item) => {
+          return (
+            <MessageBox
+              key={item.mid}
+              item={item}
+              setCurrentChatroom={setCurrentChatroom}
+            />
+          );
+        })}
       </MessageWrapper>
     </Wrapper>
   );

@@ -1,14 +1,12 @@
-import { getDefaultNormalizer } from "@testing-library/react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged,
   FacebookAuthProvider,
   signInWithPopup,
-  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import {
@@ -344,8 +342,40 @@ const Firebase = {
     const tags = [...new Set([...updateTags, ...oldTags])];
     await setDoc(this.tagsRef(), { tags });
   },
+  async getChatrooms() {
+    const result = await getDocs(collection(this.db(), "chatrooms"));
+    console.log(result);
+  },
+  onSnapshotChatrooms(uid, callback) {
+    const queryCondition = query(
+      collection(this.db(), "chatrooms"),
+      where("participants", "array-contains", uid)
+    );
+
+    return onSnapshot(queryCondition, callback);
+  },
+  onSnapshotChats(mid, callback) {
+    const queryCondition = query(
+      collection(this.db(), `chatrooms/${mid}/chats`),
+      orderBy("created_time")
+    );
+    return onSnapshot(queryCondition, callback);
+  },
+  async addMessage(place, mid, content) {
+    await addDoc(collection(this.db(), `chatrooms/${mid}/chats`), {
+      sender: place,
+      content: content,
+      created_time: Timestamp.fromDate(new Date(Date.now())),
+      has_read: false,
+    });
+    // await updateDoc(doc(this.db(), "works", id), {
+    //   comments_count: count,
+    // });
+  },
 };
 
+// Firebase.addMessage(1, "gNiKAj4RSlWrktrVIVnB", "Good job");
+// Firebase.onSnapshotChatrooms("eEApp6rcFZUJlikXujdGk6KhLc22");
 // Firebase.register("roger", "roger@gmail.com", "web123").then((user) => {
 //   console.log(user);
 // });
