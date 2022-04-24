@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { AuthContext } from "../auth/Auth";
+import { AuthContext } from "../components/auth/Auth";
 import { Firebase } from "../utils/firebase";
-import { GridWrapper } from "../components/GridWrapper";
+import { GridWrapper } from "../components/element/GridWrapper";
 import { Img } from "../components/element/Img";
 
 export default function ProfileCollections() {

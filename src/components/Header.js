@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
-import AuthStatus from "../auth/AuthStatus";
-
+import AuthStatus from "../components/auth/AuthStatus";
 const Nav = styled.nav`
   display: flex;
   justify-content: space-between;

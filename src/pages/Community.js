@@ -4,7 +4,7 @@ import { useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import { AuthContext } from "../auth/Auth";
+import { AuthContext } from "../components/auth/Auth";
 import { Thumbnail } from "../components/element/Thumbnail";
 
 const Div = styled.div`

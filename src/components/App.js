@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { AuthProvider } from "../auth/Auth";
-import RequireAuth from "../auth/RequireAuth";
+import { AuthProvider } from "../components/auth/Auth";
+import RequireAuth from "../components/auth/RequireAuth";
 import Header from "./Header";
 import Main from "../pages/Main";
 import ProfileLayout from "../pages/ProfileLayout";

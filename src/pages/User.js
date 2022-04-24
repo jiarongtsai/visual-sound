@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { GridWrapper } from "../components/GridWrapper";
+import { GridWrapper } from "../components/element/GridWrapper";
 import { Thumbnail } from "../components/element/Thumbnail";
 import { Img } from "../components/element/Img";
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Outlet, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { Thumbnail } from "../components/element/Thumbnail";
-import { AuthContext } from "../auth/Auth";
+import { AuthContext } from "../components/auth/Auth";
 
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import { AuthContext } from "../auth/Auth";
+import { AuthContext } from "../components/auth/Auth";
 
 const ModalCover = styled.div`
   top: 0;
