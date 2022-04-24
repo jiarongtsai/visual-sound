@@ -24,7 +24,12 @@ export default function ProfileLayout() {
         <Thumbnail src={profile.user_thumbnail} />
         <p>{profile.user_name}</p>
         <p>{profile.user_bio}</p>
+        <button>edit profile</button>
       </div>
+      <Nav>
+        <div>followers {profile.followers?.length || 0}</div>
+        <div>following {profile.following?.length || 0}</div>
+      </Nav>
       <hr />
       <Nav>
         <Link to="">Work</Link>
