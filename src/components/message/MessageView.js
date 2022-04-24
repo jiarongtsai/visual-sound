@@ -76,7 +76,7 @@ export default function MessageView({ currentChatroom }) {
           <MessageBox
             key={i}
             content={chat.content}
-            time={chat.created_time.toDate().toString()}
+            time={chat.created_time.toDate().toString().slice(0, 25)}
             name={`${
               chat.sender === currentChatroom.author_place
                 ? currentChatroom.author_name

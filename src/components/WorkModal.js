@@ -5,25 +5,8 @@ import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
-
-const ModalCover = styled.div`
-  top: 0;
-  position: fixed;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContent = styled.div`
-  background-color: white;
-  width: 80vw;
-  height: 70vh;
-  display: flex;
-`;
+import { ModalBackground } from "./element/ModalBackground";
+import { ModalContent } from "./element/ModalContent";
 
 const ModalContentVisual = styled.div`
   flex-basis: 60%;
@@ -154,7 +137,7 @@ export default function WorkModal() {
 
   if (!work) return null;
   return (
-    <ModalCover>
+    <ModalBackground>
       <ModalContent>
         <ModalContentVisual>
           <div key={work.id}>
@@ -210,6 +193,6 @@ export default function WorkModal() {
           X
         </ModalCloseButton>
       </ModalContent>
-    </ModalCover>
+    </ModalBackground>
   );
 }

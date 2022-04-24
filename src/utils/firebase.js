@@ -372,9 +372,29 @@ const Firebase = {
     //   comments_count: count,
     // });
   },
+  async getAllUsers(list) {
+    const allusers = await getDocs(collection(this.db(), "users"));
+    //cool stuff
+    const result = allusers.docs
+      .filter((user) => !list.includes(user.id))
+      .map((user) => {
+        return {
+          uid: user.id,
+          user_name: user.data().user_name,
+          user_thumbnail: user.data().user_thumbnail,
+        };
+      });
+    return result;
+  },
+  async addNewChatroom(id1, id2) {
+    const docRef = await addDoc(collection(this.db(), "chatrooms"), {
+      participants: [id1, id2],
+    });
+    return docRef.id;
+  },
 };
 
-// Firebase.addMessage(1, "gNiKAj4RSlWrktrVIVnB", "Good job");
+// Firebase.getAllUsers("eEApp6rcFZUJlikXujdGk6KhLc22");
 // Firebase.onSnapshotChatrooms("eEApp6rcFZUJlikXujdGk6KhLc22");
 // Firebase.register("roger", "roger@gmail.com", "web123").then((user) => {
 //   console.log(user);
