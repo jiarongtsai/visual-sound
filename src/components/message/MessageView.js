@@ -71,7 +71,7 @@ export default function MessageView({ currentChatroom }) {
   }
 
   if (Object.keys(currentChatroom).length === 0)
-    return <div>Start to chat by click user</div>;
+    return <div>Open new chat or Click user</div>;
   return (
     <Wrapper>
       <PersonalInfoWrapper>

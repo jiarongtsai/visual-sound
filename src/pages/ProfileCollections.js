@@ -15,10 +15,11 @@ export default function ProfileCollections() {
       const allCollections = await Firebase.getUserCollection(user.uid);
       const UserData = await Firebase.getProfile(user.uid);
       const collectionMap = UserData.collection_map;
-
-      const categorized = categorize(collectionMap, allCollections);
+      if (collectionMap) {
+        const categorized = categorize(collectionMap, allCollections);
+        setCategorizedWorks(categorized);
+      }
       setCollectedWorks(allCollections);
-      setCategorizedWorks(categorized);
     })();
   }, []);
 

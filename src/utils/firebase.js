@@ -179,6 +179,9 @@ const Firebase = {
   },
   async getFollowingWorks(id) {
     const followingList = await this.getFollowingList(id);
+
+    if (followingList.length === 0) return [];
+
     const queryCondition = query(
       this.worksRef(),
       where("author_id", "in", followingList),

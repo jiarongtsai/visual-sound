@@ -95,16 +95,17 @@ export default function MessageList({
       </div>
       <br />
       <MessageWrapper>
-        {messageList.map((item) => {
-          return (
-            <MessageBox
-              key={item.mid}
-              item={item}
-              setCurrentChatroom={setCurrentChatroom}
-              currentChatroom={currentChatroom}
-            />
-          );
-        })}
+        {messageList &&
+          messageList.map((item) => {
+            return (
+              <MessageBox
+                key={item.mid}
+                item={item}
+                setCurrentChatroom={setCurrentChatroom}
+                currentChatroom={currentChatroom}
+              />
+            );
+          })}
       </MessageWrapper>
     </Wrapper>
   );

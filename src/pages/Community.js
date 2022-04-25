@@ -50,6 +50,8 @@ export default function Community() {
     });
   }
 
+  if (allworks.length === 0)
+    return <div>Go 'Explore' to follow more users</div>;
   return (
     <>
       {allworks.map((work, i) => {

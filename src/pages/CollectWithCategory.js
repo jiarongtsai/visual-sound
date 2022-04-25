@@ -44,11 +44,12 @@ export default function CollectWithCategory({ id, collectedList }) {
         onChange={(e) => setSelection(e.target.value)}
       />
       <datalist id="category">
-        {Object.keys(collectionData).map((term) => (
-          <option key={term} value={term}>
-            {term}
-          </option>
-        ))}
+        {collectionData &&
+          Object.keys(collectionData).map((term) => (
+            <option key={term} value={term}>
+              {term}
+            </option>
+          ))}
       </datalist>
       <button onClick={collectWork}>{`${
         collect ? "collected" : "collect"
