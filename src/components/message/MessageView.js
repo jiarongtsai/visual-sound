@@ -60,6 +60,7 @@ export default function MessageView({ currentChatroom }) {
   }, [chats]);
 
   function sendMessage() {
+    if (Object.keys(currentChatroom).length === 0) return;
     Firebase.addMessage(
       1 - currentChatroom.author_place,
       currentChatroom.mid,
@@ -69,8 +70,14 @@ export default function MessageView({ currentChatroom }) {
     });
   }
 
+  if (Object.keys(currentChatroom).length === 0)
+    return <div>Start to chat by click user</div>;
   return (
     <Wrapper>
+      <PersonalInfoWrapper>
+        <Thumbnail src={currentChatroom.author_thumbnail} />
+        <p>{currentChatroom.author_name}</p>
+      </PersonalInfoWrapper>
       <MessageWrapper>
         {chats.map((chat, i) => (
           <MessageBox

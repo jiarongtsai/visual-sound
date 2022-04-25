@@ -373,6 +373,14 @@ const Firebase = {
       created_time: Timestamp.fromDate(new Date(Date.now())),
       has_read: false,
     });
+    await updateDoc(doc(this.db(), `chatrooms/${mid}`), {
+      latestMessage: {
+        sender: place,
+        content: content,
+        created_time: Timestamp.fromDate(new Date(Date.now())),
+        has_read: false,
+      },
+    });
   },
   async getAllUsers(list) {
     const allusers = await getDocs(collection(this.db(), "users"));
@@ -406,9 +414,24 @@ const Firebase = {
 
     return { id: id, ...data };
   },
-  async updateLatestMessage(mid, id) {
-    const docRef = doc(this.db(), `chatrooms/${mid}/chats/${id}`);
+  async updateLatestMessage(mid, latestMessage) {
+    const docRef = doc(this.db(), `chatrooms/${mid}/chats/${latestMessage.id}`);
     await updateDoc(docRef, { has_read: true });
+
+    await updateDoc(doc(this.db(), `chatrooms/${mid}`), {
+      latestMessage: {
+        ...latestMessage,
+        has_read: true,
+      },
+    });
+  },
+  onSnapshotLatestMessage(mid, callback) {
+    const queryCondition = query(
+      collection(this.db(), `chatrooms/${mid}/chats`),
+      orderBy("created_time", "desc"),
+      limit(1)
+    );
+    return onSnapshot(queryCondition, callback);
   },
 };
 

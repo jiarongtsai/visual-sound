@@ -38,9 +38,8 @@ export default function ShowAllUsersModal({ setShowModal, messageList }) {
           <div>all users</div>
           {usersList.map((list) => {
             return (
-              <>
+              <div key={list.uid}>
                 <PersonalInfoWrapper
-                  key={list.uid}
                   onClick={() => openNewChat(list.uid, user.uid)}
                   style={{ cursor: "pointer" }}
                 >
@@ -48,7 +47,7 @@ export default function ShowAllUsersModal({ setShowModal, messageList }) {
                   <p>{list.user_name}</p>
                 </PersonalInfoWrapper>
                 <br />
-              </>
+              </div>
             );
           })}
         </div>

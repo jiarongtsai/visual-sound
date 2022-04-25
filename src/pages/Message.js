@@ -14,7 +14,6 @@ const MessageContainer = styled.div`
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
   const [currentChatroom, setCurrentChatroom] = useState({});
-
   const user = useContext(AuthContext);
 
   useEffect(() => {
@@ -47,6 +46,8 @@ export default function Message() {
         setMessageList(result);
       }
     );
+    console.log(Object.keys(currentChatroom).length === 0);
+    // const onSnapshotLatestMessage = Firebase.onSnapshotLatestMessage()
     return () => {
       onSnapshotChatrooms();
     };
@@ -56,6 +57,7 @@ export default function Message() {
     <MessageContainer>
       <MessageList
         messageList={messageList}
+        currentChatroom={currentChatroom}
         setCurrentChatroom={setCurrentChatroom}
       />
       <MessageView currentChatroom={currentChatroom} />

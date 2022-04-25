@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import { onSnapshot } from "firebase/firestore";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../auth/Auth";
@@ -31,23 +32,25 @@ const Unread = styled.span`
   margin-right: 20px;
 `;
 
-const MessageBox = ({ item, setCurrentChatroom }) => {
+const MessageBox = ({ item, setCurrentChatroom, currentChatroom }) => {
   function handleClickBox() {
     setCurrentChatroom(item);
     if (
       item.author_place === item.latestMessage.sender &&
       !item.latestMessage.has_read
     ) {
-      Firebase.updateLatestMessage(item.mid, item.latestMessage.id);
+      Firebase.updateLatestMessage(item.mid, item.latestMessage);
     }
   }
+
   return (
     <a onClick={() => handleClickBox(item)} style={{ cursor: "pointer" }}>
       <PersonalInfoWrapper>
         <Thumbnail src={item.author_thumbnail} />
         <p>{item.author_name}</p>
         {item.author_place === item.latestMessage.sender &&
-        !item.latestMessage.has_read ? (
+        !item.latestMessage.has_read &&
+        currentChatroom.mid !== item.mid ? (
           <Unread />
         ) : (
           ""
@@ -59,7 +62,11 @@ const MessageBox = ({ item, setCurrentChatroom }) => {
   );
 };
 
-export default function MessageList({ messageList, setCurrentChatroom }) {
+export default function MessageList({
+  messageList,
+  setCurrentChatroom,
+  currentChatroom,
+}) {
   const user = useContext(AuthContext);
   const [input, setInput] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -82,8 +89,8 @@ export default function MessageList({ messageList, setCurrentChatroom }) {
           <div>{user.displayName || "have't set name"}</div>
         </PersonalInfoWrapper>
         <div>
-          <input value={input} onChange={(e) => setInput(e.target.value)} />
-          <button onClick={searchForUser}>search for user</button>
+          {/* <input value={input} onChange={(e) => setInput(e.target.value)} /> */}
+          <button onClick={searchForUser}>open new chat</button>
         </div>
       </div>
       <br />
@@ -94,6 +101,7 @@ export default function MessageList({ messageList, setCurrentChatroom }) {
               key={item.mid}
               item={item}
               setCurrentChatroom={setCurrentChatroom}
+              currentChatroom={currentChatroom}
             />
           );
         })}
