@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
@@ -45,6 +45,12 @@ const TagWrapper = styled.div`
   display: flex;
 `;
 
+const PersonalInfoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Img = styled.img`
   width: 50px;
   border-radius: 50%;
@@ -55,6 +61,7 @@ export default function WorkModal() {
   const navigate = useNavigate();
   const { id } = useParams();
   const buttonRef = useRef(null);
+  const location = useLocation;
 
   function onDismiss() {
     navigate(-1);
@@ -124,6 +131,7 @@ export default function WorkModal() {
   }
 
   if (!work || !user) return null;
+
   return (
     <ModalBackground>
       <ModalContent>
@@ -141,6 +149,15 @@ export default function WorkModal() {
                 );
               }}
             </PlayerProvider>
+            <Link
+              to={`/user/${work.author_id}`}
+              state={{ backgroundLocation: location }}
+            >
+              <PersonalInfoWrapper>
+                <Img src={work.author_thumbnail} />
+                <p>{work.author_name}</p>
+              </PersonalInfoWrapper>
+            </Link>
             <ModalText>{work.description}</ModalText>
             <TagsContainer>
               {work.tags?.map((tag) => (
@@ -163,8 +180,14 @@ export default function WorkModal() {
           {comments.map((comment) => {
             return (
               <div key={comment.id}>
-                <Img src={comment.author_thumbnail} />
-                <p>{comment.author_name}</p>
+                <Link
+                  to={`/user/${comment.author_id}`}
+                  state={{ backgroundLocation: location }}
+                >
+                  <Img src={comment.author_thumbnail} />
+
+                  <p>{comment.author_name}</p>
+                </Link>
                 <p>{comment.content}</p>
               </div>
             );

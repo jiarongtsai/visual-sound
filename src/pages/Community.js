@@ -55,15 +55,22 @@ export default function Community() {
   return (
     <>
       {allworks.map((work, i) => {
+        console.log(work);
         return (
           <div
             style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
             key={work.id}
           >
-            <Div>
-              <Thumbnail src={work.author_thumbnail} />
-              <p>{work.author_name}</p>
-            </Div>
+            <Link
+              style={{ cursor: "pointer" }}
+              to={`/user/${work.author_id}`}
+              state={{ backgroundLocation: location }}
+            >
+              <Div>
+                <Thumbnail src={work.author_thumbnail} />
+                <p>{work.author_name}</p>
+              </Div>
+            </Link>
             <Link
               style={{ cursor: "pointer" }}
               to={`/work/${work.id}`}

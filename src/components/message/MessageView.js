@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import { Thumbnail } from "../element/Thumbnail";
@@ -43,6 +44,7 @@ const MessageBox = ({ name, thumbnail, content, time }) => {
 
 export default function MessageView({ currentChatroom }) {
   const user = useContext(AuthContext);
+  const location = useLocation;
   const [chats, setChats] = useState([]);
   const [input, setInput] = useState("");
   const endRef = useRef(null);
@@ -74,10 +76,16 @@ export default function MessageView({ currentChatroom }) {
     return <div>Open new chat or Click user</div>;
   return (
     <Wrapper>
-      <PersonalInfoWrapper>
-        <Thumbnail src={currentChatroom.author_thumbnail} />
-        <p>{currentChatroom.author_name}</p>
-      </PersonalInfoWrapper>
+      <Link
+        style={{ cursor: "pointer" }}
+        to={`/user/${currentChatroom.author_id}`}
+        state={{ backgroundLocation: location }}
+      >
+        <PersonalInfoWrapper>
+          <Thumbnail src={currentChatroom.author_thumbnail} />
+          <p>{currentChatroom.author_name}</p>
+        </PersonalInfoWrapper>
+      </Link>
       <MessageWrapper>
         {chats.map((chat, i) => (
           <MessageBox
