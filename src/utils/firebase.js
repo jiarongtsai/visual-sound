@@ -274,6 +274,11 @@ const Firebase = {
       collected_by: [...currentCollectedByList, uid],
     });
   },
+  async collectWorkByCategory(uid, collectionMap) {
+    await updateDoc(doc(this.db(), "users", uid), {
+      collection_map: collectionMap,
+    });
+  },
   async uncollectWork(uid, id, currentCollectedByList) {
     const newCollectByList = currentCollectedByList.filter((id) => id !== uid);
     await updateDoc(doc(this.db(), "works", id), {

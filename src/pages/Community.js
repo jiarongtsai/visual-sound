@@ -6,6 +6,7 @@ import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import { Thumbnail } from "../components/element/Thumbnail";
+import CollectWithCategory from "./CollectWithCategory";
 
 const Div = styled.div`
   display: flex;
@@ -18,7 +19,6 @@ export default function Community() {
   const location = useLocation();
   const [allworks, setAllworks] = useState([]);
   const [like, setLike] = useState([]);
-  const [collect, setCollect] = useState([]);
 
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
@@ -28,11 +28,6 @@ export default function Community() {
           setLike((pre) => [...pre, true]);
         } else {
           setLike((pre) => [...pre, false]);
-        }
-        if (item.collected_by.includes(user.uid)) {
-          setCollect((pre) => [...pre, true]);
-        } else {
-          setCollect((pre) => [...pre, false]);
         }
       });
     });
@@ -55,21 +50,6 @@ export default function Community() {
     });
   }
 
-  function handleCollect(id, i, list) {
-    if (!collect[i]) {
-      Firebase.collectWork(user.uid, id, list).then(() => {
-        const newCollectList = [...collect];
-        newCollectList[i] = !newCollectList[i];
-        setCollect(newCollectList);
-      });
-      return;
-    }
-    Firebase.uncollectWork(user.uid, id, list).then(() => {
-      const newCollectList = [...collect];
-      newCollectList[i] = !newCollectList[i];
-      setCollect(newCollectList);
-    });
-  }
   return (
     <>
       {allworks.map((work, i) => {
@@ -104,11 +84,11 @@ export default function Community() {
               <button onClick={() => handleLike(work.id, i, work.liked_by)}>
                 {`${like[i] ? "liked" : "like"}`}
               </button>
-              <button
-                onClick={() => handleCollect(work.id, i, work.collected_by)}
-              >
-                {`${collect[i] ? "collected" : "collect"}`}
-              </button>
+
+              <CollectWithCategory
+                id={work.id}
+                collectedList={work.collected_by}
+              />
               {/* <button onClick={() => setWorkModalID(work.id)}>
                   Add a comment
                 </button> */}

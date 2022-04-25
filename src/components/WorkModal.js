@@ -7,9 +7,11 @@ import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import { ModalBackground } from "./element/ModalBackground";
 import { ModalContent } from "./element/ModalContent";
+import CollectWithCategory from "../pages/CollectWithCategory";
 
 const ModalContentVisual = styled.div`
   flex-basis: 60%;
+  overflow: scroll;
 `;
 
 const ModalContentText = styled.div`
@@ -62,13 +64,11 @@ export default function WorkModal() {
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
-  const [collect, setCollect] = useState(false);
   const endRef = useRef(null);
 
   useEffect(() => {
     Firebase.getWork(id).then((data) => {
       setLike(data.liked_by.includes(user.uid));
-      setCollect(data.collected_by.includes(user.uid));
       setWork(data);
     });
   }, []);
@@ -122,18 +122,6 @@ export default function WorkModal() {
       setLike(!like);
     });
   }
-  function handleCollect(id, list) {
-    if (!collect) {
-      Firebase.collectWork(user.uid, id, list).then(() => {
-        setCollect(!collect);
-      });
-      return;
-    }
-
-    Firebase.uncollectWork(user.uid, id, list).then(() => {
-      setCollect(!collect);
-    });
-  }
 
   if (!work) return null;
   return (
@@ -163,10 +151,13 @@ export default function WorkModal() {
             <button onClick={() => handleLike(work.id, work.liked_by)}>
               {`${like ? "liked" : "like"}`}
             </button>
-            <button onClick={() => handleCollect(work.id, work.collected_by)}>
-              {`${collect ? "collected" : "collect"}`}
-            </button>
+            <CollectWithCategory
+              id={work.id}
+              collectedList={work.collected_by}
+            />
           </div>
+          <br />
+          <br />
         </ModalContentVisual>
         <ModalContentText>
           {comments.map((comment) => {
