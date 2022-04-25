@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
+import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../auth/Auth";
 import { Thumbnail } from "../element/Thumbnail";
 import ShowAllUsersModal from "../ShowAllUsersModal";
@@ -20,20 +21,40 @@ const MessageWrapper = styled.div`
   height: 60vh;
 `;
 
+const Unread = styled.span`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 20px;
+`;
+
 const MessageBox = ({ item, setCurrentChatroom }) => {
+  function handleClickBox() {
+    setCurrentChatroom(item);
+    if (
+      item.author_place === item.latestMessage.sender &&
+      !item.latestMessage.has_read
+    ) {
+      console.log(item.latestMessage);
+      Firebase.updateLatestMessage(item.mid, item.latestMessage.id);
+    }
+  }
   return (
-    <a onClick={() => setCurrentChatroom(item)} style={{ cursor: "pointer" }}>
+    <a onClick={() => handleClickBox(item)} style={{ cursor: "pointer" }}>
       <PersonalInfoWrapper>
         <Thumbnail src={item.author_thumbnail} />
         <p>{item.author_name}</p>
+        {item.author_place === item.latestMessage.sender &&
+        !item.latestMessage.has_read ? (
+          <Unread />
+        ) : (
+          ""
+        )}
       </PersonalInfoWrapper>
       <p>{item.latestMessage.content}</p>
-      <p>{`${
-        item.author_place === item.latestMessage.sender &&
-        !item.latestMessage.has_read
-          ? "unread"
-          : "-----"
-      }`}</p>
       <hr />
     </a>
   );

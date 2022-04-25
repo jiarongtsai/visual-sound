@@ -396,12 +396,12 @@ const Firebase = {
       limit(1)
     );
     const docRef = await getDocs(queryCondition);
-    return docRef.docs[0].data();
+    return { ...docRef.docs[0].data(), id: docRef.docs[0].id };
+  },
+  async updateLatestMessage(mid, id) {
+    const docRef = doc(this.db(), `chatrooms/${mid}/chats/${id}`);
+    await updateDoc(docRef, { has_read: true });
   },
 };
 
-// Firebase.onSnapshotChatrooms("eEApp6rcFZUJlikXujdGk6KhLc22");
-// Firebase.register("roger", "roger@gmail.com", "web123").then((user) => {
-//   console.log(user);
-// });
 export { Firebase };

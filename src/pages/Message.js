@@ -49,7 +49,7 @@ export default function Message() {
     return () => {
       onSnapshotChatrooms();
     };
-  }, []);
+  }, [messageList]);
 
   return (
     <MessageContainer>
