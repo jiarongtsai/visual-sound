@@ -401,7 +401,10 @@ const Firebase = {
       limit(1)
     );
     const docRef = await getDocs(queryCondition);
-    return { ...docRef.docs[0].data(), id: docRef.docs[0].id };
+    const data = docRef.docs[0]?.data();
+    const id = docRef.docs[0]?.id;
+
+    return { id: id, ...data };
   },
   async updateLatestMessage(mid, id) {
     const docRef = doc(this.db(), `chatrooms/${mid}/chats/${id}`);

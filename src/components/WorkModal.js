@@ -123,7 +123,7 @@ export default function WorkModal() {
     });
   }
 
-  if (!work) return null;
+  if (!work || !user) return null;
   return (
     <ModalBackground>
       <ModalContent>

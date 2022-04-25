@@ -34,6 +34,7 @@ export default function Message() {
           senders.map(async (sender) => {
             const latestMessage = await Firebase.getLatestMessage(sender.mid);
             const senderInfo = await Firebase.getUserBasicInfo(sender.id);
+
             return {
               mid: sender.mid,
               author_id: sender.id,
@@ -49,7 +50,7 @@ export default function Message() {
     return () => {
       onSnapshotChatrooms();
     };
-  }, [messageList]);
+  }, []);
 
   return (
     <MessageContainer>

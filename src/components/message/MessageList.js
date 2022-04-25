@@ -38,7 +38,6 @@ const MessageBox = ({ item, setCurrentChatroom }) => {
       item.author_place === item.latestMessage.sender &&
       !item.latestMessage.has_read
     ) {
-      console.log(item.latestMessage);
       Firebase.updateLatestMessage(item.mid, item.latestMessage.id);
     }
   }
