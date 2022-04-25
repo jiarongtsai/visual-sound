@@ -55,7 +55,6 @@ export default function Community() {
   return (
     <>
       {allworks.map((work, i) => {
-        console.log(work);
         return (
           <div
             style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}

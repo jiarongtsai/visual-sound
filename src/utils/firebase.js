@@ -175,18 +175,41 @@ const Firebase = {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
 
-    return docSnap.data().following;
+    return docSnap.data()?.following;
   },
   async getFollowingWorks(id) {
     const followingList = await this.getFollowingList(id);
 
-    if (followingList.length === 0) return [];
+    if (!followingList || followingList.length === 0) return [];
+
+    //ask if followinglist longer!
+    // if (followingList.length > 10) {
+    //   const splitFollowingList = [];
+    //   while (followingList.length) {
+    //     splitFollowingList.push(followingList.splice(0, 10));
+    //   }
+
+    //   function getQueryList(arrOfarr) {
+
+    //     for (const list of arrOfarr) {
+    //       console.log(typeof where("author_id", "in", list));
+    //       return where("author_id", "in", list);
+    //     }
+    //   }
+
+    //   // const queryCondition = query(
+    //   //   this.worksRef(),
+    //   //   getQueryList(splitFollowingList),
+    //   //   orderBy("created_time", "desc")
+    //   // );
+
+    //   console.log(getQueryList(splitFollowingList));
+    // }
 
     const queryCondition = query(
       this.worksRef(),
       where("author_id", "in", followingList),
-      orderBy("created_time", "desc"),
-      limit(20)
+      orderBy("created_time", "desc")
     );
     const snapShot = await getDocs(queryCondition);
     const allworks = await Promise.all(
@@ -435,6 +458,29 @@ const Firebase = {
       limit(1)
     );
     return onSnapshot(queryCondition, callback);
+  },
+  async followUser(uid, userID, userList) {
+    const uList = await this.getFollowingList(uid);
+
+    await updateDoc(doc(this.db(), `users/${uid}`), {
+      following: [...uList, userID],
+    });
+    await updateDoc(doc(this.db(), `users/${userID}`), {
+      followers: [...userList, uid],
+    });
+  },
+  async unfollowUser(uid, userID, userList) {
+    const uList = await this.getFollowingList(uid);
+    const newList = uList.filter((id) => id !== userID);
+
+    await updateDoc(doc(this.db(), `users/${uid}`), {
+      following: newList,
+    });
+
+    const newUserList = userList.filter((id) => id !== uid);
+    await updateDoc(doc(this.db(), `users/${userID}`), {
+      followers: newUserList,
+    });
   },
 };
 
