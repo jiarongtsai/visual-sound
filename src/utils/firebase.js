@@ -307,10 +307,13 @@ const Firebase = {
       collection_map: collectionMap,
     });
   },
-  async uncollectWork(uid, id, currentCollectedByList) {
+  async uncollectWork(uid, id, currentCollectedByList, collctionMap) {
     const newCollectByList = currentCollectedByList.filter((id) => id !== uid);
     await updateDoc(doc(this.db(), "works", id), {
       collected_by: newCollectByList,
+    });
+    await updateDoc(doc(this.db(), "users", uid), {
+      collction_map: collctionMap,
     });
   },
   async addComment(uid, id, content, count) {

@@ -5,14 +5,13 @@ import { Firebase } from "../utils/firebase";
 import { Thumbnail } from "../components/element/Thumbnail";
 import { AuthContext } from "../components/auth/Auth";
 
+const Nav = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`;
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
   const user = useContext(AuthContext);
-
-  const Nav = styled.div`
-    display: flex;
-    justify-content: space-evenly;
-  `;
 
   useEffect(() => {
     Firebase.getProfile(user.uid).then((data) => setProfile(data));

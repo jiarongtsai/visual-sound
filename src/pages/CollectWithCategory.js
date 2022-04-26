@@ -30,10 +30,34 @@ export default function CollectWithCategory({ id, collectedList }) {
 
       setSelection("");
     } else {
-      await Firebase.uncollectWork(user.uid, id, collectedList);
+      const collectionCopy = { ...collectionData };
+      console.log(collectionCopy);
+      const removedCollectionData = removeCollectionByID(collectionCopy, id);
+      console.log(removedCollectionData);
+      await Firebase.uncollectWork(
+        user.uid,
+        id,
+        collectedList,
+        removedCollectionData
+      );
+      setCollectionData(removedCollectionData);
     }
 
     setCollect(!collect);
+  }
+
+  function removeCollectionByID(obj, id) {
+    const result = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      const index = value.findIndex((v) => v === id);
+      if (index >= 0) {
+        value.splice(index, 1);
+      }
+      result[key] = value;
+    }
+
+    return result;
   }
 
   return (
