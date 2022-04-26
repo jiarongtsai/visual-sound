@@ -1,5 +1,6 @@
 import { onSnapshot } from "firebase/firestore";
 import React, { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../auth/Auth";
@@ -32,33 +33,36 @@ const Unread = styled.span`
   margin-right: 20px;
 `;
 
-const MessageBox = ({ item, setCurrentChatroom, currentChatroom }) => {
+const MessageBox = ({ messageInfo, setCurrentChatroom, currentChatroom }) => {
   function handleClickBox() {
-    setCurrentChatroom(item);
+    setCurrentChatroom(messageInfo.mid);
     if (
-      item.author_place === item.latestMessage.sender &&
-      !item.latestMessage.has_read
+      messageInfo.author_place === messageInfo.latestMessage.sender &&
+      !messageInfo.latestMessage.has_read
     ) {
-      Firebase.updateLatestMessage(item.mid, item.latestMessage);
+      Firebase.updateLatestMessage(messageInfo.mid, messageInfo.latestMessage);
     }
   }
 
   return (
-    <a onClick={() => handleClickBox(item)} style={{ cursor: "pointer" }}>
+    <div
+      onClick={() => handleClickBox(messageInfo)}
+      style={{ cursor: "pointer" }}
+    >
       <PersonalInfoWrapper>
-        <Thumbnail src={item.author_thumbnail} />
-        <p>{item.author_name}</p>
-        {item.author_place === item.latestMessage.sender &&
-        !item.latestMessage.has_read &&
-        currentChatroom.mid !== item.mid ? (
+        <Thumbnail src={messageInfo.author_thumbnail} />
+        <p>{messageInfo.author_name}</p>
+        {messageInfo.author_place === messageInfo.latestMessage.sender &&
+        !messageInfo.latestMessage.has_read &&
+        currentChatroom !== messageInfo.mid ? (
           <Unread />
         ) : (
           ""
         )}
       </PersonalInfoWrapper>
-      <p>{item.latestMessage.content}</p>
+      <p>{messageInfo.latestMessage.content}</p>
       <hr />
-    </a>
+    </div>
   );
 };
 
@@ -96,14 +100,15 @@ export default function MessageList({
       <br />
       <MessageWrapper>
         {messageList &&
-          messageList.map((item) => {
+          messageList.map((messageInfo) => {
             return (
-              <MessageBox
-                key={item.mid}
-                item={item}
-                setCurrentChatroom={setCurrentChatroom}
-                currentChatroom={currentChatroom}
-              />
+              <Link key={messageInfo.mid} to={`/message/${messageInfo.mid}`}>
+                <MessageBox
+                  messageInfo={messageInfo}
+                  setCurrentChatroom={setCurrentChatroom}
+                  currentChatroom={currentChatroom}
+                />
+              </Link>
             );
           })}
       </MessageWrapper>

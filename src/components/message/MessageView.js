@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import { Thumbnail } from "../element/Thumbnail";
@@ -43,17 +43,28 @@ const MessageBox = ({ name, thumbnail, content, time }) => {
 };
 
 export default function MessageView({ currentChatroom }) {
+  const { mid } = useParams();
   const user = useContext(AuthContext);
   const location = useLocation;
   const [chats, setChats] = useState([]);
+  const [currentChatInfo, SetCurrentCahtInfo] = useState({});
   const [input, setInput] = useState("");
   const endRef = useRef(null);
+
   useEffect(() => {
-    Firebase.onSnapshotChats(currentChatroom.mid, (snapshot) => {
+    const onSnapshotChat = Firebase.onSnapshotChats(mid, (snapshot) => {
       const allChats = snapshot.docs.map((item) => item.data());
       setChats(allChats);
     });
-  }, [currentChatroom]);
+
+    Firebase.getChatroomInfo(mid, user.uid).then((data) => {
+      SetCurrentCahtInfo(data);
+    });
+
+    return () => {
+      onSnapshotChat();
+    };
+  }, [mid]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({
@@ -62,14 +73,12 @@ export default function MessageView({ currentChatroom }) {
   }, [chats]);
 
   function sendMessage() {
-    if (Object.keys(currentChatroom).length === 0) return;
-    Firebase.addMessage(
-      1 - currentChatroom.author_place,
-      currentChatroom.mid,
-      input
-    ).then(() => {
-      setInput("");
-    });
+    if (!currentChatroom) return;
+    Firebase.addMessage(1 - currentChatInfo.author_place, mid, input).then(
+      () => {
+        setInput("");
+      }
+    );
   }
 
   if (Object.keys(currentChatroom).length === 0)
@@ -78,12 +87,12 @@ export default function MessageView({ currentChatroom }) {
     <Wrapper>
       <Link
         style={{ cursor: "pointer" }}
-        to={`/user/${currentChatroom.author_id}`}
+        to={`/user/${currentChatInfo.author_id}`}
         state={{ backgroundLocation: location }}
       >
         <PersonalInfoWrapper>
-          <Thumbnail src={currentChatroom.author_thumbnail} />
-          <p>{currentChatroom.author_name}</p>
+          <Thumbnail src={currentChatInfo.author_thumbnail} />
+          <p>{currentChatInfo.author_name}</p>
         </PersonalInfoWrapper>
       </Link>
       <MessageWrapper>
@@ -93,13 +102,13 @@ export default function MessageView({ currentChatroom }) {
             content={chat.content}
             time={chat.created_time.toDate().toString().slice(0, 25)}
             name={`${
-              chat.sender === currentChatroom.author_place
-                ? currentChatroom.author_name
+              chat.sender === currentChatInfo.author_place
+                ? currentChatInfo.author_name
                 : user.displayName
             }`}
             thumbnail={`${
-              chat.sender === currentChatroom.author_place
-                ? currentChatroom.author_thumbnail
+              chat.sender === currentChatInfo.author_place
+                ? currentChatInfo.author_thumbnail
                 : user.photoURL
             }`}
           />

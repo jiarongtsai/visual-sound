@@ -1,5 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { GridWrapper } from "../components/element/GridWrapper";
 import { Thumbnail } from "../components/element/Thumbnail";
@@ -18,6 +24,7 @@ export default function User() {
   const [userWorks, setUserWorks] = useState([]);
   const { uid } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentFollowers, setCurrentFollowers] = useState(0);
 
@@ -47,7 +54,12 @@ export default function User() {
     });
   }
 
-  console.log(isFollowing);
+  function handleChat() {
+    Firebase.getChatroom(user.uid, uid).then((mid) => {
+      console.log(mid);
+      navigate(`/message/${mid}`);
+    });
+  }
 
   return (
     <>
@@ -65,7 +77,8 @@ export default function User() {
           <button onClick={handleFollow}>
             {!isFollowing ? "follow" : "unfollow"}
           </button>
-          <button>chat with {profile.user_name}</button>
+
+          <button onClick={handleChat}>chat with {profile.user_name}</button>
         </Nav>
       </div>
       <hr />

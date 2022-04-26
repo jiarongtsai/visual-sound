@@ -54,6 +54,14 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route
+            path="message/:mid"
+            element={
+              <RequireAuth>
+                <Message />
+              </RequireAuth>
+            }
+          />
           <Route path="login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Route>

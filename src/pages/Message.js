@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
@@ -15,8 +16,10 @@ export default function Message() {
   const [messageList, setMessageList] = useState([]);
   const [currentChatroom, setCurrentChatroom] = useState({});
   const user = useContext(AuthContext);
+  const { mid } = useParams();
 
   useEffect(() => {
+    if (mid) setCurrentChatroom(mid);
     const onSnapshotChatrooms = Firebase.onSnapshotChatrooms(
       user.uid,
       async (snapshot) => {
@@ -25,29 +28,32 @@ export default function Message() {
         snapshot.docs.map((item) => {
           item.data().participants.forEach((id, i) => {
             if (id !== user.uid)
-              senders.push({ id: id, place: i, mid: item.id });
+              senders.push({
+                id: id,
+                place: i,
+                mid: item.id,
+                latestMessage: item.data().latestMessage,
+              });
           });
         });
 
         const result = await Promise.all(
           senders.map(async (sender) => {
-            const latestMessage = await Firebase.getLatestMessage(sender.mid);
             const senderInfo = await Firebase.getUserBasicInfo(sender.id);
 
             return {
               mid: sender.mid,
               author_id: sender.id,
               author_place: sender.place,
+              latestMessage: sender.latestMessage,
               ...senderInfo,
-              latestMessage,
             };
           })
         );
         setMessageList(result);
       }
     );
-    console.log(Object.keys(currentChatroom).length === 0);
-    // const onSnapshotLatestMessage = Firebase.onSnapshotLatestMessage()
+
     return () => {
       onSnapshotChatrooms();
     };

@@ -28,6 +28,7 @@ import {
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { theWindow } from "tone/build/esm/core/context/AudioContext";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCAHli85vuDjMNmK3r0_1k3VQvYSysvUFg",
@@ -425,6 +426,7 @@ const Firebase = {
   async addNewChatroom(id1, id2) {
     const docRef = await addDoc(collection(this.db(), "chatrooms"), {
       participants: [id1, id2],
+      latestMessage: {},
     });
     return docRef.id;
   },
@@ -482,6 +484,44 @@ const Firebase = {
       followers: newUserList,
     });
   },
+  async getChatroom(id1, id2) {
+    const result = await getDocs(collection(this.db(), "chatrooms"));
+
+    const target = result.docs.filter((doc) => {
+      return (
+        doc.data().participants.includes(id1) &&
+        doc.data().participants.includes(id2)
+      );
+    });
+
+    if (target) return target[0]?.id;
+
+    const newRoom = this.addNewChatroom(id1, id2);
+
+    return newRoom;
+  },
+  async getChatroomInfo(mid, uid) {
+    const chatroomData = await getDoc(doc(this.db(), "chatrooms", mid));
+    const sender = {};
+    chatroomData.data().participants.forEach((id, i) => {
+      if (id !== uid) {
+        sender.place = i;
+        sender.id = id;
+      }
+    });
+    const senderInfo = await this.getUserBasicInfo(sender.id);
+
+    return {
+      ...senderInfo,
+      author_id: sender.id,
+      author_place: sender.place,
+    };
+  },
 };
+
+// Firebase.getChatroomInfo(
+//   "DpGeGkrZpWMsUtz0Uxkv",
+//   "oWhlyRTSEMPFknaRnA5MNNB8iZC2"
+// ).then((data) => console.log(data));
 
 export { Firebase };
