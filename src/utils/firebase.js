@@ -229,6 +229,7 @@ const Firebase = {
     const docSnap = await getDoc(docRef);
 
     return {
+      author_id: docSnap.id,
       author_name: docSnap.data().user_name,
       author_thumbnail: docSnap.data().user_thumbnail,
     };
@@ -469,6 +470,8 @@ const Firebase = {
   },
   async followUser(uid, userID, userList) {
     const uList = await this.getFollowingList(uid);
+
+    if (uList.includes(userID)) return;
 
     await updateDoc(doc(this.db(), `users/${uid}`), {
       following: [...uList, userID],

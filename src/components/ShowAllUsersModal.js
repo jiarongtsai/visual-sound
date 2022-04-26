@@ -37,7 +37,7 @@ export default function ShowAllUsersModal({ setShowModal, messageList }) {
         <div
           style={{ display: "flex", flexDirection: "column", flexBasis: "50%" }}
         >
-          <div>all users</div>
+          <div>users</div>
           {usersList.map((list) => {
             return (
               <div key={list.uid}>

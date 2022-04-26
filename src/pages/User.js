@@ -54,7 +54,6 @@ export default function User() {
 
   function handleChat() {
     Firebase.getChatroom(user.uid, uid).then((mid) => {
-      // console.log(mid);
       navigate(`/message/${mid}`);
     });
   }
