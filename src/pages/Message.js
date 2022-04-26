@@ -21,7 +21,7 @@ export default function Message() {
 
   useEffect(() => {
     mid &&
-      Firebase.checkChatroomParticipants((result) => {
+      Firebase.checkChatroomParticipants(mid, user.uid).then((result) => {
         if (result) {
           setCurrentChatroom(mid);
           return;

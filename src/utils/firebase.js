@@ -395,14 +395,18 @@ const Firebase = {
     return onSnapshot(queryCondition, callback);
   },
   async addMessage(place, mid, content) {
-    await addDoc(collection(this.db(), `chatrooms/${mid}/chats`), {
-      sender: place,
-      content: content,
-      created_time: Timestamp.fromDate(new Date(Date.now())),
-      has_read: false,
-    });
+    const docRef = await addDoc(
+      collection(this.db(), `chatrooms/${mid}/chats`),
+      {
+        sender: place,
+        content: content,
+        created_time: Timestamp.fromDate(new Date(Date.now())),
+        has_read: false,
+      }
+    );
     await updateDoc(doc(this.db(), `chatrooms/${mid}`), {
       latestMessage: {
+        id: docRef.id,
         sender: place,
         content: content,
         created_time: Timestamp.fromDate(new Date(Date.now())),
@@ -490,21 +494,21 @@ const Firebase = {
 
     const target = result.docs.filter((doc) => {
       return (
-        doc.data().participants.includes(id1) &&
-        doc.data().participants.includes(id2)
+        doc.data().participants?.includes(id1) &&
+        doc.data().participants?.includes(id2)
       );
     });
 
-    if (target) return target[0]?.id;
+    if (target.length !== 0) return target[0]?.id;
 
-    const newRoom = this.addNewChatroom(id1, id2);
+    const newRoom = await this.addNewChatroom(id1, id2);
 
     return newRoom;
   },
   async getChatroomInfo(mid, uid) {
     const chatroomData = await getDoc(doc(this.db(), "chatrooms", mid));
     const sender = {};
-    chatroomData.data().participants.forEach((id, i) => {
+    chatroomData.data().participants?.forEach((id, i) => {
       if (id !== uid) {
         sender.place = i;
         sender.id = id;
@@ -520,7 +524,8 @@ const Firebase = {
   },
   async checkChatroomParticipants(mid, uid) {
     const chatroom = await getDoc(doc(this.db(), "chatrooms", mid));
-    return chatroom.data().participants.includes(uid);
+    const result = chatroom.data().participants.includes(uid);
+    return result;
   },
 };
 

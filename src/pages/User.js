@@ -23,7 +23,7 @@ export default function User() {
   const [currentFollowers, setCurrentFollowers] = useState(0);
 
   useEffect(() => {
-    if (user.uid === uid) navigate(`/profile`);
+    if (user?.uid === uid) navigate(`/profile`);
     Firebase.getProfile(uid).then((data) => {
       setProfile(data);
       setIsFollowing(data.followers.includes(user?.uid));
@@ -51,6 +51,7 @@ export default function User() {
 
   function handleChat() {
     Firebase.getChatroom(user.uid, uid).then((mid) => {
+      // console.log(mid);
       navigate(`/message/${mid}`);
     });
   }
