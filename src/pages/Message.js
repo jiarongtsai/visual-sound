@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
@@ -17,9 +17,18 @@ export default function Message() {
   const [currentChatroom, setCurrentChatroom] = useState({});
   const user = useContext(AuthContext);
   const { mid } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (mid) setCurrentChatroom(mid);
+    mid &&
+      Firebase.checkChatroomParticipants((result) => {
+        if (result) {
+          setCurrentChatroom(mid);
+          return;
+        }
+        navigate(`/message`);
+      });
+
     const onSnapshotChatrooms = Firebase.onSnapshotChatrooms(
       user.uid,
       async (snapshot) => {

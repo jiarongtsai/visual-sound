@@ -57,9 +57,10 @@ export default function MessageView({ currentChatroom }) {
       setChats(allChats);
     });
 
-    Firebase.getChatroomInfo(mid, user.uid).then((data) => {
-      SetCurrentCahtInfo(data);
-    });
+    mid &&
+      Firebase.getChatroomInfo(mid, user?.uid).then((data) => {
+        SetCurrentCahtInfo(data);
+      });
 
     return () => {
       onSnapshotChat();
@@ -81,8 +82,7 @@ export default function MessageView({ currentChatroom }) {
     );
   }
 
-  if (Object.keys(currentChatroom).length === 0)
-    return <div>Open new chat or Click user</div>;
+  if (!mid) return <div>Open new chat or Click user</div>;
   return (
     <Wrapper>
       <Link

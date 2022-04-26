@@ -1,11 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import {
-  useParams,
-  Link,
-  useLocation,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { GridWrapper } from "../components/element/GridWrapper";
 import { Thumbnail } from "../components/element/Thumbnail";
@@ -29,6 +23,7 @@ export default function User() {
   const [currentFollowers, setCurrentFollowers] = useState(0);
 
   useEffect(() => {
+    if (user.uid === uid) navigate(`/profile`);
     Firebase.getProfile(uid).then((data) => {
       setProfile(data);
       setIsFollowing(data.followers.includes(user?.uid));
@@ -56,7 +51,6 @@ export default function User() {
 
   function handleChat() {
     Firebase.getChatroom(user.uid, uid).then((mid) => {
-      console.log(mid);
       navigate(`/message/${mid}`);
     });
   }

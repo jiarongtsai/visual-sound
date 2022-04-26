@@ -28,6 +28,7 @@ import {
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { check } from "prettier";
 import { theWindow } from "tone/build/esm/core/context/AudioContext";
 
 const firebaseConfig = {
@@ -517,9 +518,13 @@ const Firebase = {
       author_place: sender.place,
     };
   },
+  async checkChatroomParticipants(mid, uid) {
+    const chatroom = await getDoc(doc(this.db(), "chatrooms", mid));
+    return chatroom.data().participants.includes(uid);
+  },
 };
 
-// Firebase.getChatroomInfo(
+// Firebase.checkChatroomParticipants(
 //   "DpGeGkrZpWMsUtz0Uxkv",
 //   "oWhlyRTSEMPFknaRnA5MNNB8iZC2"
 // ).then((data) => console.log(data));
