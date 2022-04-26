@@ -180,37 +180,33 @@ const Firebase = {
     return docSnap.data()?.following;
   },
   async getFollowingWorks(id) {
+    //haven't test more than 10
     const followingList = await this.getFollowingList(id);
 
     if (!followingList || followingList.length === 0) return [];
 
-    //ask if followinglist longer!
-    // if (followingList.length > 10) {
-    //   const splitFollowingList = [];
-    //   while (followingList.length) {
-    //     splitFollowingList.push(followingList.splice(0, 10));
-    //   }
+    if (followingList.length <= 10)
+      return this.getUnderTenFollowingsWorks(followingList);
 
-    //   function getQueryList(arrOfarr) {
+    const splitFollowingList = [];
+    while (followingList.length) {
+      splitFollowingList.push(followingList.splice(0, 10));
+    }
 
-    //     for (const list of arrOfarr) {
-    //       console.log(typeof where("author_id", "in", list));
-    //       return where("author_id", "in", list);
-    //     }
-    //   }
+    const allFollowingWorks = [];
+    splitFollowingList.forEach((list) => {
+      allFollowingWorks = [
+        ...allFollowingWorks,
+        ...this.getUnderTenFollowingsWorks(list),
+      ];
+    });
 
-    //   // const queryCondition = query(
-    //   //   this.worksRef(),
-    //   //   getQueryList(splitFollowingList),
-    //   //   orderBy("created_time", "desc")
-    //   // );
-
-    //   console.log(getQueryList(splitFollowingList));
-    // }
-
+    return allFollowingWorks;
+  },
+  async getUnderTenFollowingsWorks(list) {
     const queryCondition = query(
       this.worksRef(),
-      where("author_id", "in", followingList),
+      where("author_id", "in", list),
       orderBy("created_time", "desc")
     );
     const snapShot = await getDocs(queryCondition);
@@ -434,7 +430,9 @@ const Firebase = {
   async addNewChatroom(id1, id2) {
     const docRef = await addDoc(collection(this.db(), "chatrooms"), {
       participants: [id1, id2],
-      latestMessage: {},
+      latestMessage: {
+        created_time: Timestamp.fromDate(new Date(Date.now())),
+      },
     });
     return docRef.id;
   },

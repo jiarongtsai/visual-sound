@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "./auth/Auth";
 import { ModalBackground } from "./element/ModalBackground";
@@ -8,6 +9,7 @@ import { PersonalInfoWrapper } from "./message/MessageList";
 
 export default function ShowAllUsersModal({ setShowModal, messageList }) {
   const user = useContext(AuthContext);
+  const navigate = useNavigate();
   const [usersList, setUsersList] = useState([]);
 
   function listFilter(uid, list) {
@@ -24,8 +26,8 @@ export default function ShowAllUsersModal({ setShowModal, messageList }) {
   }, []);
 
   function openNewChat(id1, id2) {
-    Firebase.addNewChatroom(id1, id2).then(() => {
-      console.log("success");
+    Firebase.addNewChatroom(id1, id2).then((mid) => {
+      navigate(`/message/${mid}`);
       setShowModal(false);
     });
   }

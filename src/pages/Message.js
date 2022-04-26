@@ -59,7 +59,13 @@ export default function Message() {
             };
           })
         );
-        setMessageList(result);
+        const ResultSortedByTime = result.sort((a, b) => {
+          return (
+            b.latestMessage.created_time.seconds -
+            a.latestMessage.created_time.seconds
+          );
+        });
+        setMessageList(ResultSortedByTime);
       }
     );
 
