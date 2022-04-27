@@ -88,6 +88,17 @@ const Firebase = {
     const currentUser = await this.addNewUser(user);
     return currentUser;
   },
+  async updateProfile(user, name, bio, thumbnail) {
+    await updateProfile(user, {
+      displayName: name,
+      photoURL: thumbnail,
+    });
+    await updateDoc(doc(this.db(), "users", user.uid), {
+      user_name: name,
+      user_bio: bio,
+      user_thumbnail: thumbnail,
+    });
+  },
   async login(email, password) {
     const userCredential = await signInWithEmailAndPassword(
       this.auth(),
@@ -414,8 +425,8 @@ const Firebase = {
   getNewWorkRef() {
     return doc(this.worksRef());
   },
-  async uploadFile(file) {
-    const imageRef = ref(getStorage(), `images/${file.name}`);
+  async uploadFile(file, place) {
+    const imageRef = ref(getStorage(), `${place}/${file.name}`);
     await uploadBytes(imageRef, file);
     const imageDownloadURL = await getDownloadURL(imageRef);
 

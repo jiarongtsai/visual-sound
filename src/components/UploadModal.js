@@ -115,7 +115,7 @@ export default function UploadModal({
       type: "image/png",
     });
 
-    const imageUrl = await Firebase.uploadFile(workFile);
+    const imageUrl = await Firebase.uploadFile(workFile, "images");
 
     const data = {
       author_id: user.uid,

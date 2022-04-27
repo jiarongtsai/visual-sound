@@ -26,10 +26,10 @@ export default function User() {
 
   useEffect(() => {
     if (user?.uid === uid) {
-      console.log(user.uid, uid);
       navigate(`/profile`);
     }
     Firebase.getProfile(uid).then((data) => {
+      console.log(data);
       setProfile(data);
       setIsFollowing(data.followers.includes(user?.uid));
       setCurrentFollowers(data.followers?.length || 0);

@@ -5,6 +5,7 @@ import { Firebase } from "../utils/firebase";
 import { Thumbnail } from "../components/element/Thumbnail";
 import { AuthContext } from "../components/auth/Auth";
 import UsersModal from "../components/UsersModal";
+import EditProfileModal from "../components/EditProfileModal";
 
 const Nav = styled.div`
   display: flex;
@@ -18,6 +19,7 @@ export default function ProfileLayout() {
   const [buttonName, setButtonName] = useState("");
   const user = useContext(AuthContext);
   const navigate = useNavigate();
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
     Firebase.getProfile(user.uid).then((data) => setProfile(data));
@@ -73,11 +75,20 @@ export default function ProfileLayout() {
       ) : (
         ""
       )}
+      {openEditModal ? (
+        <EditProfileModal
+          setOpenModal={setOpenEditModal}
+          profile={profile}
+          setProfile={setProfile}
+        />
+      ) : (
+        ""
+      )}
       <div>
         <Thumbnail src={profile.user_thumbnail} />
         <p>{profile.user_name}</p>
         <p>{profile.user_bio}</p>
-        <button>edit profile</button>
+        <button onClick={() => setOpenEditModal(true)}>edit profile</button>
       </div>
       <Nav>
         <div onClick={openFollowers} style={{ cursor: "pointer" }}>
