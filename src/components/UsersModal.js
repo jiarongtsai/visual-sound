@@ -21,7 +21,12 @@ export default function UsersModal({
     <ModalBackground>
       <ModalContent>
         <div
-          style={{ display: "flex", flexDirection: "column", flexBasis: "50%" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexBasis: "50%",
+            overflow: "scroll",
+          }}
         >
           <div>users</div>
           {list.map((list) => {

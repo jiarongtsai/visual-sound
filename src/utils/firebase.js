@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -194,14 +195,23 @@ const Firebase = {
     }
 
     const allFollowingWorks = [];
-    splitFollowingList.forEach((list) => {
-      allFollowingWorks = [
-        ...allFollowingWorks,
-        ...this.getUnderTenFollowingsWorks(list),
-      ];
+
+    async function gerAllworks() {
+      for (const list of splitFollowingList) {
+        const works = await Firebase.getUnderTenFollowingsWorks(list);
+        allFollowingWorks.push(...works);
+      }
+    }
+    gerAllworks();
+
+    const sortedFollowingWorks = allFollowingWorks.sort((a, b) => {
+      return (
+        b.latestMessage.created_time.seconds -
+        a.latestMessage.created_time.seconds
+      );
     });
 
-    return allFollowingWorks;
+    return sortedFollowingWorks;
   },
   async getUnderTenFollowingsWorks(list) {
     const queryCondition = query(

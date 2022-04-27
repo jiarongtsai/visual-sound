@@ -22,6 +22,7 @@ export default function Community() {
 
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
+      console.log(data);
       setAllworks(data);
       data.forEach((item) => {
         if (item.liked_by.includes(user.uid)) {

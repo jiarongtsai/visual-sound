@@ -28,7 +28,6 @@ export default function ProfileLayout() {
     await Firebase.unfollowUser(user.uid, userID, profile.following);
     setList((pre) => pre.filter((user) => user.author_id !== userID));
   };
-  console.log(list);
 
   const chat = async (userID) => {
     const mid = await Firebase.getChatroom(user.uid, userID);
