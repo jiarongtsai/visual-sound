@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import SequenceMotion from "../components/SequenceMotion";
-import { GridWrapper, Square } from "../components/element/GridWrapper";
-import { Img } from "../components/element/Img";
+
+import Gallery from "../components/Gallery";
 
 export default function Explore() {
-  let location = useLocation();
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
   const [alltags, setAlltags] = useState([]);
@@ -28,22 +26,20 @@ export default function Explore() {
     const pagingObserver = new IntersectionObserver((entries) => {
       if (entries[0].intersectionRatio <= 0) return;
       if (isFetching) return;
+      if (typeof pagingRef.current === "undefined") return;
       isFetching = true;
 
-      function fetchWorks() {
-        if (queryTerm) {
-          return Firebase.searchWorks(queryTerm, pagingRef.current);
+      Firebase.getWorks(pagingRef.current, queryTerm).then(
+        ({ fetchWorks, lastVisibleWork }) => {
+          setExploreworks((pre) => [...pre, ...fetchWorks]);
+          setIsShown((pre) => [
+            ...pre,
+            ...Array(fetchWorks.length).fill(false),
+          ]);
+          pagingRef.current = lastVisibleWork;
+          isFetching = false;
         }
-        return Firebase.getAllworks(pagingRef.current);
-      }
-
-      fetchWorks().then(({ fetchWorks, lastVisibleWork }) => {
-        setExploreworks((pre) => [...pre, ...fetchWorks]);
-        console.log(fetchWorks.length);
-        setIsShown((pre) => [...pre, ...Array(fetchWorks.length).fill(false)]);
-        pagingRef.current = lastVisibleWork;
-        isFetching = false;
-      });
+      );
     });
     pagingObserver.observe(endofPageRef.current);
     return () => {
@@ -60,6 +56,7 @@ export default function Explore() {
     setSearchParams({ query: newQuery });
     setExploreworks([]);
     setIsShown([]);
+    console.log("hello");
   }
   return (
     <>
@@ -78,42 +75,7 @@ export default function Explore() {
         </datalist>
         <button>Search</button>
       </form>
-      <GridWrapper>
-        {exploreworks.map((work, i) => {
-          return (
-            <Link
-              key={work.id}
-              to={`/work/${work.id}`}
-              state={{ backgroundLocation: location }}
-            >
-              <Square style={{ display: isShown[i] ? "block" : "none" }}>
-                <SequenceMotion
-                  sheetmusic={work.sheetmusic}
-                  bpm={work.bpm}
-                  themeColor={work.themeColor}
-                />
-              </Square>
-              <Img
-                src={work.image_url}
-                onMouseEnter={() =>
-                  setIsShown((pre) => [
-                    ...pre.slice(0, i),
-                    true,
-                    ...pre.slice(i + 1),
-                  ])
-                }
-                onMouseLeave={() =>
-                  setIsShown((pre) => [
-                    ...pre.slice(0, i),
-                    false,
-                    ...pre.slice(i + 1),
-                  ])
-                }
-              />
-            </Link>
-          );
-        })}
-      </GridWrapper>
+      <Gallery works={exploreworks} isShown={isShown} setIsShown={setIsShown} />
       <div ref={endofPageRef}></div>
     </>
   );

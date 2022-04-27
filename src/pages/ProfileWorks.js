@@ -1,34 +1,43 @@
-import { useState, useEffect, useContext } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../components/auth/Auth";
 import { Firebase } from "../utils/firebase";
-import { GridWrapper } from "../components/element/GridWrapper";
-import { Img } from "../components/element/Img";
+import Gallery from "../components/Gallery";
 
 export default function ProfileWorks() {
   const user = useContext(AuthContext);
   const [userWorks, setUserWorks] = useState([]);
-  const location = useLocation();
+  const [isShown, setIsShown] = useState([]);
+  const endofPageRef = useRef();
+  const pagingRef = useRef(null);
+  let isFetching = false;
+
   useEffect(() => {
-    Firebase.getUserWorks(user.uid).then((data) => {
-      setUserWorks(data);
+    const pagingObserver = new IntersectionObserver((entries) => {
+      if (entries[0].intersectionRatio <= 0) return;
+      if (isFetching) return;
+      if (typeof pagingRef.current === "undefined") return;
+      isFetching = true;
+      Firebase.getWorks(pagingRef.current, null, user.uid).then(
+        ({ fetchWorks, lastVisibleWork }) => {
+          setUserWorks((pre) => [...pre, ...fetchWorks]);
+          setIsShown((pre) => [
+            ...pre,
+            ...Array(fetchWorks.length).fill(false),
+          ]);
+          pagingRef.current = lastVisibleWork;
+          isFetching = false;
+        }
+      );
     });
+    pagingObserver.observe(endofPageRef.current);
+    return () => {
+      endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
+    };
   }, []);
   return (
     <>
-      <GridWrapper>
-        {userWorks.map((work) => {
-          return (
-            <Link
-              key={work.id}
-              to={`/work/${work.id}`}
-              state={{ backgroundLocation: location }}
-            >
-              <Img src={work.image_url} />
-            </Link>
-          );
-        })}
-      </GridWrapper>
+      <Gallery works={userWorks} isShown={isShown} setIsShown={setIsShown} />
+      <div ref={endofPageRef}></div>
     </>
   );
 }

@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { GridWrapper } from "../components/element/GridWrapper";
 import { Thumbnail } from "../components/element/Thumbnail";
-import { Img } from "../components/element/Img";
 import styled from "styled-components";
 import { AuthContext } from "../components/auth/Auth";
+import Gallery from "../components/Gallery";
 
 const Nav = styled.div`
   display: flex;
@@ -17,10 +16,13 @@ export default function User() {
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);
   const { uid } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentFollowers, setCurrentFollowers] = useState(0);
+  const [isShown, setIsShown] = useState([]);
+  const endofPageRef = useRef();
+  const pagingRef = useRef(null);
+  let isFetching = false;
 
   useEffect(() => {
     if (user?.uid === uid) {
@@ -32,10 +34,30 @@ export default function User() {
       setIsFollowing(data.followers.includes(user?.uid));
       setCurrentFollowers(data.followers?.length || 0);
     });
+  }, []);
 
-    Firebase.getUserWorks(uid).then((data) => {
-      setUserWorks(data);
+  useEffect(() => {
+    const pagingObserver = new IntersectionObserver((entries) => {
+      if (entries[0].intersectionRatio <= 0) return;
+      if (isFetching) return;
+      if (typeof pagingRef.current === "undefined") return;
+      isFetching = true;
+      Firebase.getWorks(pagingRef.current, null, uid).then(
+        ({ fetchWorks, lastVisibleWork }) => {
+          setUserWorks((pre) => [...pre, ...fetchWorks]);
+          setIsShown((pre) => [
+            ...pre,
+            ...Array(fetchWorks.length).fill(false),
+          ]);
+          pagingRef.current = lastVisibleWork;
+          isFetching = false;
+        }
+      );
     });
+    pagingObserver.observe(endofPageRef.current);
+    return () => {
+      endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
+    };
   }, []);
 
   function handleFollow() {
@@ -79,19 +101,8 @@ export default function User() {
         </Nav>
       </div>
       <hr />
-      <GridWrapper>
-        {userWorks.map((work) => {
-          return (
-            <Link
-              key={work.id}
-              to={`/work/${work.id}`}
-              state={{ backgroundLocation: location }}
-            >
-              <Img src={work.image_url} />
-            </Link>
-          );
-        })}
-      </GridWrapper>
+      <Gallery works={userWorks} isShown={isShown} setIsShown={setIsShown} />
+      <div ref={endofPageRef}></div>
     </>
   );
 }

@@ -110,35 +110,85 @@ const Firebase = {
       console.log(error);
     }
   },
-  async getAllworks(lastVisibleData) {
+  async getWorks(lastVisibleData, term, uid) {
     let queryCondition;
-    if (lastVisibleData) {
-      queryCondition = query(
-        this.worksRef(),
-        orderBy("created_time", "desc"),
-        startAfter(lastVisibleData),
-        limit(this.pageLimit)
-      );
+    if (term) {
+      if (lastVisibleData) {
+        queryCondition = query(
+          this.worksRef(),
+          where("tags", "array-contains", term),
+          orderBy("created_time", "desc"),
+          startAfter(lastVisibleData),
+          limit(this.pageLimit)
+        );
+      } else {
+        queryCondition = query(
+          this.worksRef(),
+          where("tags", "array-contains", term),
+          orderBy("created_time", "desc"),
+          limit(this.pageLimit)
+        );
+      }
+    } else if (uid) {
+      if (lastVisibleData) {
+        queryCondition = query(
+          this.worksRef(),
+          where("author_id", "==", uid),
+          orderBy("created_time", "desc"),
+          startAfter(lastVisibleData),
+          limit(this.pageLimit)
+        );
+      } else {
+        queryCondition = query(
+          this.worksRef(),
+          where("author_id", "==", uid),
+          orderBy("created_time", "desc"),
+          limit(this.pageLimit)
+        );
+      }
     } else {
-      queryCondition = query(
-        this.worksRef(),
-        orderBy("created_time", "desc"),
-        limit(this.pageLimit)
-      );
+      if (lastVisibleData) {
+        queryCondition = query(
+          this.worksRef(),
+          orderBy("created_time", "desc"),
+          startAfter(lastVisibleData),
+          limit(this.pageLimit)
+        );
+      } else {
+        queryCondition = query(
+          this.worksRef(),
+          orderBy("created_time", "desc"),
+          limit(this.pageLimit)
+        );
+      }
     }
 
     const snapshot = await getDocs(queryCondition);
-    const fetchWorks = await Promise.all(
-      snapshot.docs.map(async (item) => {
-        const userInfo = await this.getUserBasicInfo(item.data().author_id);
+
+    let fetchWorks;
+
+    if (uid) {
+      fetchWorks = snapshot.docs.map((doc) => {
         return {
-          id: item.id,
-          ...item.data(),
-          ...userInfo,
+          id: doc.id,
+          ...doc.data(),
         };
-      })
-    );
+      });
+    } else {
+      fetchWorks = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const userInfo = await this.getUserBasicInfo(doc.data().author_id);
+          return {
+            id: doc.id,
+            ...doc.data(),
+            ...userInfo,
+          };
+        })
+      );
+    }
+
     const lastVisibleWork = snapshot.docs[this.pageLimit - 1];
+
     return { fetchWorks, lastVisibleWork };
   },
   async searchWorks(term, lastVisibleData) {
@@ -198,11 +248,14 @@ const Firebase = {
 
     async function gerAllworks() {
       for (const list of splitFollowingList) {
-        const works = await Firebase.getUnderTenFollowingsWorks(list);
+        //bind() ?? or just change to firebase
+        //late update??
+        const works = await this.getUnderTenFollowingsWorks(list);
         allFollowingWorks.push(...works);
       }
     }
-    gerAllworks();
+    const w = gerAllworks.bind(Firebase);
+    w();
 
     const sortedFollowingWorks = allFollowingWorks.sort((a, b) => {
       return (
@@ -253,8 +306,8 @@ const Firebase = {
   async getUserWorks(uid) {
     const queryByUser = query(
       collection(this.db(), "works"),
-      orderBy("created_time", "desc"),
-      where("author_id", "==", uid)
+      where("author_id", "==", uid),
+      orderBy("created_time", "desc")
     );
     const querySnapshot = await getDocs(queryByUser);
     const userWorks = querySnapshot.docs.map((doc) => {
