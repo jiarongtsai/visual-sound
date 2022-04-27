@@ -56,11 +56,16 @@ export default function Explore() {
     setSearchParams({ query: newQuery });
     setExploreworks([]);
     setIsShown([]);
-    console.log("hello");
   }
   return (
     <>
-      <div>Explore</div>
+      {queryTerm ? (
+        <div>
+          search for <strong>{queryTerm}</strong>
+        </div>
+      ) : (
+        ""
+      )}
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
           name="query"

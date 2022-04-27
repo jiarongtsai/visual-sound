@@ -13,9 +13,9 @@ const Nav = styled.div`
 
 export default function User() {
   const user = useContext(AuthContext);
+  const { uid } = useParams();
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);
-  const { uid } = useParams();
   const navigate = useNavigate();
   const [isFollowing, setIsFollowing] = useState(false);
   const [currentFollowers, setCurrentFollowers] = useState(0);
@@ -25,11 +25,14 @@ export default function User() {
   let isFetching = false;
 
   useEffect(() => {
+    //authcontext 的延遲問題如何解決
     if (user?.uid === uid) {
       navigate(`/profile`);
     }
+  }, []);
+
+  useEffect(() => {
     Firebase.getProfile(uid).then((data) => {
-      console.log(data);
       setProfile(data);
       setIsFollowing(data.followers.includes(user?.uid));
       setCurrentFollowers(data.followers?.length || 0);
