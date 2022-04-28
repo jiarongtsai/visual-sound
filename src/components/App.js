@@ -1,6 +1,8 @@
 import React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "../components/auth/Auth";
+import { theme } from "../theme/theme";
 import RequireAuth from "../components/auth/RequireAuth";
 import Header from "./Header";
 import Main from "../pages/Main";
@@ -15,64 +17,67 @@ import WorkModal from "./WorkModal";
 import WorkView from "../pages/WorkView";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Navbar from "./Navbar";
 
 function App() {
   const location = useLocation();
   const state = location.state;
   return (
     <AuthProvider>
-      <Routes location={state?.backgroundLocation || location}>
-        <Route path="/" element={<Header />}>
-          <Route index element={<Main />} />
-          <Route
-            path="community"
-            element={
-              <RequireAuth>
-                <Community />
-              </RequireAuth>
-            }
-          />
-          <Route path="explore" element={<Explore />} />
-          <Route path="/work/:id" element={<WorkView />} />
+      <ChakraProvider theme={theme}>
+        <Routes location={state?.backgroundLocation || location}>
+          <Route path="/" element={<Navbar />}>
+            <Route index element={<Main />} />
+            <Route
+              path="community"
+              element={
+                <RequireAuth>
+                  <Community />
+                </RequireAuth>
+              }
+            />
+            <Route path="explore" element={<Explore />} />
+            <Route path="/work/:id" element={<WorkView />} />
 
-          <Route path="/user/:uid" element={<User />} />
+            <Route path="/user/:uid" element={<User />} />
 
-          <Route
-            path="profile"
-            element={
-              <RequireAuth>
-                <ProfileLayout />
-              </RequireAuth>
-            }
-          >
-            <Route index element={<ProfileWorks />} />
-            <Route path="collection" element={<ProfileCollections />} />
+            <Route
+              path="profile"
+              element={
+                <RequireAuth>
+                  <ProfileLayout />
+                </RequireAuth>
+              }
+            >
+              <Route index element={<ProfileWorks />} />
+              <Route path="collection" element={<ProfileCollections />} />
+            </Route>
+            <Route
+              path="message"
+              element={
+                <RequireAuth>
+                  <Message />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="message/:mid"
+              element={
+                <RequireAuth>
+                  <Message />
+                </RequireAuth>
+              }
+            />
+            <Route path="login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route
-            path="message"
-            element={
-              <RequireAuth>
-                <Message />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="message/:mid"
-            element={
-              <RequireAuth>
-                <Message />
-              </RequireAuth>
-            }
-          />
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-      {state?.backgroundLocation && (
-        <Routes>
-          <Route path="/work/:id" element={<WorkModal />} />
         </Routes>
-      )}
+        {state?.backgroundLocation && (
+          <Routes>
+            <Route path="/work/:id" element={<WorkModal />} />
+          </Routes>
+        )}
+      </ChakraProvider>
     </AuthProvider>
   );
 }

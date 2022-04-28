@@ -29,7 +29,7 @@ export default function User() {
     if (user?.uid === uid) {
       navigate(`/profile`);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     Firebase.getProfile(uid).then((data) => {

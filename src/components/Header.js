@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import { Box, Flex } from "@chakra-ui/react";
 import styled from "styled-components";
 import AuthStatus from "../components/auth/AuthStatus";
 const Nav = styled.nav`
@@ -12,16 +13,22 @@ const Nav = styled.nav`
 export default function Header() {
   return (
     <>
-      <h1>Visual Sound - personal project</h1>
-      <Nav>
+      <Flex
+        bg="#8547D6"
+        as="header"
+        position="fixed"
+        w="100%"
+        p={4}
+        color="white"
+        mb="25"
+      >
         <Link to="/">Main</Link>
         <Link to="/community">Community</Link>
         <Link to="/explore">Explore</Link>
         <Link to="/profile">Profile</Link>
         <Link to="/message">Message</Link>
-        <br />
         <AuthStatus />
-      </Nav>
+      </Flex>
       <Outlet />
     </>
   );
