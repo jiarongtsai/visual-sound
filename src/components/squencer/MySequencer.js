@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createRef } from "react";
 import { useTransition } from "react-spring";
+import { Flex } from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
 import Grid from "./grid";
@@ -354,7 +355,7 @@ const Sequencer = ({ player }) => {
   }
 
   return (
-    <>
+    <Flex direction={"column"}>
       {openModal ? (
         <UploadModal
           setOpenModal={setOpenModal}
@@ -425,7 +426,7 @@ const Sequencer = ({ player }) => {
         />
       </Div>
       <Grid sequence={sequence} toggleStep={toggleStep} />
-    </>
+    </Flex>
   );
 };
 

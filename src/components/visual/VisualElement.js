@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 50vh;
-  width: 65vw;
+  width: 100%;
   margin: 0 auto;
   background: ${(props) => props.theme.background};
 `;

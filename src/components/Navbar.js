@@ -57,20 +57,18 @@ export default function Navbar() {
 
   return (
     <>
-      <Box
-        bg={useColorModeValue("gray.100", "gray.900")}
-        px={4}
-        position={"relative"}
-      >
+      <Box bg={useColorModeValue("gray.50", "gray.900")} position={"relative"}>
         <Flex
           h={16}
           alignItems={"center"}
           justifyContent={"space-between"}
           position={"fixed"}
-          w="95%"
+          w="100%"
+          bg={useColorModeValue("white", "gray.900")}
         >
           <IconButton
-            mr={12}
+            ml={2}
+            mr={14}
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
@@ -102,7 +100,7 @@ export default function Navbar() {
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
-            <Button mr={3} variant={"ghost"} onClick={toggleColorMode}>
+            <Button variant={"ghost"} onClick={toggleColorMode}>
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
 
@@ -114,6 +112,7 @@ export default function Navbar() {
                   variant={"link"}
                   cursor={"pointer"}
                   minW={0}
+                  mx={4}
                 >
                   <Avatar size={"sm"} src={user.photoURL} />
                 </MenuButton>
@@ -144,7 +143,7 @@ export default function Navbar() {
 
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
+            <Stack as={"nav"} spacing={6}>
               <br />
               <br />
               {Links.map((link) => (
@@ -155,7 +154,7 @@ export default function Navbar() {
         ) : null}
       </Box>
 
-      <Box p={4}>
+      <Box p={4} bg={useColorModeValue("gray.100", "gray.800")} minH="100%">
         <Outlet />
       </Box>
     </>

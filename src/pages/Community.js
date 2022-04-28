@@ -1,11 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { useLocation, Link } from "react-router-dom";
+import { Container, useColorModeValue } from "@chakra-ui/react";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import { Thumbnail } from "../components/element/Thumbnail";
+import CommunityCard from "../components/CommunityCard";
 import CollectWithCategory from "./CollectWithCategory";
 
 const Div = styled.div`
@@ -22,7 +24,6 @@ export default function Community() {
 
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
-      console.log(data);
       setAllworks(data);
       data.forEach((item) => {
         if (item.liked_by.includes(user.uid)) {
@@ -54,8 +55,18 @@ export default function Community() {
   if (allworks.length === 0)
     return <div>Go 'Explore' to follow more users</div>;
   return (
-    <>
-      {allworks.map((work, i) => {
+    <Container mt={16}>
+      {allworks.map((work, i) => (
+        <CommunityCard
+          key={work.id}
+          work={work}
+          i={i}
+          like={like}
+          handleLike={handleLike}
+          location={location}
+        />
+      ))}
+      {/* {allworks.map((work, i) => {
         return (
           <div
             style={{ width: "70vw", padding: "0 2rem", margin: "2rem auto" }}
@@ -101,7 +112,7 @@ export default function Community() {
               {/* <button onClick={() => setWorkModalID(work.id)}>
                   Add a comment
                 </button> */}
-            </div>
+      {/*}  </div>
             <Div>
               <h3>{work.author_name}</h3>
               <p>{work.description}</p>
@@ -129,7 +140,7 @@ export default function Community() {
             <p>{work.created_time.toDate().toDateString()}</p>
           </div>
         );
-      })}
-    </>
+      })} */}
+    </Container>
   );
 }

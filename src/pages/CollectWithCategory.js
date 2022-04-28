@@ -1,4 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
+import {
+  Menu,
+  MenuItem,
+  MenuItemOption,
+  MenuOptionGroup,
+  MenuList,
+  MenuButton,
+  Box,
+  useColorModeValue,
+  Link,
+  IconButton,
+  Editable,
+  EditableInput,
+  EditablePreview,
+} from "@chakra-ui/react";
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import { AuthContext } from "../components/auth/Auth";
 import { Firebase } from "../utils/firebase";
 
@@ -16,33 +32,34 @@ export default function CollectWithCategory({ id, collectedList }) {
     setCollect(collectedList?.includes(user.uid) ? true : false);
   }, []);
 
-  async function collectWork() {
-    if (!collect) {
-      await Firebase.collectWork(user.uid, id, collectedList);
+  async function collectWork(collectionName) {
+    await Firebase.collectWork(user.uid, id, collectedList);
 
-      if (selection) {
-        const collectionCopy = { ...collectionData };
-        collectionCopy[selection]
-          ? collectionCopy[selection].push(id)
-          : (collectionCopy[selection] = [id]);
-        await Firebase.collectWorkByCategory(user.uid, collectionCopy);
-      }
+    const collectionCopy = { ...collectionData };
 
-      setSelection("");
-    } else {
-      const collectionCopy = { ...collectionData };
-      console.log(collectionCopy);
-      const removedCollectionData = removeCollectionByID(collectionCopy, id);
-      console.log(removedCollectionData);
-      await Firebase.uncollectWork(
-        user.uid,
-        id,
-        collectedList,
-        removedCollectionData
-      );
-      setCollectionData(removedCollectionData);
-    }
+    collectionCopy[collectionName]
+      ? collectionCopy[collectionName].push(id)
+      : (collectionCopy[collectionName] = [id]);
 
+    await Firebase.collectWorkByCategory(user.uid, collectionCopy);
+
+    setSelection("");
+    setCollect(!collect);
+  }
+
+  async function uncollectWork() {
+    const collectionCopy = { ...collectionData };
+
+    const removedCollectionData = removeCollectionByID(collectionCopy, id);
+
+    await Firebase.uncollectWork(
+      user.uid,
+      id,
+      collectedList,
+      removedCollectionData
+    );
+    setCollectionData(removedCollectionData);
+    setSelection("");
     setCollect(!collect);
   }
 
@@ -60,24 +77,64 @@ export default function CollectWithCategory({ id, collectedList }) {
     return result;
   }
 
+  const color = useColorModeValue("gray.200", "gray.700");
+
   return (
     <div>
-      <input
-        list="category"
-        value={selection}
-        onChange={(e) => setSelection(e.target.value)}
-      />
-      <datalist id="category">
-        {collectionData &&
-          Object.keys(collectionData).map((term) => (
-            <option key={term} value={term}>
-              {term}
-            </option>
-          ))}
-      </datalist>
-      <button onClick={collectWork}>{`${
-        collect ? "collected" : "collect"
-      }`}</button>
+      {collect ? (
+        <IconButton
+          variant="ghost"
+          aria-label="collected"
+          icon={<BsFillBookmarkFill />}
+          onClick={uncollectWork}
+        />
+      ) : (
+        <Menu>
+          <MenuButton
+            as={Link}
+            rounded={"md"}
+            cursor={"pointer"}
+            py={1}
+            px={0.25}
+            _hover={{
+              textDecoration: "none",
+              bg: color,
+            }}
+          >
+            <IconButton
+              variant="ghost"
+              aria-label="collect"
+              icon={<BsBookmark />}
+            />
+          </MenuButton>
+          <MenuList>
+            <MenuOptionGroup>
+              <Editable
+                defaultValue="...Type New Collection"
+                onSubmit={() => collectWork(selection)}
+              >
+                <EditablePreview px={3} />
+                <EditableInput
+                  mx={3}
+                  w="90%"
+                  value={selection}
+                  onChange={(e) => setSelection(e.target.value)}
+                />
+              </Editable>
+              {collectionData &&
+                Object.keys(collectionData).map((term) => (
+                  <MenuItem
+                    key={term}
+                    value={term}
+                    onClick={() => collectWork(term)}
+                  >
+                    {term}
+                  </MenuItem>
+                ))}
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
+      )}
     </div>
   );
 }
