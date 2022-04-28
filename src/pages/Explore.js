@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-
+import {
+  Button,
+  Center,
+  Box,
+  Stack,
+  Input,
+  InputGroup,
+  InputLeftElement,
+} from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
 import Gallery from "../components/Gallery";
 
 export default function Explore() {
@@ -58,30 +67,49 @@ export default function Explore() {
     setIsShown([]);
   }
   return (
-    <>
-      {queryTerm ? (
-        <div>
-          search for <strong>{queryTerm}</strong>
-        </div>
-      ) : (
-        ""
-      )}
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input
-          name="query"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          list="opts"
+    <Box mt={16}>
+      <Stack mb={4}>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <Center>
+            <InputGroup w={80}>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<Search2Icon color="gray.500" />}
+              />
+              <Input
+                placeholder="Searching..."
+                name="query"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                list="opts"
+              />
+            </InputGroup>
+            <Button
+              type="submit"
+              colorScheme="teal"
+              variant="solid"
+              ml={2}
+              // onClick={(e) => handleSubmit(e)}
+            >
+              Search
+            </Button>
+          </Center>
+
+          <datalist id="opts">
+            {alltags.map((tag, i) => (
+              <option key={i}>{tag}</option>
+            ))}
+          </datalist>
+        </form>
+      </Stack>
+      <Stack>
+        <Gallery
+          works={exploreworks}
+          isShown={isShown}
+          setIsShown={setIsShown}
         />
-        <datalist id="opts">
-          {alltags.map((tag, i) => (
-            <option key={i}>{tag}</option>
-          ))}
-        </datalist>
-        <button>Search</button>
-      </form>
-      <Gallery works={exploreworks} isShown={isShown} setIsShown={setIsShown} />
+      </Stack>
       <div ref={endofPageRef}></div>
-    </>
+    </Box>
   );
 }

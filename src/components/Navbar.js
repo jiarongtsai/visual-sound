@@ -56,7 +56,7 @@ export default function Navbar() {
   }
 
   return (
-    <>
+    <Box>
       <Box bg={useColorModeValue("gray.50", "gray.900")} position={"relative"}>
         <Flex
           h={16}
@@ -154,9 +154,9 @@ export default function Navbar() {
         ) : null}
       </Box>
 
-      <Box p={4} bg={useColorModeValue("gray.100", "gray.800")} minH="100%">
+      <Box minH="100vh" p={4} bg={useColorModeValue("gray.100", "gray.800")}>
         <Outlet />
       </Box>
-    </>
+    </Box>
   );
 }
