@@ -86,7 +86,7 @@ export default function Explore() {
             </InputGroup>
             <Button
               type="submit"
-              colorScheme="teal"
+              colorScheme="purple"
               variant="solid"
               ml={2}
               // onClick={(e) => handleSubmit(e)}
