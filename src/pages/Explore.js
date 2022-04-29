@@ -67,8 +67,8 @@ export default function Explore() {
     setIsShown([]);
   }
   return (
-    <Box mt={16}>
-      <Stack mb={4}>
+    <Box mt={20}>
+      <Stack>
         <form onSubmit={(e) => handleSubmit(e)}>
           <Center>
             <InputGroup w={80}>
@@ -102,7 +102,7 @@ export default function Explore() {
           </datalist>
         </form>
       </Stack>
-      <Stack>
+      <Stack mt={8}>
         <Gallery
           works={exploreworks}
           isShown={isShown}
