@@ -10,16 +10,10 @@ import {
   IconButton,
   Image,
 } from "@chakra-ui/react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  BsHeart,
-  BsHeartFill,
-  BsChat,
-  BsFillChatFill,
-  BsBookmark,
-  BsFillBookmarkFill,
-} from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { BsHeart, BsHeartFill, BsChat, BsFillChatFill } from "react-icons/bs";
 import CollectWithCategory from "../pages/CollectWithCategory";
+import { useState, useEffect } from "react";
 
 export default function CommunityCard({
   work,
@@ -27,7 +21,20 @@ export default function CommunityCard({
   likes,
   handleLike,
   location,
+  collections,
+  setCollections,
+  follwingWorks,
 }) {
+  const [workIndex, setWorkIndex] = useState(-1);
+
+  useEffect(() => {
+    const index = follwingWorks
+      .map((singleWork) => singleWork.id.includes(work.id))
+      .findIndex((include) => include);
+
+    setWorkIndex(index);
+  }, []);
+
   return (
     <Center my={4}>
       <Box
@@ -87,7 +94,13 @@ export default function CommunityCard({
             icon={<BsChat />}
           />
           <Spacer />
-          <CollectWithCategory id={work.id} collectedList={work.collected_by} />
+          <CollectWithCategory
+            id={work.id}
+            workIndex={workIndex}
+            collectedList={work.collected_by}
+            collections={collections}
+            setCollections={setCollections}
+          />
         </Flex>
         <Stack mb={3} direction={"column"} spacing={0} fontSize={"sm"}>
           <Text fontWeight={600}>{work.author_name}</Text>

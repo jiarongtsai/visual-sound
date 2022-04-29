@@ -56,7 +56,13 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
-export default function WorkModal({ likes, setLikes, follwingWorks }) {
+export default function WorkModal({
+  likes,
+  setLikes,
+  collections,
+  setCollections,
+  follwingWorks,
+}) {
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -181,6 +187,9 @@ export default function WorkModal({ likes, setLikes, follwingWorks }) {
             <CollectWithCategory
               id={work.id}
               collectedList={work.collected_by}
+              workIndex={workIndex}
+              collections={collections}
+              setCollections={setCollections}
             />
           </div>
           <br />

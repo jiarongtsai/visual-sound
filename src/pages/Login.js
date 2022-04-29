@@ -21,10 +21,13 @@ import { Firebase } from "../utils/firebase";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isRegister, switchPanel] = useState(true);
+  const [isRegister, switchPanel] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    email: "jiarongtsai19@gmail.com",
+    password: "web123",
+  });
 
   const from = location.state?.from?.pathname || "/";
 
@@ -94,7 +97,7 @@ export default function Login() {
             <Input
               type="email"
               name="email"
-              value={inputs.email || ""}
+              value={inputs.email}
               onChange={(e) => handleInputs(e)}
             />
           </FormControl>
@@ -104,7 +107,7 @@ export default function Login() {
               <Input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                value={inputs.password || ""}
+                value={inputs.password}
                 onChange={(e) => handleInputs(e)}
               />
               <InputRightElement h={"full"}>

@@ -9,6 +9,8 @@ import CommunityCard from "../components/CommunityCard";
 export default function Community({
   likes,
   setLikes,
+  collections,
+  setCollections,
   follwingWorks,
   setFollowingworks,
 }) {
@@ -24,25 +26,25 @@ export default function Community({
         } else {
           setLikes((pre) => [...pre, false]);
         }
+        if (item.collected_by.includes(user.uid)) {
+          setCollections((pre) => [...pre, true]);
+        } else {
+          setCollections((pre) => [...pre, false]);
+        }
       });
     });
   }, []);
 
-  function handleLike(id, i, list) {
+  async function handleLike(id, i, list) {
     if (!likes[i]) {
-      Firebase.likeWork(user.uid, id, list).then(() => {
-        const newLikeList = [...likes];
-        newLikeList[i] = !newLikeList[i];
-        setLikes(newLikeList);
-      });
-      return;
+      Firebase.likeWork(user.uid, id, list);
+    } else {
+      Firebase.unlikeWork(user.uid, id, list);
     }
 
-    Firebase.unlikeWork(user.uid, id, list).then(() => {
-      const newLikeList = [...likes];
-      newLikeList[i] = !newLikeList[i];
-      setLikes(newLikeList);
-    });
+    const newLikeList = [...likes];
+    newLikeList[i] = !newLikeList[i];
+    setLikes(newLikeList);
   }
 
   if (follwingWorks.length === 0)
@@ -57,6 +59,9 @@ export default function Community({
           likes={likes}
           handleLike={handleLike}
           location={location}
+          collections={collections}
+          setCollections={setCollections}
+          follwingWorks={follwingWorks}
         />
       ))}
     </Container>

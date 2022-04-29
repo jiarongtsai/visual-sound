@@ -18,7 +18,13 @@ import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import { AuthContext } from "../components/auth/Auth";
 import { Firebase } from "../utils/firebase";
 
-export default function CollectWithCategory({ id, collectedList }) {
+export default function CollectWithCategory({
+  id,
+  collectedList,
+  workIndex,
+  collections,
+  setCollections,
+}) {
   const user = useContext(AuthContext);
   const [collectionData, setCollectionData] = useState({});
   const [selection, setSelection] = useState("");
@@ -28,9 +34,16 @@ export default function CollectWithCategory({ id, collectedList }) {
     Firebase.getProfile(user?.uid).then((data) => {
       setCollectionData(data.collection_map);
     });
-
-    setCollect(collectedList?.includes(user.uid) ? true : false);
   }, []);
+
+  //fix me //rerender too much!!
+  useEffect(() => {
+    if (workIndex < 0) {
+      setCollect(collectedList?.includes(user.uid) ? true : false);
+      return;
+    }
+    setCollect(collections[workIndex]);
+  }, [collections]);
 
   async function collectWork(collectionName) {
     await Firebase.collectWork(user.uid, id, collectedList);
@@ -45,6 +58,10 @@ export default function CollectWithCategory({ id, collectedList }) {
 
     setSelection("");
     setCollect(!collect);
+
+    const newCollectionList = [...collections];
+    newCollectionList[workIndex] = !newCollectionList[workIndex];
+    setCollections(newCollectionList);
   }
 
   async function uncollectWork() {
@@ -61,6 +78,9 @@ export default function CollectWithCategory({ id, collectedList }) {
     setCollectionData(removedCollectionData);
     setSelection("");
     setCollect(!collect);
+    const newCollectionList = [...collections];
+    newCollectionList[workIndex] = !newCollectionList[workIndex];
+    setCollections(newCollectionList);
   }
 
   function removeCollectionByID(obj, id) {

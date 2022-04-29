@@ -23,6 +23,7 @@ function App() {
   const state = location.state;
   const [follwingWorks, setFollowingworks] = useState([]);
   const [likes, setLikes] = useState([]);
+  const [collections, setCollections] = useState([]);
 
   return (
     <AuthProvider>
@@ -39,6 +40,8 @@ function App() {
                     setFollowingworks={setFollowingworks}
                     likes={likes}
                     setLikes={setLikes}
+                    collections={collections}
+                    setCollections={setCollections}
                   />
                 </RequireAuth>
               }
@@ -88,6 +91,8 @@ function App() {
                   follwingWorks={follwingWorks}
                   likes={likes}
                   setLikes={setLikes}
+                  collections={collections}
+                  setCollections={setCollections}
                 />
               }
             />
