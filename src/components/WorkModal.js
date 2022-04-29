@@ -56,16 +56,16 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
-export default function WorkModal() {
+export default function WorkModal({ likes, setLikes, follwingWorks }) {
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const buttonRef = useRef(null);
   const location = useLocation;
 
-  function onDismiss() {
-    navigate(-1);
-  }
+  const workIndex = follwingWorks
+    .map((work) => work.id.includes(id))
+    .findIndex((include) => include);
 
   const [work, setWork] = useState({});
   const [input, setInput] = useState("");
@@ -74,10 +74,16 @@ export default function WorkModal() {
   const endRef = useRef(null);
 
   useEffect(() => {
-    Firebase.getWork(id).then((data) => {
-      setLike(data.liked_by.includes(user.uid));
-      setWork(data);
-    });
+    if (workIndex < 0) {
+      Firebase.getWork(id).then((data) => {
+        setLike(data.liked_by.includes(user.uid));
+        setWork(data);
+      });
+      return;
+    }
+
+    setWork(follwingWorks[workIndex]);
+    setLike(likes[workIndex]);
   }, []);
 
   useEffect(() => {
@@ -110,6 +116,10 @@ export default function WorkModal() {
     });
   }, [comments]);
 
+  function onDismiss() {
+    navigate(-1);
+  }
+
   function sendComment() {
     const count = comments.length + 1 || 1;
     Firebase.addComment(user.uid, id, input, count).then(() => {
@@ -117,17 +127,17 @@ export default function WorkModal() {
     });
   }
 
-  function handleLike(id, list) {
+  async function handleLike(id, list) {
     if (!like) {
-      Firebase.likeWork(user.uid, id, list).then(() => {
-        setLike(!like);
-      });
-      return;
+      await Firebase.likeWork(user.uid, id, list);
+    } else {
+      await Firebase.unlikeWork(user.uid, id, list);
     }
 
-    Firebase.unlikeWork(user.uid, id, list).then(() => {
-      setLike(!like);
-    });
+    setLike(!like);
+    const newLikeList = [...likes];
+    newLikeList[workIndex] = !newLikeList[workIndex];
+    setLikes(newLikeList);
   }
 
   if (!work || !user) return null;

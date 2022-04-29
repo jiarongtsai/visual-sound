@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "../components/auth/Auth";
 import { theme } from "../theme/theme";
 import RequireAuth from "../components/auth/RequireAuth";
-import Header from "./Header";
 import Main from "../pages/Main";
 import ProfileLayout from "../pages/ProfileLayout";
 import ProfileWorks from "../pages/ProfileWorks";
@@ -22,6 +21,9 @@ import Navbar from "./Navbar";
 function App() {
   const location = useLocation();
   const state = location.state;
+  const [follwingWorks, setFollowingworks] = useState([]);
+  const [likes, setLikes] = useState([]);
+
   return (
     <AuthProvider>
       <ChakraProvider theme={theme}>
@@ -32,7 +34,12 @@ function App() {
               path="community"
               element={
                 <RequireAuth>
-                  <Community />
+                  <Community
+                    follwingWorks={follwingWorks}
+                    setFollowingworks={setFollowingworks}
+                    likes={likes}
+                    setLikes={setLikes}
+                  />
                 </RequireAuth>
               }
             />
@@ -74,7 +81,16 @@ function App() {
         </Routes>
         {state?.backgroundLocation && (
           <Routes>
-            <Route path="/work/:id" element={<WorkModal />} />
+            <Route
+              path="/work/:id"
+              element={
+                <WorkModal
+                  follwingWorks={follwingWorks}
+                  likes={likes}
+                  setLikes={setLikes}
+                />
+              }
+            />
           </Routes>
         )}
       </ChakraProvider>

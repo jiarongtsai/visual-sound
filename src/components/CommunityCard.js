@@ -21,7 +21,13 @@ import {
 } from "react-icons/bs";
 import CollectWithCategory from "../pages/CollectWithCategory";
 
-export default function CommunityCard({ work, i, like, handleLike, location }) {
+export default function CommunityCard({
+  work,
+  i,
+  likes,
+  handleLike,
+  location,
+}) {
   return (
     <Center my={4}>
       <Box
@@ -56,7 +62,7 @@ export default function CommunityCard({ work, i, like, handleLike, location }) {
           </Link>
         </Box>
         <Flex mx={-4}>
-          {like[i] ? (
+          {likes[i] ? (
             <IconButton
               pt={1}
               variant="ghost"
