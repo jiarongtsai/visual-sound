@@ -14,6 +14,6 @@ export const GlobalStyles = createGlobalStyle`
   body {
     font-family: 'Mukta', sans-serif;
     text-rendering: optimizeLegibility;
-    text-align: center;
+    text-align: left;
   }
   `;

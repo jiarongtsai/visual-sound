@@ -1,17 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Flex, Box, useColorModeValue } from "@chakra-ui/react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
 import MessageList from "../components/message/MessageList";
 import MessageView from "../components/message/MessageView";
 
-const MessageContainer = styled.div`
-  margin-top: 3rem;
-  display: flex;
-  justify-content: center;
-  text-align: left;
-`;
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
   const [currentChatroom, setCurrentChatroom] = useState({});
@@ -75,13 +70,33 @@ export default function Message() {
   }, []);
 
   return (
-    <MessageContainer>
-      <MessageList
-        messageList={messageList}
-        currentChatroom={currentChatroom}
-        setCurrentChatroom={setCurrentChatroom}
-      />
-      <MessageView currentChatroom={currentChatroom} />
-    </MessageContainer>
+    <Flex
+      mt={24}
+      mx="auto"
+      w="90%"
+      h="100%"
+      rounded="md"
+      maxW="1080px"
+      border="1px"
+      borderColor={useColorModeValue("gray.200", "gray.500")}
+      bg={useColorModeValue("gray.50", "gray.700")}
+    >
+      <Box
+        w={["20%", 160, "30%"]}
+        minW="80px"
+        maxW="300px"
+        borderRight="1px"
+        borderColor={useColorModeValue("gray.200", "gray.500")}
+      >
+        <MessageList
+          messageList={messageList}
+          currentChatroom={currentChatroom}
+          setCurrentChatroom={setCurrentChatroom}
+        />
+      </Box>
+      <Box flex="1" h="100%">
+        <MessageView currentChatroom={currentChatroom} />
+      </Box>
+    </Flex>
   );
 }

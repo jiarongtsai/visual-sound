@@ -3,44 +3,22 @@ import styled from "styled-components";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
-import { Thumbnail } from "../element/Thumbnail";
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 50%;
-`;
-
-const PersonalInfoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const MessageWrapper = styled.div`
-  overflow: scroll;
-  height: 60vh;
-`;
-
-const MessageBox = ({ name, thumbnail, content, time }) => {
-  return (
-    <div
-      style={{
-        background: "gray",
-        color: "white",
-        borderRadius: "1rem",
-        margin: "2rem",
-      }}
-    >
-      <PersonalInfoWrapper>
-        <Thumbnail src={thumbnail} />
-        <p>{name}</p>
-      </PersonalInfoWrapper>
-      <div>{content}</div>
-      <p>{time}</p>
-      <br />
-    </div>
-  );
-};
+import {
+  VStack,
+  Text,
+  Box,
+  Flex,
+  Center,
+  IconButton,
+  useColorModeValue,
+  Avatar,
+  Button,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
+import { BsCursorFill } from "react-icons/bs";
+import { MessageViewCell } from "./MessageViewCell";
 
 export default function MessageView({ currentChatroom }) {
   const { mid } = useParams();
@@ -50,6 +28,8 @@ export default function MessageView({ currentChatroom }) {
   const [currentChatInfo, SetCurrentCahtInfo] = useState({});
   const [input, setInput] = useState("");
   const endRef = useRef(null);
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.500");
 
   useEffect(() => {
     const onSnapshotChat = Firebase.onSnapshotChats(mid, (snapshot) => {
@@ -75,6 +55,7 @@ export default function MessageView({ currentChatroom }) {
 
   function sendMessage() {
     if (!currentChatroom) return;
+    if (!input.trim()) return;
     Firebase.addMessage(1 - currentChatInfo.author_place, mid, input).then(
       () => {
         setInput("");
@@ -82,25 +63,59 @@ export default function MessageView({ currentChatroom }) {
     );
   }
 
-  if (!mid) return <div>Open new chat or Click user</div>;
+  function sendMessageKeyDown(e) {
+    if (e.key !== "Enter") return;
+    sendMessage();
+  }
+
+  if (!mid)
+    return (
+      <Center h="75vh" flexDirection="column">
+        {/* <IconButton aria-label="like" icon={<BsChat />} /> */}
+        <Text>Open new chat or Click a chatroom</Text>
+        {/* fix me : add new chat button */}
+      </Center>
+    );
   return (
-    <Wrapper>
+    <Flex direction="column">
       <Link
         style={{ cursor: "pointer" }}
         to={`/user/${currentChatInfo.author_id}`}
         state={{ backgroundLocation: location }}
       >
-        <PersonalInfoWrapper>
-          <Thumbnail src={currentChatInfo.author_thumbnail} />
-          <p>{currentChatInfo.author_name}</p>
-        </PersonalInfoWrapper>
+        <Box boxShadow="base" p={4}>
+          <Flex align="center">
+            <Button
+              w="50px"
+              h="50px"
+              rounded={"full"}
+              variant="ghost"
+              me="10px"
+            >
+              <Avatar
+                src={currentChatInfo.author_thumbnail}
+                alt={currentChatInfo.author_name}
+              />
+            </Button>
+            <Text fontSize="sm" color={textColor} fontWeight="bold">
+              {currentChatInfo.author_name}
+            </Text>
+          </Flex>
+        </Box>
       </Link>
-      <MessageWrapper>
+      <VStack
+        align="flex-start"
+        h={"58vh"}
+        overflowY={"scroll"}
+        borderTop="1px"
+        borderColor={borderColor}
+      >
+        {/* time, align for  MessageView cell */}
         {chats.map((chat, i) => (
-          <MessageBox
+          <MessageViewCell
             key={i}
             content={chat.content}
-            time={chat.created_time.toDate().toString().slice(0, 25)}
+            time={chat.created_time.toDate().toString().slice(4, 25)}
             name={`${
               chat.sender === currentChatInfo.author_place
                 ? currentChatInfo.author_name
@@ -114,12 +129,34 @@ export default function MessageView({ currentChatroom }) {
           />
         ))}
         <div ref={endRef}></div>
-      </MessageWrapper>
-      <br />
-      <div>
-        <input value={input} onChange={(e) => setInput(e.target.value)} />
-        <button onClick={sendMessage}>send</button>
-      </div>
-    </Wrapper>
+      </VStack>
+      {/* <div> */}
+      <Flex align="center" justify="center" p={4}>
+        <InputGroup size="lg" position="relative">
+          <Input
+            rounded="full"
+            placeholder="Typing....."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={sendMessageKeyDown}
+          />
+          <InputRightElement>
+            <IconButton
+              // bg="transparent"
+              variant="ghost"
+              rounded="full"
+              position="absolute"
+              right={2}
+              aria-label="Search database"
+              icon={<BsCursorFill />}
+              onClick={sendMessage}
+            />
+          </InputRightElement>
+        </InputGroup>
+      </Flex>
+      {/* <input  /> */}
+      {/* <button onClick={sendMessage}>send</button>
+      </div> */}
+    </Flex>
   );
 }

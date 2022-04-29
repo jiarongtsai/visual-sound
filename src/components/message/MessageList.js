@@ -1,70 +1,25 @@
-import { onSnapshot } from "firebase/firestore";
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../auth/Auth";
-import { Thumbnail } from "../element/Thumbnail";
 import ShowAllUsersModal from "../ShowAllUsersModal";
+import MessageListCell from "./MessageListCell";
+import {
+  Box,
+  Avatar,
+  Button,
+  Flex,
+  Text,
+  useColorModeValue,
+  StackDivider,
+  VStack,
+} from "@chakra-ui/react";
+import { BsPlusSquare } from "react-icons/bs";
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 25%;
-`;
-
+//remove me later
 export const PersonalInfoWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
-
-const MessageWrapper = styled.div`
-  overflow: scroll;
-  height: 60vh;
-`;
-
-const Unread = styled.span`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: red;
-  display: inline-block;
-  margin-left: auto;
-  margin-right: 20px;
-`;
-
-const MessageBox = ({ messageInfo, setCurrentChatroom, currentChatroom }) => {
-  function handleClickBox() {
-    setCurrentChatroom(messageInfo.mid);
-    if (
-      messageInfo.author_place === messageInfo.latestMessage.sender &&
-      !messageInfo.latestMessage.has_read
-    ) {
-      Firebase.updateLatestMessage(messageInfo.mid, messageInfo.latestMessage);
-    }
-  }
-
-  return (
-    <div
-      onClick={() => handleClickBox(messageInfo)}
-      style={{ cursor: "pointer" }}
-    >
-      <PersonalInfoWrapper>
-        <Thumbnail src={messageInfo.author_thumbnail} />
-        <p>{messageInfo.author_name}</p>
-        {messageInfo.author_place === messageInfo.latestMessage.sender &&
-        !messageInfo.latestMessage.has_read &&
-        currentChatroom !== messageInfo.mid ? (
-          <Unread />
-        ) : (
-          ""
-        )}
-      </PersonalInfoWrapper>
-      <p>{messageInfo.latestMessage.content}</p>
-      <hr />
-    </div>
-  );
-};
 
 export default function MessageList({
   messageList,
@@ -72,46 +27,76 @@ export default function MessageList({
   currentChatroom,
 }) {
   const user = useContext(AuthContext);
-  const [input, setInput] = useState("");
   const [showModal, setShowModal] = useState(false);
+
+  const textColor = useColorModeValue("gray.700", "white");
 
   function searchForUser() {
     setShowModal(true);
   }
 
   return (
-    <Wrapper>
+    <Flex direction="column">
       {showModal && (
         <ShowAllUsersModal
           setShowModal={setShowModal}
           messageList={messageList}
         />
       )}
-      <div>
-        <PersonalInfoWrapper>
-          <Thumbnail src={user.photoURL} />
-          <div>{user.displayName || "have't set name"}</div>
-        </PersonalInfoWrapper>
-        <div>
-          {/* <input value={input} onChange={(e) => setInput(e.target.value)} /> */}
-          <button onClick={searchForUser}>open new chat</button>
-        </div>
-      </div>
-      <br />
-      <MessageWrapper>
+      <Box
+        display={["none", "initial"]}
+        borderButtom="1px"
+        borderColor={useColorModeValue("gray.200", "gray.500")}
+        boxShadow="base"
+        p={4}
+        pb={0}
+      >
+        <Flex align="center">
+          <Avatar
+            src={user.photoURL}
+            alt={user.displayName}
+            w="50px"
+            h="50px"
+            rounded={"full"}
+            me="10px"
+          />
+          <Text fontSize="sm" color={textColor} fontWeight="bold">
+            {user.displayName}
+          </Text>
+        </Flex>
+        <Button
+          my={3}
+          onClick={searchForUser}
+          colorScheme="purple"
+          variant="solid"
+          leftIcon={<BsPlusSquare />}
+        >
+          New chat
+        </Button>
+      </Box>
+
+      <VStack
+        alignItems={"flex-start"}
+        h={["78vh", "60vh"]}
+        overflowY={"scroll"}
+        divider={
+          <StackDivider
+            borderColor={useColorModeValue("gray.200", "gray.500")}
+          />
+        }
+      >
         {messageList &&
           messageList.map((messageInfo) => {
             return (
-              <Link key={messageInfo.mid} to={`/message/${messageInfo.mid}`}>
-                <MessageBox
-                  messageInfo={messageInfo}
-                  setCurrentChatroom={setCurrentChatroom}
-                  currentChatroom={currentChatroom}
-                />
-              </Link>
+              <MessageListCell
+                key={messageInfo.mid}
+                messageInfo={messageInfo}
+                setCurrentChatroom={setCurrentChatroom}
+                currentChatroom={currentChatroom}
+              />
             );
           })}
-      </MessageWrapper>
-    </Wrapper>
+      </VStack>
+    </Flex>
   );
 }

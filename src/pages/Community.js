@@ -8,13 +8,6 @@ import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import { Thumbnail } from "../components/element/Thumbnail";
 import CommunityCard from "../components/CommunityCard";
-import CollectWithCategory from "./CollectWithCategory";
-
-const Div = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
 
 export default function Community() {
   const user = useContext(AuthContext);

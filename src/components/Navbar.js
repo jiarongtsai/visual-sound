@@ -5,7 +5,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -19,7 +18,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-
+import { Link } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAuth, signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -28,7 +27,7 @@ import { AuthContext } from "./auth/Auth";
 const Links = ["community", "explore", "message"];
 
 const NavLink = ({ children }) => (
-  <Link
+  <Box
     px={2}
     py={1}
     rounded={"md"}
@@ -36,10 +35,9 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={`/${children}`}
   >
-    {children}
-  </Link>
+    <Link to={children}>{children}</Link>
+  </Box>
 );
 
 export default function Navbar() {
@@ -117,12 +115,12 @@ export default function Navbar() {
                   <Avatar size={"sm"} src={user.photoURL} />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem as="a" href="/profile">
-                    Profile
-                  </MenuItem>
-                  <MenuItem as="a" href="/profile/collection">
-                    My Collection
-                  </MenuItem>
+                  <Link to="/profile">
+                    <MenuItem>Profile</MenuItem>
+                  </Link>
+                  <Link to="/profile/collection">
+                    <MenuItem>My Collection</MenuItem>
+                  </Link>
                   <MenuDivider />
                   <MenuItem onClick={UserSignOut}>Log out</MenuItem>
                 </MenuList>
