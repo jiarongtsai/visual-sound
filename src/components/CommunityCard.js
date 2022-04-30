@@ -5,7 +5,6 @@ import {
   Spacer,
   Text,
   Stack,
-  Avatar,
   useColorModeValue,
   IconButton,
   Image,

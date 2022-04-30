@@ -7,6 +7,7 @@ import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import { Wrapper, Square, Ellipse, Triangle } from "../visual/VisualElement";
 import { colorTheme } from "../visual/colorTheme";
+import { useDisclosure, Button, Center, Image } from "@chakra-ui/react";
 
 //sequence
 const steps = 16;
@@ -32,12 +33,12 @@ const Div = styled.div`
 `;
 
 const Sequencer = ({ player }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const ref = createRef(null);
   const [image, setImage, takeScreenshot] = useScreenshot();
   const getImage = () => takeScreenshot(ref.current);
 
   const [isUploaded, setIsUploaded] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [themeColor, setThemeColor] = useState("themeDefault");
 
@@ -59,7 +60,7 @@ const Sequencer = ({ player }) => {
     useEffect(() => {
       const handlePress = (event) => {
         const handler = map[event.key];
-        if (typeof handler === "function" && !openModal) {
+        if (typeof handler === "function" && !isOpen) {
           handler();
         }
       };
@@ -356,26 +357,35 @@ const Sequencer = ({ player }) => {
 
   return (
     <Flex direction={"column"}>
-      {openModal ? (
-        <UploadModal
-          setOpenModal={setOpenModal}
-          sequenceJSON={handleSequenceData(sequence)}
-          bpm={bpm}
-          setIsUploaded={setIsUploaded}
-          image={image}
-          setImage={setImage}
-          themeColor={themeColor}
+      <UploadModal
+        sequenceJSON={handleSequenceData(sequence)}
+        bpm={bpm}
+        setIsUploaded={setIsUploaded}
+        image={image}
+        setImage={setImage}
+        themeColor={themeColor}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
+      {image && (
+        <Image
+          w="100px"
+          src={image}
+          alt={"Screenshot"}
+          position="fixed"
+          buttom="0"
+          right="0"
         />
-      ) : (
-        ""
       )}
-      <div>
-        {image && (
-          <img style={{ width: "20vw" }} src={image} alt={"Screenshot"} />
-        )}
-      </div>
-      <button onClick={() => setOpenModal(true)}>upload</button>
-      <button onClick={getImage}>screenshot</button>
+      <Center>
+        <Button colorScheme={"purple"} m={1} onClick={getImage}>
+          Screenshot
+        </Button>
+        <Button colorScheme={"purple"} m={1} onClick={onOpen}>
+          Open Modal
+        </Button>
+      </Center>
+
       <ThemeProvider theme={colorTheme[themeColor]}>
         <Wrapper ref={ref}>
           {boomTransition((style, item) =>

@@ -2,56 +2,27 @@ import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Flex,
+  VStack,
+  Text,
+  Textarea,
+  Image,
+  Input,
+  useColorModeValue,
+  Box,
+} from "@chakra-ui/react";
 
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-`;
-const ModalBackground = styled.div`
-  top: 0;
-  left: 0;
-  position: fixed;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const ModalWhitebroad = styled.div`
-  background-color: white;
-  display: flex;
-  justify-content: space-between;
-  width: 70vw;
-  height: 70vh;
-  padding: 1rem 2rem;
-  overflow: scroll;
-`;
-
-const ModalText = styled.p`
-  z-index: 999;
-  margin-top: 5vh;
-`;
-
-const ModalCloseButton = styled.button`
-  z-index: 999;
-  background-color: red;
-  width: 5vw;
-  height: 5vh;
-  flex-basis: 50px;
-`;
-
-const ModalConfirmButton = styled.button`
-  z-index: 999;
-  background-color: green;
-  width: 10vw;
-  height: 5vh;
-  margin-bottom: 2rem;
-`;
+import { PlayerProvider } from "../components/PlayerProvider";
+import SequencePlayer from "../components/SequencePlayer";
 
 const TagsContainer = styled.div`
   display: flex;
@@ -74,18 +45,20 @@ const TagDelete = styled.span`
 `;
 
 export default function UploadModal({
-  setOpenModal,
   sequenceJSON,
   bpm,
   setIsUploaded,
   image,
   setImage,
   themeColor,
+  isOpen,
+  onClose,
 }) {
   const user = useContext(AuthContext);
   const [inputs, setInputs] = useState({});
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
+  const borderColor = useColorModeValue("gray.300", "gray.800");
 
   function handleInputs(e) {
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
@@ -135,63 +108,105 @@ export default function UploadModal({
         setInputs({});
         setTags([]);
         setTagInput("");
-        setOpenModal(false);
+
         setIsUploaded(true);
         setImage(null);
+        onClose();
       });
     });
   }
 
   if (!user) return null;
   return (
-    <>
-      <ModalBackground>
-        <ModalWhitebroad>
-          <div>
-            <ModalText>Modal</ModalText>
-            {image && <img src={image} style={{ width: "50vw" }} />}
-            <Div>
-              <label>description</label>
-              <textarea
-                name="description"
-                rows="5"
-                cols="50"
-                value={inputs.description || ""}
-                onChange={handleInputs}
-              />
-            </Div>
-            <Div>
-              <label>tags</label>
-              <p>Tag your post, and separeted by comma</p>
-              <input
-                name="tags"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={(e) => handleTagInput(e)}
-                placeholder="Add tags..."
-              />
-              <TagsContainer>
-                {tags.map((tag) => (
-                  <TagWrapper key={tag}>
-                    {tag}
-                    <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
-                  </TagWrapper>
-                ))}
-              </TagsContainer>
-            </Div>
-            <ModalConfirmButton onClick={uploadtoFirebase}>
-              upload
-            </ModalConfirmButton>
-          </div>
-          <ModalCloseButton
-            onClick={() => {
-              setOpenModal(false);
-            }}
-          >
-            X
-          </ModalCloseButton>
-        </ModalWhitebroad>
-      </ModalBackground>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader
+          borderBottom="1px"
+          borderColor={borderColor}
+          shadow={"base"}
+        >
+          Upload your new work
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex direction={["column", "row"]} justify="space-between">
+            <Flex direction="column" w={["100%", "60%"]}>
+              <Text>Preview</Text>
+              <PlayerProvider>
+                {({ soundPlayer }) => {
+                  return (
+                    <SequencePlayer
+                      player={soundPlayer}
+                      sheetmusic={sequenceJSON}
+                      bpm={bpm}
+                      themeColor={themeColor}
+                    />
+                  );
+                }}
+              </PlayerProvider>
+            </Flex>
+            <Flex direction="column" w={["100%", "35%"]}>
+              <VStack
+                align="flex-start"
+                h="55vh"
+                overflowY={"scroll"}
+                p={1}
+                spacing={4}
+              >
+                <Text>Edit Details</Text>
+                <Box>
+                  <Text color="gray.500" fontSize="sm">
+                    Screenshot
+                  </Text>
+                  {image && <Image src={image} w="100%" />}
+                </Box>
+                <Box w="100%">
+                  <Text color="gray.500" fontSize="sm">
+                    Description
+                  </Text>
+                  <Textarea
+                    placeholder="Write somthing about your work"
+                    name="description"
+                    value={inputs.description || ""}
+                    onChange={handleInputs}
+                    h="30%"
+                  />
+                </Box>
+                <Box>
+                  <Text color="gray.500" fontSize="sm">
+                    Tag your post, and separeted your Tags by ","
+                  </Text>
+                  <TagsContainer>
+                    {tags.map((tag) => (
+                      <TagWrapper key={tag}>
+                        {tag}
+                        <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
+                      </TagWrapper>
+                    ))}
+                  </TagsContainer>
+                  <Input
+                    name="tags"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => handleTagInput(e)}
+                    placeholder="Add tags..."
+                  />
+                </Box>
+              </VStack>
+            </Flex>
+          </Flex>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme={"gray"} onClick={onClose} mr={3}>
+            Cancel
+          </Button>
+          <Button colorScheme={"purple"} onClick={uploadtoFirebase}>
+            Upload
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

@@ -1,4 +1,3 @@
-import React from "react";
 import { HStack, Stack, Avatar, Text, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 

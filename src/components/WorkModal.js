@@ -13,6 +13,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  ModalFooter,
   ModalCloseButton,
   Flex,
   IconButton,
@@ -22,6 +23,7 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { BsHeart, BsHeartFill, BsCursorFill } from "react-icons/bs";
 
@@ -59,6 +61,8 @@ export default function WorkModal({
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
   const endRef = useRef(null);
+
+  const borderColor = useColorModeValue("gray.300", "gray.800");
 
   useEffect(() => {
     if (workIndex < 0) {
@@ -140,7 +144,12 @@ export default function WorkModal({
       <Modal size="4xl" isOpen={true} onClose={onDismiss}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader pb={0}>
+          <ModalHeader
+            pb={0}
+            borderBottom="1px"
+            borderColor={borderColor}
+            shadow={"base"}
+          >
             <UserWithTime
               id={work.author_id}
               name={work.author_name}
@@ -149,9 +158,9 @@ export default function WorkModal({
             />
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={8}>
+          <ModalBody>
             <Flex direction={["column", "row"]} justify="space-between">
-              <Flex direction="column" w="65%">
+              <Flex direction="column" w={["100%", "60%"]}>
                 <PlayerProvider>
                   {({ soundPlayer }) => {
                     return (
@@ -165,8 +174,8 @@ export default function WorkModal({
                   }}
                 </PlayerProvider>
               </Flex>
-              <Flex direction="column" w="32%">
-                <VStack align="flex-start" h="41vh" overflowY={"scroll"}>
+              <Flex direction="column" w={["100%", "35%"]}>
+                <VStack align="flex-start" h="43vh" overflowY={"scroll"} p={1}>
                   <UserSmall
                     id={work.author_id}
                     name={work.author_name}
@@ -268,6 +277,7 @@ export default function WorkModal({
               </Flex>
             </Flex>
           </ModalBody>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </>
