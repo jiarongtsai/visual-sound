@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import styled from "styled-components";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import {
@@ -11,24 +10,24 @@ import {
   Center,
   IconButton,
   useColorModeValue,
-  Avatar,
   Button,
   Input,
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { BsCursorFill } from "react-icons/bs";
+import { BsCursorFill, BsPlusSquare } from "react-icons/bs";
 import { MessageViewCell } from "./MessageViewCell";
+import { UserWithName } from "../UserVariants";
 
-export default function MessageView({ currentChatroom }) {
+export default function MessageView({ currentChatroom, openNewChatList }) {
   const { mid } = useParams();
   const user = useContext(AuthContext);
-  const location = useLocation;
+
   const [chats, setChats] = useState([]);
   const [currentChatInfo, SetCurrentCahtInfo] = useState({});
   const [input, setInput] = useState("");
   const endRef = useRef(null);
-  const textColor = useColorModeValue("gray.700", "white");
+
   const borderColor = useColorModeValue("gray.200", "gray.500");
 
   useEffect(() => {
@@ -71,38 +70,28 @@ export default function MessageView({ currentChatroom }) {
   if (!mid)
     return (
       <Center h="75vh" flexDirection="column">
-        {/* <IconButton aria-label="like" icon={<BsChat />} /> */}
         <Text>Open new chat or Click a chatroom</Text>
-        {/* fix me : add new chat button */}
+        <Button
+          my={3}
+          onClick={openNewChatList}
+          colorScheme="purple"
+          variant="solid"
+          leftIcon={<BsPlusSquare />}
+        >
+          New chat
+        </Button>
       </Center>
     );
   return (
     <Flex direction="column">
-      <Link
-        style={{ cursor: "pointer" }}
-        to={`/user/${currentChatInfo.author_id}`}
-        state={{ backgroundLocation: location }}
-      >
-        <Box boxShadow="base" p={4}>
-          <Flex align="center">
-            <Button
-              w="50px"
-              h="50px"
-              rounded={"full"}
-              variant="ghost"
-              me="10px"
-            >
-              <Avatar
-                src={currentChatInfo.author_thumbnail}
-                alt={currentChatInfo.author_name}
-              />
-            </Button>
-            <Text fontSize="sm" color={textColor} fontWeight="bold">
-              {currentChatInfo.author_name}
-            </Text>
-          </Flex>
-        </Box>
-      </Link>
+      <Box boxShadow="base" p={4}>
+        <UserWithName
+          id={currentChatInfo.author_id}
+          name={currentChatInfo.author_name}
+          thumbnail={currentChatInfo.author_thumbnail}
+        />
+      </Box>
+
       <VStack
         align="flex-start"
         h={"58vh"}

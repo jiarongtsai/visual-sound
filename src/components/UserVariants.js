@@ -1,5 +1,39 @@
-import { HStack, Stack, Avatar, Text, Image } from "@chakra-ui/react";
+import {
+  HStack,
+  Stack,
+  Avatar,
+  Text,
+  Image,
+  Flex,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+
+export const UserWithName = ({ id, name, thumbnail }) => {
+  const textColor = useColorModeValue("gray.700", "white");
+  return (
+    <Link to={`/user/${id}`}>
+      <Flex align="center">
+        <Avatar
+          src={thumbnail}
+          alt={name}
+          w="50px"
+          h="50px"
+          rounded={"full"}
+          me="10px"
+        />
+        <Text
+          fontSize="sm"
+          color={textColor}
+          fontWeight="bold"
+          display={["none", "initial"]}
+        >
+          {name}
+        </Text>
+      </Flex>
+    </Link>
+  );
+};
 
 export const UserWithTime = ({ id, name, thumbnail, time }) => {
   return (

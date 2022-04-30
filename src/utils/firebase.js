@@ -451,7 +451,6 @@ const Firebase = {
   },
   async getChatrooms() {
     const result = await getDocs(collection(this.db(), "chatrooms"));
-    console.log(result);
   },
   onSnapshotChatrooms(uid, callback) {
     const queryCondition = query(
@@ -495,9 +494,9 @@ const Firebase = {
       .filter((user) => !list.includes(user.id))
       .map((user) => {
         return {
-          uid: user.id,
-          user_name: user.data().user_name,
-          user_thumbnail: user.data().user_thumbnail,
+          author_id: user.id,
+          author_name: user.data().user_name,
+          author_thumbnail: user.data().user_thumbnail,
         };
       });
     return result;

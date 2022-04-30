@@ -1,58 +1,50 @@
-import { useEffect, useState } from "react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Flex,
+  VStack,
+  Spacer,
+} from "@chakra-ui/react";
+import { UserWithName } from "./UserVariants";
 
-import { ModalBackground } from "./element/ModalBackground";
-import { ModalContent } from "./element/ModalContent";
-import { Thumbnail } from "./element/Thumbnail";
-import { PersonalInfoWrapper } from "./message/MessageList";
-
-export default function UsersModal({
-  setOpenModal,
-  list,
-  invokeFunction,
-  buttonName,
-}) {
-  // const [usersList, setUsersList] = useState([]);
-
-  // useEffect(() => {
-  //   setUsersList(list);
-  // }, [list]);
-
+export default function UsersModal({ isOpen, onClose, action }) {
   return (
-    <ModalBackground>
+    <Modal size="lg" isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
       <ModalContent>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flexBasis: "50%",
-            overflow: "scroll",
-          }}
-        >
-          <div>users</div>
-          {list.map((list) => {
-            return (
-              <div key={list.author_id}>
-                <PersonalInfoWrapper>
-                  <Thumbnail src={list.author_thumbnail} />
-                  <p>{list.author_name}</p>
-                </PersonalInfoWrapper>
-                <br />
-                <button onClick={() => invokeFunction(list.author_id)}>
-                  {buttonName}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        <div>
-          <button
-            onClick={() => setOpenModal(false)}
-            style={{ hegiht: "2rem" }}
-          >
-            X
-          </button>
-        </div>
+        <ModalHeader>{action.name}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <VStack spacing={4} h={"60vh"} overflowY={"scroll"} pr={4}>
+            {action.userList?.map((user) => {
+              return (
+                <Flex key={user.author_id} justify="space-between" w="100%">
+                  <UserWithName
+                    id={user.author_id}
+                    name={user.author_name}
+                    thumbnail={user.author_thumbnail}
+                  />
+                  <Spacer />
+                  <Button
+                    colorScheme="purple"
+                    onClick={() => action.invokeFunction(user.author_id)}
+                  >
+                    {action.buttonText}
+                  </Button>
+                </Flex>
+              );
+            })}
+          </VStack>
+        </ModalBody>
+
+        <ModalFooter></ModalFooter>
       </ModalContent>
-    </ModalBackground>
+    </Modal>
   );
 }

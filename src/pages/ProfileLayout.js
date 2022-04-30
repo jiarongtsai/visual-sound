@@ -6,19 +6,18 @@ import { Thumbnail } from "../components/element/Thumbnail";
 import { AuthContext } from "../components/auth/Auth";
 import UsersModal from "../components/UsersModal";
 import EditProfileModal from "../components/EditProfileModal";
-
+import { useDisclosure } from "@chakra-ui/react";
 const Nav = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
-  const [openModal, setOpenModal] = useState(false);
-  const [list, setList] = useState([]);
-  const [invokeFunction, setInvokeFunction] = useState({});
-  const [buttonName, setButtonName] = useState("");
+  const [action, setAction] = useState({});
+
   const user = useContext(AuthContext);
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
@@ -26,9 +25,11 @@ export default function ProfileLayout() {
   }, []);
 
   const unfollow = async (userID) => {
-    console.log("unfollow");
     await Firebase.unfollowUser(user.uid, userID, profile.following);
-    setList((pre) => pre.filter((user) => user.author_id !== userID));
+    setAction((pre) => ({
+      ...pre,
+      userList: pre.userList.filter((user) => user.author_id !== userID),
+    }));
   };
 
   const chat = async (userID) => {
@@ -37,44 +38,41 @@ export default function ProfileLayout() {
   };
 
   async function openFollowers() {
-    setOpenModal(true);
     const FollowerListWithInfo = await Promise.all(
       profile.followers.map(async (id) => {
         const data = await Firebase.getUserBasicInfo(id);
         return data;
       })
     );
-
-    setList(() => FollowerListWithInfo);
-    setInvokeFunction(() => chat);
-    setButtonName("chat");
+    setAction({
+      name: "Follower List",
+      userList: FollowerListWithInfo,
+      invokeFunction: chat,
+      buttonText: "Send Message",
+    });
+    onOpen();
   }
 
   async function openFollowing() {
-    setOpenModal(true);
     const FollowingListWithInfo = await Promise.all(
       profile.following.map(async (id) => {
         const data = await Firebase.getUserBasicInfo(id);
         return data;
       })
     );
-    setList(() => FollowingListWithInfo);
-    setInvokeFunction(() => unfollow);
-    setButtonName("unfollow");
+    setAction({
+      name: "Following List",
+      userList: FollowingListWithInfo,
+      invokeFunction: unfollow,
+      buttonText: "Unfollow",
+    });
+    onOpen();
   }
 
   return (
     <>
-      {openModal ? (
-        <UsersModal
-          setOpenModal={setOpenModal}
-          list={list}
-          invokeFunction={invokeFunction}
-          buttonName={buttonName}
-        />
-      ) : (
-        ""
-      )}
+      <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
+
       {openEditModal ? (
         <EditProfileModal
           setOpenModal={setOpenEditModal}
