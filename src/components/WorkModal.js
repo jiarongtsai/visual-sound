@@ -1,38 +1,32 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
-import { ModalBackground } from "./element/ModalBackground";
-import { ModalContent } from "./element/ModalContent";
 import CollectWithCategory from "../pages/CollectWithCategory";
-
-const ModalContentVisual = styled.div`
-  flex-basis: 60%;
-  overflow: scroll;
-`;
-
-const ModalContentText = styled.div`
-  flex-basis: 30%;
-  overflow: scroll;
-`;
-
-const ModalText = styled.p`
-  margin-top: 5vh;
-`;
-
-const ModalCloseButton = styled.button`
-  flex-basis: 5%;
-  background-color: red;
-  height: 2rem;
-  cursor: pointer;
-`;
+import { UserWithTime, UserSmall } from "./UserVariants";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Flex,
+  IconButton,
+  Spacer,
+  Text,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack,
+} from "@chakra-ui/react";
+import { BsHeart, BsHeartFill, BsCursorFill } from "react-icons/bs";
 
 const TagsContainer = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
 `;
 
@@ -41,19 +35,8 @@ const TagWrapper = styled.div`
   color: white;
   border-radius: 0.5rem;
   padding: 0 0.5rem;
-  margin: 0.5rem;
+  margin-right: 0.5rem;
   display: flex;
-`;
-
-const PersonalInfoWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Img = styled.img`
-  width: 50px;
-  border-radius: 50%;
 `;
 
 export default function WorkModal({
@@ -66,8 +49,6 @@ export default function WorkModal({
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
-  const buttonRef = useRef(null);
-  const location = useLocation;
 
   const workIndex = follwingWorks
     .map((work) => work.id.includes(id))
@@ -127,10 +108,16 @@ export default function WorkModal({
   }
 
   function sendComment() {
+    if (!input.trim()) return;
     const count = comments.length + 1 || 1;
     Firebase.addComment(user.uid, id, input, count).then(() => {
       setInput("");
     });
+  }
+
+  function sendCommentKeyDown(e) {
+    if (e.key !== "Enter") return;
+    sendComment();
   }
 
   async function handleLike(id, list) {
@@ -149,83 +136,140 @@ export default function WorkModal({
   if (!work || !user) return null;
 
   return (
-    <ModalBackground>
-      <ModalContent>
-        <ModalContentVisual>
-          <div key={work.id}>
-            <PlayerProvider>
-              {({ soundPlayer }) => {
-                return (
-                  <SequencePlayer
-                    player={soundPlayer}
-                    sheetmusic={work.sheetmusic}
-                    bpm={work.bpm}
-                    themeColor={work.themeColor}
+    <>
+      <Modal size="4xl" isOpen={true} onClose={onDismiss}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader pb={0}>
+            <UserWithTime
+              id={work.author_id}
+              name={work.author_name}
+              thumbnail={work.author_thumbnail}
+              time={work.created_time?.toDate().toDateString()}
+            />
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={8}>
+            <Flex direction={["column", "row"]} justify="space-between">
+              <Flex direction="column" w="65%">
+                <PlayerProvider>
+                  {({ soundPlayer }) => {
+                    return (
+                      <SequencePlayer
+                        player={soundPlayer}
+                        sheetmusic={work.sheetmusic}
+                        bpm={work.bpm}
+                        themeColor={work.themeColor}
+                      />
+                    );
+                  }}
+                </PlayerProvider>
+              </Flex>
+              <Flex direction="column" w="32%">
+                <VStack align="flex-start" h="41vh" overflowY={"scroll"}>
+                  <UserSmall
+                    id={work.author_id}
+                    name={work.author_name}
+                    thumbnail={work.author_thumbnail}
                   />
-                );
-              }}
-            </PlayerProvider>
-            <Link
-              to={`/user/${work.author_id}`}
-              state={{ backgroundLocation: location }}
-            >
-              <PersonalInfoWrapper>
-                <Img src={work.author_thumbnail} />
-                <p>{work.author_name}</p>
-              </PersonalInfoWrapper>
-            </Link>
-            <ModalText>{work.description}</ModalText>
-            <TagsContainer>
-              {work.tags?.map((tag) => (
-                <TagWrapper key={tag}>{tag}</TagWrapper>
-              ))}
-            </TagsContainer>
 
-            <button onClick={() => handleLike(work.id, work.liked_by)}>
-              {`${like ? "liked" : "like"}`}
-            </button>
-            <CollectWithCategory
-              id={work.id}
-              collectedList={work.collected_by}
-              workIndex={workIndex}
-              collections={collections}
-              setCollections={setCollections}
-            />
-          </div>
-          <br />
-          <br />
-        </ModalContentVisual>
-        <ModalContentText>
-          {comments.map((comment) => {
-            return (
-              <div key={comment.id}>
-                <Link
-                  to={`/user/${comment.author_id}`}
-                  state={{ backgroundLocation: location }}
-                >
-                  <Img src={comment.author_thumbnail} />
+                  <Text fontWeight="400" my={2} color="gray.500" minH="60px">
+                    {work.description}
+                  </Text>
+                  <TagsContainer>
+                    {work.tags?.map((tag) => (
+                      <TagWrapper key={tag}>{tag}</TagWrapper>
+                    ))}
+                  </TagsContainer>
+                  <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
+                    {`Created at ${work.created_time
+                      ?.toDate()
+                      .toDateString()
+                      .slice(4, 25)}`}
+                  </Text>
 
-                  <p>{comment.author_name}</p>
-                </Link>
-                <p>{comment.content}</p>
-              </div>
-            );
-          })}
-          <>
-            <input
-              value={input}
-              onChange={(e) => {
-                setInput(e.target.value);
-              }}
-            />
-            <button onClick={sendComment}>send</button>
-          </>
-          <div ref={endRef}></div>
-        </ModalContentText>
-        <ModalCloseButton ref={buttonRef} onClick={onDismiss}>
-          X
-        </ModalCloseButton>
-      </ModalContent>
-    </ModalBackground>
+                  {comments.map((comment) => {
+                    return (
+                      <div key={comment.id}>
+                        <UserSmall
+                          id={comment.author_id}
+                          name={comment.author_name}
+                          thumbnail={comment.author_thumbnail}
+                        />
+
+                        <Text color={"gray.500"} ml={9} mb={2}>
+                          {comment.content}
+                        </Text>
+                      </div>
+                    );
+                  })}
+                  <div ref={endRef}></div>
+                </VStack>
+                <Flex align="center">
+                  {like ? (
+                    <IconButton
+                      pt={1}
+                      variant="ghost"
+                      aria-label="like"
+                      icon={<BsHeartFill />}
+                      onClick={() => handleLike(work.id, work.liked_by)}
+                    />
+                  ) : (
+                    <IconButton
+                      pt={1}
+                      variant="ghost"
+                      aria-label="like"
+                      icon={<BsHeart />}
+                      onClick={() => handleLike(work.id, work.liked_by)}
+                    />
+                  )}
+                  {/* fixme // need to update as well */}
+                  <Text
+                    color={"gray.500"}
+                  >{`${work.liked_by?.length} likes`}</Text>
+                  <Spacer />
+                  <CollectWithCategory
+                    id={work.id}
+                    workIndex={workIndex}
+                    collectedList={work.collected_by}
+                    collections={collections}
+                    setCollections={setCollections}
+                  />
+                </Flex>
+                <Flex align="center" justify="center" pt={2}>
+                  <InputGroup size="md" position="relative">
+                    <Input
+                      rounded="full"
+                      placeholder="Leave comment....."
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={sendCommentKeyDown}
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        variant="ghost"
+                        rounded="full"
+                        position="absolute"
+                        right={2}
+                        aria-label="Search database"
+                        icon={<BsCursorFill />}
+                        onClick={sendComment}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </Flex>
+                {/* <input
+                    value={input}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                    }}
+                  />
+                  <button onClick={sendComment}>send</button> */}
+              </Flex>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { BsHeart, BsHeartFill, BsChat, BsFillChatFill } from "react-icons/bs";
 import CollectWithCategory from "../pages/CollectWithCategory";
 import { useState, useEffect } from "react";
+import { UserWithTime } from "./UserVariants";
 
 export default function CommunityCard({
   work,
@@ -42,19 +43,18 @@ export default function CommunityCard({
         w={"full"}
         bg={useColorModeValue("white", "gray.900")}
         rounded={"md"}
-        px={4}
+        p={4}
+        pb={6}
         overflow={"hidden"}
         textAlign={"left"}
       >
-        <Stack my={4} direction={"row"} spacing={4} align={"center"}>
-          <Avatar src={work.author_thumbnail} alt={work.author_name} />
-          <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-            <Text fontWeight={600}>{work.author_name}</Text>
-            <Text color={"gray.500"}>
-              {work.created_time.toDate().toDateString()}
-            </Text>
-          </Stack>
-        </Stack>
+        <UserWithTime
+          id={work.author_id}
+          name={work.author_name}
+          thumbnail={work.author_thumbnail}
+          time={work.created_time.toDate().toDateString()}
+        />
+
         <Box bg={"gray.100"} pos={"relative"} mx={-4}>
           <Link
             to={`/work/${work.id}`}
@@ -107,7 +107,7 @@ export default function CommunityCard({
           <Text color={"gray.500"}>{work.description}</Text>
           {/* <Text fontWeight={600}>...More</Text> */}
         </Stack>
-        <Stack mb={6} spacing={1}>
+        <Stack spacing={1}>
           {work.latestComments?.map((comment) => {
             return (
               <Box key={comment.id} fontSize={"sm"}>

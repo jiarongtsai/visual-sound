@@ -130,7 +130,7 @@ export default function MessageView({ currentChatroom }) {
         ))}
         <div ref={endRef}></div>
       </VStack>
-      {/* <div> */}
+      {/* simillar component as comment */}
       <Flex align="center" justify="center" p={4}>
         <InputGroup size="lg" position="relative">
           <Input

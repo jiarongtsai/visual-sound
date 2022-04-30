@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { Container } from "@chakra-ui/react";
 import { Firebase } from "../utils/firebase";
