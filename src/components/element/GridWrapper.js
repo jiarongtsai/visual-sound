@@ -5,10 +5,10 @@ const GridWrapper = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 90vw;
   margin: 0 auto;
-  max-width: 1080px;
+  max-width: 960px;
 `;
 
 const Square = styled.div`

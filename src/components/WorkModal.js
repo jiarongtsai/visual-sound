@@ -159,8 +159,11 @@ export default function WorkModal({
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex direction={["column", "row"]} justify="space-between">
-              <Flex direction="column" w={["100%", "60%"]}>
+            <Flex
+              direction={["column", "column", "row"]}
+              justify="space-between"
+            >
+              <Flex direction="column" w={["100%", "100%", "60%"]}>
                 <PlayerProvider>
                   {({ soundPlayer }) => {
                     return (
@@ -174,7 +177,7 @@ export default function WorkModal({
                   }}
                 </PlayerProvider>
               </Flex>
-              <Flex direction="column" w={["100%", "35%"]}>
+              <Flex direction="column" w={["100%", "100%", "35%"]}>
                 <VStack align="flex-start" h="43vh" overflowY={"scroll"} p={1}>
                   <UserSmall
                     id={work.author_id}

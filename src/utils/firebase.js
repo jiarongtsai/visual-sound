@@ -235,6 +235,38 @@ const Firebase = {
     const lastVisibleWork = snapshot.docs[this.pageLimit - 1];
     return { fetchWorks, lastVisibleWork };
   },
+  async getRelatedWorks(uid, tags) {
+    const queryCondition = query(
+      this.worksRef(),
+      where("author_id", "==", uid),
+      limit(6)
+    );
+    const snapshot = await getDocs(queryCondition);
+
+    const authorResult = snapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+
+    if ((authorResult.length = 6)) return authorResult;
+
+    const TagsQueryCondition = query(
+      this.worksRef(),
+      where("tags", "array-contains", tags),
+      limit(6 - authorResult.length)
+    );
+    const tagSnapshot = await getDocs(TagsQueryCondition);
+    const TagsResult = tagSnapshot.docs.map((doc) => {
+      return {
+        id: doc.id,
+        ...doc.data(),
+      };
+    });
+
+    return [...authorResult, ...TagsResult];
+  },
   async getFollowingList(id) {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
@@ -242,7 +274,6 @@ const Firebase = {
     return docSnap.data()?.following;
   },
   async getFollowingWorks(id) {
-    //haven't test more than 10
     const followingList = await this.getFollowingList(id);
 
     if (!followingList || followingList.length === 0) return [];

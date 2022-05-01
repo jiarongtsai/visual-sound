@@ -47,7 +47,15 @@ function App() {
               }
             />
             <Route path="explore" element={<Explore />} />
-            <Route path="/work/:id" element={<WorkView />} />
+            <Route
+              path="/work/:id"
+              element={
+                <WorkView
+                  collections={collections}
+                  setCollections={setCollections}
+                />
+              }
+            />
 
             <Route exact path="/user/:uid" element={<User />} />
 
