@@ -37,9 +37,7 @@ export default function SequencePlayer({
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const [sequence, setSequence] = useState(
-    transformStoredSequence(sheetmusic) || initialState
-  );
+  const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
 
   function transformStoredSequence(storedData) {
@@ -53,6 +51,9 @@ export default function SequencePlayer({
     }
     return storedSequence;
   }
+  useEffect(() => {
+    sheetmusic && setSequence(transformStoredSequence(sheetmusic));
+  }, [sheetmusic]);
 
   const nextStep = (time) => {
     const sequenceCopy = [...sequence];
