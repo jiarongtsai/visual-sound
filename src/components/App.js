@@ -49,7 +49,7 @@ function App() {
             <Route path="explore" element={<Explore />} />
             <Route path="/work/:id" element={<WorkView />} />
 
-            <Route path="/user/:uid" element={<User />} />
+            <Route exact path="/user/:uid" element={<User />} />
 
             <Route
               path="profile"
