@@ -1,13 +1,24 @@
 import React, { useState, useEffect, createRef } from "react";
 import { useTransition } from "react-spring";
-import { Flex } from "@chakra-ui/react";
+import {
+  Flex,
+  // Lorem,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+} from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
 import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import { Wrapper, Square, Ellipse, Triangle } from "../visual/VisualElement";
 import { colorTheme } from "../visual/colorTheme";
-import { useDisclosure, Button, Center, Image } from "@chakra-ui/react";
 
 //sequence
 const steps = 16;
@@ -39,6 +50,7 @@ const Sequencer = ({ player }) => {
   const getImage = () => takeScreenshot(ref.current);
 
   const [isUploaded, setIsUploaded] = useState(false);
+
   const [playing, setPlaying] = useState(false);
   const [themeColor, setThemeColor] = useState("themeDefault");
 
@@ -345,98 +357,82 @@ const Sequencer = ({ player }) => {
     setSequence(sequenceCopy);
   }
 
-  function handleSequenceData(currentSequence) {
-    for (let i = 0; i < currentSequence.length; i++) {
-      for (let j = 0; j < currentSequence[i].length; j++) {
-        const { activated } = currentSequence[i][j];
-        currentSequence[i][j] = { activated };
-      }
-    }
-    return JSON.stringify(currentSequence);
-  }
-
   return (
-    <Flex direction={"column"}>
+    <>
       <UploadModal
-        sequenceJSON={handleSequenceData(sequence)}
+        isOpen={isOpen}
+        onClose={onClose}
+        sequence={sequence}
         bpm={bpm}
         setIsUploaded={setIsUploaded}
         image={image}
         setImage={setImage}
         themeColor={themeColor}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
-      {image && (
-        <Image
-          w="100px"
-          src={image}
-          alt={"Screenshot"}
-          position="fixed"
-          buttom="0"
-          right="0"
-        />
-      )}
-      <Center>
-        <Button colorScheme={"purple"} m={1} onClick={getImage}>
-          Screenshot
-        </Button>
-        <Button colorScheme={"purple"} m={1} onClick={onOpen}>
-          Open Modal
-        </Button>
-      </Center>
+      ></UploadModal>
+      <Flex direction={"column"}>
+        {/* <UploadModal
+        
+      /> */}
 
-      <ThemeProvider theme={colorTheme[themeColor]}>
-        <Wrapper ref={ref}>
-          {boomTransition((style, item) =>
-            item ? <Ellipse style={style} /> : ""
+        <div>
+          {image && (
+            <img style={{ width: "20vw" }} src={image} alt={"Screenshot"} />
           )}
-          {clapTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {hihatTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {kickTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {openhatTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {rideTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {snareTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {tomTransition((style, item) =>
-            item ? <Ellipse style={style} /> : ""
-          )}
-          {tinkTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-        </Wrapper>
-      </ThemeProvider>
-      <Div>
-        <button onClick={handleBacktoHead}>to head</button>
-        <button onClick={() => setPlaying(!playing)}>{`${
-          playing ? "Pause" : "Play"
-        }`}</button>
-        <button onClick={handleCleanUp}>clean</button>
-      </Div>
-      <Div>
-        <label>{`BPM = ${bpm}`}</label>
-        <input
-          type="range"
-          min="60"
-          max="240"
-          value={bpm}
-          step="1"
-          onChange={(e) => setBpm(e.target.value)}
-        />
-      </Div>
-      <Grid sequence={sequence} toggleStep={toggleStep} />
-    </Flex>
+        </div>
+        <button onClick={onOpen}>upload</button>
+        <button onClick={getImage}>screenshot</button>
+        <ThemeProvider theme={colorTheme[themeColor]}>
+          <Wrapper ref={ref}>
+            {boomTransition((style, item) =>
+              item ? <Ellipse style={style} /> : ""
+            )}
+            {clapTransition((style, item) =>
+              item ? <Triangle style={style} /> : ""
+            )}
+            {hihatTransition((style, item) =>
+              item ? <Triangle style={style} /> : ""
+            )}
+            {kickTransition((style, item) =>
+              item ? <Square style={style} /> : ""
+            )}
+            {openhatTransition((style, item) =>
+              item ? <Triangle style={style} /> : ""
+            )}
+            {rideTransition((style, item) =>
+              item ? <Square style={style} /> : ""
+            )}
+            {snareTransition((style, item) =>
+              item ? <Square style={style} /> : ""
+            )}
+            {tomTransition((style, item) =>
+              item ? <Ellipse style={style} /> : ""
+            )}
+            {tinkTransition((style, item) =>
+              item ? <Triangle style={style} /> : ""
+            )}
+          </Wrapper>
+        </ThemeProvider>
+        <Div>
+          <button onClick={handleBacktoHead}>to head</button>
+          <button onClick={() => setPlaying(!playing)}>{`${
+            playing ? "Pause" : "Play"
+          }`}</button>
+          <button onClick={handleCleanUp}>clean</button>
+        </Div>
+        <Div>
+          <label>{`BPM = ${bpm}`}</label>
+          <input
+            type="range"
+            min="60"
+            max="240"
+            value={bpm}
+            step="1"
+            onChange={(e) => setBpm(e.target.value)}
+          />
+        </Div>
+        <Grid sequence={sequence} toggleStep={toggleStep} />
+      </Flex>
+    </>
   );
 };
 

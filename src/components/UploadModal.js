@@ -45,7 +45,7 @@ const TagDelete = styled.span`
 `;
 
 export default function UploadModal({
-  sequenceJSON,
+  sequence,
   bpm,
   setIsUploaded,
   image,
@@ -79,6 +79,16 @@ export default function UploadModal({
     setTags(tags.filter((tag) => tag != value));
   }
 
+  function handleSequenceData(currentSequence) {
+    for (let i = 0; i < currentSequence.length; i++) {
+      for (let j = 0; j < currentSequence[i].length; j++) {
+        const { activated } = currentSequence[i][j];
+        currentSequence[i][j] = { activated };
+      }
+    }
+    return JSON.stringify(currentSequence);
+  }
+
   async function uploadtoFirebase() {
     const workRef = Firebase.getNewWorkRef();
     const workID = workRef.id;
@@ -98,7 +108,7 @@ export default function UploadModal({
       tags: tags,
       collected_by: [],
       liked_by: [],
-      sheetmusic: sequenceJSON,
+      sheetmusic: handleSequenceData(sequence),
       bpm: bpm,
       themeColor: themeColor,
     };
@@ -138,7 +148,7 @@ export default function UploadModal({
                   return (
                     <SequencePlayer
                       player={soundPlayer}
-                      sheetmusic={sequenceJSON}
+                      sheetmusic={handleSequenceData(sequence)}
                       bpm={bpm}
                       themeColor={themeColor}
                     />
