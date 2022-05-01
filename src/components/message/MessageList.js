@@ -26,8 +26,8 @@ export default function MessageList({
       <Flex direction="column">
         <Box
           display={["none", "initial"]}
-          // borderButtom="1px"
-          // borderColor={useColorModeValue("gray.200", "gray.500")}
+          borderBottom="1px"
+          borderColor={useColorModeValue("gray.200", "gray.500")}
           boxShadow="base"
           p={4}
           pb={0}

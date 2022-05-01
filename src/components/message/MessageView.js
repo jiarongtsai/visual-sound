@@ -16,7 +16,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { BsCursorFill, BsPlusSquare } from "react-icons/bs";
-import { MessageViewCell } from "./MessageViewCell";
+import { MessageViewReceiver, MessageViewSender } from "./MessageViewCell";
 import { UserWithName } from "../UserVariants";
 
 export default function MessageView({ currentChatroom, openNewChatList }) {
@@ -93,29 +93,29 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
       </Box>
 
       <VStack
-        align="flex-start"
+        align="center"
         h={"58vh"}
         overflowY={"scroll"}
         borderTop="1px"
         borderColor={borderColor}
+        pt={3}
       >
-        {/* time, align for  MessageView cell */}
+        {/* time calculate  MessageView cell */}
         {chats.map((chat, i) => (
-          <MessageViewCell
-            key={i}
-            content={chat.content}
-            time={chat.created_time.toDate().toString().slice(4, 25)}
-            name={`${
-              chat.sender === currentChatInfo.author_place
-                ? currentChatInfo.author_name
-                : user.displayName
-            }`}
-            thumbnail={`${
-              chat.sender === currentChatInfo.author_place
-                ? currentChatInfo.author_thumbnail
-                : user.photoURL
-            }`}
-          />
+          <>
+            <Text color="gray.500" fontSize="sm">
+              {chat.created_time.toDate().toString().slice(4, 21)}
+            </Text>
+            {chat.sender === currentChatInfo.author_place ? (
+              <MessageViewSender
+                content={chat.content}
+                name={`${currentChatInfo.author_name}`}
+                thumbnail={`${currentChatInfo.author_thumbnail}`}
+              />
+            ) : (
+              <MessageViewReceiver content={chat.content} />
+            )}
+          </>
         ))}
         <div ref={endRef}></div>
       </VStack>
