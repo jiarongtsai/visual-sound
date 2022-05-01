@@ -16,39 +16,36 @@ import {
   ModalCloseButton,
   Button,
   Flex,
-  VStack,
-  Spacer,
+  Image,
+  Input,
+  Textarea,
+  IconButton,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
-// const ModalCloseButton = styled.button`
-//   flex-basis: 5%;
-//   background-color: red;
-//   height: 2rem;
-//   cursor: pointer;
-// `;
-
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-`;
-
-const Img = styled.img`
-  width: 100px;
-  border-radius: 50%;
-`;
+import { BsPencilSquare } from "react-icons/bs";
 
 export default function EditProfileModal({
   isOpen,
   onClose,
   profile,
-
   setProfile,
 }) {
   const user = useContext(AuthContext);
   const [inputs, setInputs] = useState({});
+  const [preview, setPreview] = useState("");
+  useEffect(() => {
+    if (!preview) setPreview(profile.user_thumbnail);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!inputs.user_thumbnail) return;
+
+    const objectUrl = URL.createObjectURL(inputs.user_thumbnail);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [inputs]);
 
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -71,67 +68,83 @@ export default function EditProfileModal({
       user_thumbnail: imageUrl,
     }));
     setInputs({});
-    // setOpenModal(false);
+    onClose();
   }
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody></ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost">Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/* <ModalBackground>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
       <ModalContent>
-        <div>
-          <Div>
-            <Img src={profile.user_thumbnail} />
-            <input
-              name="user_thumbnail"
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={(e) =>
-                setInputs({ ...inputs, user_thumbnail: e.target.files[0] })
-              }
-            />
-          </Div>
-          <Div>
-            <label>username</label>
-            <input
-              name="user_name"
-              placeholder={profile.user_name}
-              value={inputs.user_name || ""}
-              onChange={(e) => handleInputs(e)}
-            ></input>
-          </Div>
-          <Div>
-            <label>bio</label>
-            <textarea
-              name="user_bio"
-              rows="5"
-              cols="50"
-              placeholder={profile.user_bio}
-              value={inputs.user_bio || ""}
-              onChange={handleInputs}
-            />
-          </Div>
-          <button onClick={handelUpdate}>update</button>
-        </div>
-        <ModalCloseButton onClick={() => setOpenModal(false)}>
-          X
-        </ModalCloseButton>
+        <ModalHeader>Edit Profile</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex direction="column">
+            <Flex direction="column" align="center" position="relative">
+              <Image
+                src={preview}
+                w="40%"
+                rounded="full"
+                border="1px"
+                borderColor={useColorModeValue("gray.200", "gray.500")}
+              />
+              <label
+                htmlFor="upload"
+                style={{
+                  height: "40px",
+                  position: "absolute",
+                  right: "30%",
+                  bottom: "5%",
+                  cursor: "pointer",
+                }}
+              >
+                <Input
+                  id="upload"
+                  display="none"
+                  name="user_thumbnail"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={(e) =>
+                    setInputs({ ...inputs, user_thumbnail: e.target.files[0] })
+                  }
+                />
+                <IconButton
+                  pointerEvents="none"
+                  colorScheme="purple"
+                  aria-label="Update Profile Photo"
+                  icon={<BsPencilSquare />}
+                />
+              </label>
+            </Flex>
+            <Flex direction="column" justify="center">
+              <label>Username</label>
+              <Input
+                name="user_name"
+                placeholder={profile.user_name}
+                value={inputs.user_name || ""}
+                onChange={(e) => handleInputs(e)}
+              />
+            </Flex>
+            <Flex direction="column" justify="center">
+              <label>Bio</label>
+              <Textarea
+                name="user_bio"
+                rows="5"
+                cols="50"
+                overflow="scroll"
+                placeholder={profile.user_bio}
+                value={inputs.user_bio || ""}
+                onChange={handleInputs}
+              />
+            </Flex>
+          </Flex>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme="purple" onClick={handelUpdate}>
+            Update
+          </Button>
+        </ModalFooter>
       </ModalContent>
-    </ModalBackground> */}
-    </>
+    </Modal>
   );
 }

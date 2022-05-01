@@ -17,6 +17,7 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
@@ -123,6 +124,7 @@ export default function ProfileLayout() {
                   textDecoration: "none",
                   bg: useColorModeValue("gray.200", "gray.800"),
                 }}
+                leftIcon={<EditIcon />}
                 onClick={onEditOpen}
               >
                 Edit Profile
