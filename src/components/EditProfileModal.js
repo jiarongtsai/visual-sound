@@ -4,14 +4,28 @@ import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
 import { ModalBackground } from "./element/ModalBackground";
-import { ModalContent } from "./element/ModalContent";
+// import { ModalContent } from "./element/ModalContent";
 
-const ModalCloseButton = styled.button`
-  flex-basis: 5%;
-  background-color: red;
-  height: 2rem;
-  cursor: pointer;
-`;
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Flex,
+  VStack,
+  Spacer,
+} from "@chakra-ui/react";
+
+// const ModalCloseButton = styled.button`
+//   flex-basis: 5%;
+//   background-color: red;
+//   height: 2rem;
+//   cursor: pointer;
+// `;
 
 const Div = styled.div`
   display: flex;
@@ -27,8 +41,10 @@ const Img = styled.img`
 `;
 
 export default function EditProfileModal({
+  isOpen,
+  onClose,
   profile,
-  setOpenModal,
+
   setProfile,
 }) {
   const user = useContext(AuthContext);
@@ -55,11 +71,27 @@ export default function EditProfileModal({
       user_thumbnail: imageUrl,
     }));
     setInputs({});
-    setOpenModal(false);
+    // setOpenModal(false);
   }
 
   return (
-    <ModalBackground>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody></ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/* <ModalBackground>
       <ModalContent>
         <div>
           <Div>
@@ -99,6 +131,7 @@ export default function EditProfileModal({
           X
         </ModalCloseButton>
       </ModalContent>
-    </ModalBackground>
+    </ModalBackground> */}
+    </>
   );
 }
