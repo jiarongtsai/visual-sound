@@ -2,16 +2,18 @@ import React, { useState, useEffect, createRef } from "react";
 import { useTransition } from "react-spring";
 import {
   Flex,
-  // Lorem,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   Button,
+  useDisclosure,
+  useColorModeValue,
+  CloseButton,
+  Slide,
+  Box,
+  Fade,
+  IconButton,
+  HStack,
+  Text,
+  Heading,
+  Image,
 } from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
@@ -19,6 +21,19 @@ import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import { Wrapper, Square, Ellipse, Triangle } from "../visual/VisualElement";
 import { colorTheme } from "../visual/colorTheme";
+import {
+  BsPlayFill,
+  BsPauseFill,
+  BsSkipStartFill,
+  BsFillRecordFill,
+  BsFillStopFill,
+  BsArrowCounterclockwise,
+  BsFillCameraFill,
+  BsBoxArrowUp,
+} from "react-icons/bs";
+
+import BPMController from "./BPMController";
+import { getValue } from "@testing-library/user-event/dist/utils";
 
 //sequence
 const steps = 16;
@@ -44,6 +59,11 @@ const Div = styled.div`
 `;
 
 const Sequencer = ({ player }) => {
+  const {
+    isOpen: isControllerOpen,
+    onOpen: onControllerOpen,
+    onClose: onControllerClose,
+  } = useDisclosure();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const ref = createRef(null);
   const [image, setImage, takeScreenshot] = useScreenshot();
@@ -52,7 +72,7 @@ const Sequencer = ({ player }) => {
   const [isUploaded, setIsUploaded] = useState(false);
 
   const [playing, setPlaying] = useState(false);
-  const [themeColor, setThemeColor] = useState("themeDefault");
+  const [themeColor, setThemeColor] = useState("main");
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -64,9 +84,10 @@ const Sequencer = ({ player }) => {
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
 
-  const [bpm, setBpm] = useState(120);
+  const [BPMValue, setBPMValue] = useState(120);
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
+
   //visual
   const useKeyboardBindings = (map) => {
     useEffect(() => {
@@ -172,7 +193,8 @@ const Sequencer = ({ player }) => {
   };
 
   useKeyboardBindings({
-    1: () => setThemeColor("themeDefault"),
+    " ": () => setPlaying((v) => !v),
+    1: () => setThemeColor("main"),
     2: () => setThemeColor("energe"),
     3: () => setThemeColor("macaroon"),
     4: () => setThemeColor("neon"),
@@ -311,7 +333,7 @@ const Sequencer = ({ player }) => {
   });
 
   useEffect(() => {
-    const timeOutspeed = (15 / bpm) * 1000;
+    const timeOutspeed = (15 / BPMValue) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
@@ -326,7 +348,7 @@ const Sequencer = ({ player }) => {
   useEffect(() => {
     if (isUploaded) {
       handleCleanUp();
-      setBpm(120);
+      setBPMValue(120);
       setCurrentStep(0);
       setBoomEffect(false);
       setClapEffect(false);
@@ -363,24 +385,21 @@ const Sequencer = ({ player }) => {
         isOpen={isOpen}
         onClose={onClose}
         sequence={sequence}
-        bpm={bpm}
+        bpm={BPMValue}
         setIsUploaded={setIsUploaded}
         image={image}
         setImage={setImage}
         themeColor={themeColor}
-      ></UploadModal>
-      <Flex direction={"column"}>
-        {/* <UploadModal
-        
-      /> */}
-
-        <div>
-          {image && (
-            <img style={{ width: "20vw" }} src={image} alt={"Screenshot"} />
-          )}
-        </div>
-        <button onClick={onOpen}>upload</button>
-        <button onClick={getImage}>screenshot</button>
+      />
+      <Flex
+        direction={"column"}
+        w="80vw"
+        h="80vh"
+        mt={24}
+        mx="auto"
+        justify="center"
+        align="center"
+      >
         <ThemeProvider theme={colorTheme[themeColor]}>
           <Wrapper ref={ref}>
             {boomTransition((style, item) =>
@@ -412,25 +431,132 @@ const Sequencer = ({ player }) => {
             )}
           </Wrapper>
         </ThemeProvider>
-        <Div>
-          <button onClick={handleBacktoHead}>to head</button>
-          <button onClick={() => setPlaying(!playing)}>{`${
-            playing ? "Pause" : "Play"
-          }`}</button>
-          <button onClick={handleCleanUp}>clean</button>
-        </Div>
-        <Div>
-          <label>{`BPM = ${bpm}`}</label>
-          <input
-            type="range"
-            min="60"
-            max="240"
-            value={bpm}
-            step="1"
-            onChange={(e) => setBpm(e.target.value)}
+        <Flex justify="center" align="center" my={3}>
+          <Button
+            onClick={onOpen}
+            colorScheme="purple"
+            leftIcon={<BsBoxArrowUp />}
+            mr={4}
+          >
+            upload
+          </Button>
+          <Button
+            onClick={getImage}
+            colorScheme="purple"
+            leftIcon={<BsFillCameraFill />}
+          >
+            screenshot
+          </Button>
+        </Flex>
+        {image && (
+          <Image
+            w="20vw"
+            src={image}
+            alt={"Screenshot"}
+            position="absolute"
+            right="10px"
+            bottom="10px"
           />
-        </Div>
-        <Grid sequence={sequence} toggleStep={toggleStep} />
+        )}
+        <Button
+          w="100vw"
+          position="fixed"
+          bottom="0"
+          left="0"
+          variant="ghost"
+          onClick={onControllerOpen}
+          onMouseEnter={onControllerOpen}
+          style={{ zIndex: 199 }}
+        >
+          Show Edit Panel
+        </Button>
+
+        <Fade in={isControllerOpen}>
+          <Box
+            w="100vw"
+            h="100vh"
+            bg="blackAlpha.600"
+            position="fixed"
+            top="0"
+            left="0"
+            pointerEvents="none"
+          />
+        </Fade>
+        <Slide direction="bottom" in={isControllerOpen} style={{ zIndex: 299 }}>
+          <Box
+            py={5}
+            px={10}
+            rounded="md"
+            shadow="base"
+            onMouseLeave={onControllerClose}
+            bg={useColorModeValue("white", "gray.600")}
+            d="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
+            <Heading size="md">Editing Panel</Heading>
+            <Flex
+              direction={["column", "column", "row"]}
+              justifyContent={[
+                "space-between",
+                "space-between",
+                "space-around",
+              ]}
+              w="70%"
+              my={4}
+              mx="auto"
+            >
+              <Box mx="auto">
+                <Text>Color Theme</Text>
+                <HStack spacing={2}>
+                  {Object.entries(colorTheme).map(([key, value], i) => {
+                    return (
+                      <Button
+                        opacity={0.9}
+                        key={key}
+                        bg={value.background}
+                        color={value.light}
+                        onClick={() => setThemeColor(key)}
+                        size="sm"
+                        fontSize="md"
+                      >
+                        {i + 1}
+                      </Button>
+                    );
+                  })}
+                </HStack>
+              </Box>
+
+              <Box my={[8, 8, 0]} mx="auto">
+                <Text>BPM</Text>
+                <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
+              </Box>
+            </Flex>
+            <HStack spacing={2}>
+              <IconButton
+                aria-label="skip to start"
+                icon={<BsSkipStartFill />}
+                onClick={handleBacktoHead}
+              />
+              <IconButton
+                aria-label="play or pause"
+                icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                onClick={() => setPlaying(!playing)}
+              />
+
+              <IconButton
+                aria-label="clean up"
+                icon={<BsArrowCounterclockwise />}
+                onClick={handleCleanUp}
+              />
+            </HStack>
+            {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
+              <IconButton aria-label="stop" icon={<BsFillStopFill />} /> */}
+            <Grid sequence={sequence} toggleStep={toggleStep} />
+          </Box>
+        </Slide>
       </Flex>
     </>
   );

@@ -173,7 +173,7 @@ export default function UploadModal({
                     name="description"
                     value={inputs.description || ""}
                     onChange={handleInputs}
-                    rows="5"
+                    rows="7"
                     my={2}
                   />
                 </Box>

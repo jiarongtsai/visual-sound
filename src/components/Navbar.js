@@ -63,6 +63,7 @@ export default function Navbar() {
           position={"fixed"}
           w="100%"
           bg={useColorModeValue("white", "gray.900")}
+          style={{ zIndex: 99 }}
         >
           <IconButton
             ml={2}
@@ -76,6 +77,7 @@ export default function Navbar() {
           <HStack spacing={8} alignItems={"center"}>
             <Box>
               <Button
+                ml={4}
                 as={"a"}
                 fontSize={"sm"}
                 fontWeight={400}

@@ -209,7 +209,7 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
 
   return (
     <>
-      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.themeDefault}>
+      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
         <Wrapper>
           {boomTransition((style, item) =>
             item ? <Ellipse style={style} /> : ""

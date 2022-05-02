@@ -174,7 +174,7 @@ export default function SequencePlayer({
 
   return (
     <>
-      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.themeDefault}>
+      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
         <Wrapper>
           {boomTransition((style, item) =>
             item ? <Ellipse style={style} /> : ""

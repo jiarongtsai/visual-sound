@@ -1,5 +1,5 @@
 const colorTheme = {
-  themeDefault: {
+  main: {
     background: "white",
     light: "green",
     medium: "orange",
@@ -29,10 +29,10 @@ const colorTheme = {
   },
   vintage: {
     background: "#125B50",
-    light: "#FAF5E4",
-    medium: "#F8B400",
+    light: "#FF8C32",
+    medium: "#FAF5E4",
     dark: "#FF6363",
-    special: "#FF8C32",
+    special: "##F8B400",
   },
 };
 
