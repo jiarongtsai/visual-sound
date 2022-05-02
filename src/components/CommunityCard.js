@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   IconButton,
   Image,
+  Collapse,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { BsHeart, BsHeartFill, BsChat, BsFillChatFill } from "react-icons/bs";
@@ -26,6 +27,9 @@ export default function CommunityCard({
   follwingWorks,
 }) {
   const [workIndex, setWorkIndex] = useState(-1);
+  const [show, setShow] = useState(false);
+
+  const handleToggle = () => setShow(!show);
 
   useEffect(() => {
     const index = follwingWorks
@@ -103,8 +107,17 @@ export default function CommunityCard({
         </Flex>
         <Stack mb={3} direction={"column"} spacing={0} fontSize={"sm"}>
           <Text fontWeight={600}>{work.author_name}</Text>
-          <Text color={"gray.500"}>{work.description}</Text>
-          {/* <Text fontWeight={600}>...More</Text> */}
+
+          <Collapse startingHeight={20} in={show}>
+            <Text color={"gray.500"}>{work.description}</Text>
+          </Collapse>
+          {work.description.length > 100 ? (
+            <Text fontWeight={600} size="sm" onClick={handleToggle} mt="1rem">
+              ...{show ? "Less" : "More"}
+            </Text>
+          ) : (
+            ""
+          )}
         </Stack>
         <Stack spacing={1}>
           {work.latestComments?.map((comment) => {
@@ -123,13 +136,11 @@ export default function CommunityCard({
             to={`/work/${work.id}`}
             state={{ backgroundLocation: location }}
           >
-            {work.comments_count ? (
-              <Text fontWeight={600} fontSize={"sm"}>
-                {`view all ${work.comments_count} comments`}
-              </Text>
-            ) : (
-              ""
-            )}
+            <Text fontWeight={600} fontSize={"sm"}>
+              {work.comments_count
+                ? `View all ${work.comments_count} comments`
+                : "Be the 1st to comment"}
+            </Text>
           </Link>
         </Stack>
       </Box>

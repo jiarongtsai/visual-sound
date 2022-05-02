@@ -31,7 +31,7 @@ export default function WorkView({ collections, setCollections }) {
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
-
+  const [currentLikeCount, setCurrentLikeCount] = useState(0);
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
 
@@ -40,6 +40,7 @@ export default function WorkView({ collections, setCollections }) {
   useEffect(() => {
     (async () => {
       const workData = await Firebase.getWork(id);
+      setCurrentLikeCount(workData.liked_by.length);
       setLike(workData.liked_by.includes(user?.uid));
       setWork(workData);
 
@@ -91,8 +92,10 @@ export default function WorkView({ collections, setCollections }) {
   async function handleLike(id, list) {
     if (!like) {
       await Firebase.likeWork(user.uid, id, list);
+      setCurrentLikeCount((v) => v + 1);
     } else {
       await Firebase.unlikeWork(user.uid, id, list);
+      setCurrentLikeCount((v) => v - 1);
     }
 
     setLike(!like);
@@ -194,7 +197,10 @@ export default function WorkView({ collections, setCollections }) {
                 onClick={() => handleLike(work.id, work.liked_by)}
               />
             )}
-            <Text color={"gray.500"}>{`${work.liked_by?.length} likes`}</Text>
+            <Text color={"gray.500"}>
+              {currentLikeCount}
+              {currentLikeCount > 1 ? " likes" : " like"}
+            </Text>
             <Spacer />
             <CollectWithCategory
               id={work.id}

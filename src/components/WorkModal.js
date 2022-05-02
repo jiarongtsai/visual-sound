@@ -48,6 +48,7 @@ export default function WorkModal({
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const [like, setLike] = useState(false);
+  const [currentLikeCount, setCurrentLikeCount] = useState(0);
   const endRef = useRef(null);
 
   const borderColor = useColorModeValue("gray.300", "gray.800");
@@ -55,6 +56,7 @@ export default function WorkModal({
   useEffect(() => {
     if (workIndex < 0) {
       Firebase.getWork(id).then((data) => {
+        setCurrentLikeCount(data.liked_by.length);
         setLike(data.liked_by.includes(user.uid));
         setWork(data);
       });
@@ -62,6 +64,7 @@ export default function WorkModal({
     }
 
     setWork(follwingWorks[workIndex]);
+    setCurrentLikeCount(follwingWorks[workIndex].liked_by.length);
     setLike(likes[workIndex]);
   }, []);
 
@@ -115,8 +118,10 @@ export default function WorkModal({
   async function handleLike(id, list) {
     if (!like) {
       await Firebase.likeWork(user.uid, id, list);
+      setCurrentLikeCount((v) => v + 1);
     } else {
       await Firebase.unlikeWork(user.uid, id, list);
+      setCurrentLikeCount((v) => v - 1);
     }
 
     setLike(!like);
@@ -231,9 +236,10 @@ export default function WorkModal({
                     />
                   )}
                   {/* fixme // need to update as well */}
-                  <Text
-                    color={"gray.500"}
-                  >{`${work.liked_by?.length} likes`}</Text>
+                  <Text color={"gray.500"}>
+                    {currentLikeCount}
+                    {currentLikeCount > 1 ? " likes" : " like"}
+                  </Text>
                   <Spacer />
                   <CollectWithCategory
                     id={work.id}
