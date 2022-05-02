@@ -31,6 +31,10 @@ const PlayerProvider = ({ children }) => {
         setSoundPlayer(soundPlayer);
       }
     ).toDestination();
+    return () => {
+      soundPlayer.dispose();
+      soundPlayer.disconnect();
+    };
   }, []);
   return children({ soundPlayer });
 };
