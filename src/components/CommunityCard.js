@@ -71,6 +71,7 @@ export default function CommunityCard({
         w={"full"}
         bg={useColorModeValue("white", "gray.900")}
         rounded={"md"}
+        shadow="base"
         p={4}
         pb={6}
         overflow={"hidden"}
@@ -83,7 +84,14 @@ export default function CommunityCard({
           time={work.created_time.toDate().toDateString()}
         />
 
-        <Box bg={"gray.100"} pos={"relative"} mx={-4}>
+        <Box
+          bg={"gray.100"}
+          pos={"relative"}
+          mx={-4}
+          borderTop="1px"
+          borderBottom="1px"
+          borderColor={useColorModeValue("gray.200", "gray.700")}
+        >
           <Link
             to={`/work/${work.id}`}
             state={{ backgroundLocation: location }}

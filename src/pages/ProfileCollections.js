@@ -4,6 +4,8 @@ import { AuthContext } from "../components/auth/Auth";
 import { Firebase } from "../utils/firebase";
 import { GridWrapper } from "../components/element/GridWrapper";
 import { Img } from "../components/element/Img";
+import CollectionWrapper from "../components/CollectionWrapper";
+import { Flex } from "@chakra-ui/react";
 
 export default function ProfileCollections() {
   const user = useContext(AuthContext);
@@ -35,6 +37,13 @@ export default function ProfileCollections() {
   return (
     <>
       <div>All</div>
+      <Flex wrap="wrap" w="90%" justify="center">
+        <CollectionWrapper />
+        <CollectionWrapper />
+        <CollectionWrapper />
+        <CollectionWrapper />
+        <CollectionWrapper />
+      </Flex>
       <GridWrapper>
         {collectedWorks.map((work) => {
           return (
