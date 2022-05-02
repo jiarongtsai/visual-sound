@@ -235,7 +235,7 @@ export default function WorkModal({
                       onClick={() => handleLike(work.id, work.liked_by)}
                     />
                   )}
-                  {/* fixme // need to update as well */}
+
                   <Text color={"gray.500"}>
                     {currentLikeCount}
                     {currentLikeCount > 1 ? " likes" : " like"}
@@ -271,13 +271,6 @@ export default function WorkModal({
                     </InputRightElement>
                   </InputGroup>
                 </Flex>
-                {/* <input
-                    value={input}
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                    }}
-                  />
-                  <button onClick={sendComment}>send</button> */}
               </Flex>
             </Flex>
           </ModalBody>

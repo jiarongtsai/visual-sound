@@ -9,12 +9,23 @@ import {
   IconButton,
   Image,
   Collapse,
+  Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { BsHeart, BsHeartFill, BsChat, BsFillChatFill } from "react-icons/bs";
+import {
+  BsHeart,
+  BsHeartFill,
+  BsChat,
+  BsFillChatFill,
+  BsCursorFill,
+} from "react-icons/bs";
 import CollectWithCategory from "../pages/CollectWithCategory";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { UserWithTime } from "./UserVariants";
+import { AuthContext } from "./auth/Auth";
+import { Firebase } from "../utils/firebase";
 
 export default function CommunityCard({
   work,
@@ -26,10 +37,11 @@ export default function CommunityCard({
   setCollections,
   follwingWorks,
 }) {
+  const user = useContext(AuthContext);
   const [workIndex, setWorkIndex] = useState(-1);
+  const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
-
-  const handleToggle = () => setShow(!show);
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     const index = follwingWorks
@@ -38,6 +50,19 @@ export default function CommunityCard({
 
     setWorkIndex(index);
   }, []);
+
+  function sendComment() {
+    if (!input.trim()) return;
+    const count = work.comments_count.length + 1 || 1;
+    Firebase.addComment(user.uid, work.id, input, count).then(() => {
+      setInput("");
+    });
+  }
+
+  function sendCommentKeyDown(e) {
+    if (e.key !== "Enter") return;
+    sendComment();
+  }
 
   return (
     <Center my={4}>
@@ -90,12 +115,23 @@ export default function CommunityCard({
             />
           )}
 
-          <IconButton
-            mr="auto"
-            variant="ghost"
-            aria-label="comment"
-            icon={<BsChat />}
-          />
+          {comment ? (
+            <IconButton
+              mr="auto"
+              variant="ghost"
+              aria-label="comment"
+              icon={<BsFillChatFill />}
+              onClick={() => setComment(!comment)}
+            />
+          ) : (
+            <IconButton
+              mr="auto"
+              variant="ghost"
+              aria-label="comment"
+              icon={<BsChat />}
+              onClick={() => setComment(!comment)}
+            />
+          )}
           <Spacer />
           <CollectWithCategory
             id={work.id}
@@ -112,7 +148,12 @@ export default function CommunityCard({
             <Text color={"gray.500"}>{work.description}</Text>
           </Collapse>
           {work.description.length > 100 ? (
-            <Text fontWeight={600} size="sm" onClick={handleToggle} mt="1rem">
+            <Text
+              fontWeight={600}
+              size="sm"
+              onClick={() => setShow(!show)}
+              mt="1rem"
+            >
               ...{show ? "Less" : "More"}
             </Text>
           ) : (
@@ -142,6 +183,30 @@ export default function CommunityCard({
                 : "Be the 1st to comment"}
             </Text>
           </Link>
+        </Stack>
+        <Stack>
+          <Collapse in={comment}>
+            <InputGroup m={1} mt={2} w="98%" size="sm" position="relative">
+              <Input
+                rounded="full"
+                placeholder="Leave a comment....."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={sendCommentKeyDown}
+              />
+              <InputRightElement>
+                <IconButton
+                  variant="ghost"
+                  rounded="full"
+                  position="absolute"
+                  right={2}
+                  aria-label="Search database"
+                  icon={<BsCursorFill />}
+                  onClick={sendComment}
+                />
+              </InputRightElement>
+            </InputGroup>
+          </Collapse>
         </Stack>
       </Box>
     </Center>
