@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, Component } from "react";
 import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
@@ -13,6 +13,7 @@ import {
   Button,
   Flex,
   VStack,
+  HStack,
   Text,
   Textarea,
   Image,
@@ -23,26 +24,7 @@ import {
 
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-
-const TagsContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const TagWrapper = styled.div`
-  background-color: gray;
-  color: white;
-  border-radius: 0.5rem;
-  padding: 0 0.5rem;
-  margin: 0.5rem;
-  display: flex;
-`;
-
-const TagDelete = styled.span`
-  margin-left: 0.5em;
-  cursor: pointer;
-`;
+import { Tag, TagLabel, TagCloseButton } from "@chakra-ui/react";
 
 export default function UploadModal({
   sequence,
@@ -56,9 +38,16 @@ export default function UploadModal({
 }) {
   const user = useContext(AuthContext);
   const [inputs, setInputs] = useState({});
+  const [alltags, setAlltags] = useState([]);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const borderColor = useColorModeValue("gray.300", "gray.800");
+
+  useEffect(() => {
+    Firebase.getAllTags().then((data) => {
+      setAlltags(data);
+    });
+  }, []);
 
   function handleInputs(e) {
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
@@ -68,7 +57,11 @@ export default function UploadModal({
     const { key } = e;
     const trimmedInput = tagInput.trim();
 
-    if (key === "," && trimmedInput.length && !tags.includes(trimmedInput)) {
+    if (
+      (key === "," || key === "Enter" || key === " ") &&
+      trimmedInput.length &&
+      !tags.includes(trimmedInput)
+    ) {
       e.preventDefault();
       setTags([...tags, trimmedInput]);
       setTagInput("");
@@ -180,28 +173,42 @@ export default function UploadModal({
                     name="description"
                     value={inputs.description || ""}
                     onChange={handleInputs}
-                    h="30%"
+                    rows="5"
+                    my={2}
                   />
                 </Box>
-                <Box>
+                <Box w="100%">
                   <Text color="gray.500" fontSize="sm">
-                    Tag your post, and separeted your Tags by ","
+                    Add Tags to your work <br />
+                    (separate tags by comma, Space or Enter)
                   </Text>
-                  <TagsContainer>
+                  <HStack spacing={2} my={4}>
                     {tags.map((tag) => (
-                      <TagWrapper key={tag}>
-                        {tag}
-                        <TagDelete onClick={() => deleteTag(tag)}>X</TagDelete>
-                      </TagWrapper>
+                      <Tag
+                        size="md"
+                        key={tag}
+                        borderRadius="full"
+                        colorScheme="purple"
+                      >
+                        <TagLabel>{tag}</TagLabel>
+                        <TagCloseButton onClick={() => deleteTag(tag)} />
+                      </Tag>
                     ))}
-                  </TagsContainer>
+                  </HStack>
                   <Input
+                    w="100%"
                     name="tags"
                     value={tagInput}
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={(e) => handleTagInput(e)}
-                    placeholder="Add tags..."
+                    placeholder="Tag your work..."
+                    list="options"
                   />
+                  <datalist id="options">
+                    {alltags.map((tag, i) => (
+                      <option key={i}>{tag}</option>
+                    ))}
+                  </datalist>
                 </Box>
               </VStack>
             </Flex>

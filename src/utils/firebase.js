@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -7,7 +6,6 @@ import {
   updateProfile,
   FacebookAuthProvider,
   signInWithPopup,
-  onAuthStateChanged,
 } from "firebase/auth";
 
 import {
