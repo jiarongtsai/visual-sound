@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useSearchParams, useLocation, Link } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import {
@@ -12,8 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 import Gallery from "../components/Gallery";
+import { AuthContext } from "../components/auth/Auth";
 
 export default function Explore() {
+  const user = useContext(AuthContext);
   const [exploreworks, setExploreworks] = useState([]);
   const [input, setInput] = useState("");
   const [alltags, setAlltags] = useState([]);
@@ -26,9 +28,14 @@ export default function Explore() {
   let queryTerm = searchParams.get("query");
 
   useEffect(() => {
-    Firebase.getAllTags().then((data) => {
-      setAlltags(data);
-    });
+    (async () => {
+      const users = await Firebase.getAllUsers([]);
+
+      const tags = await Firebase.getAllTags();
+
+      const usersName = users.map((user) => user.author_name);
+      setAlltags([...usersName, ...tags]);
+    })();
   }, []);
 
   useEffect(() => {
