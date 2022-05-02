@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import styled from "styled-components";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import CollectWithCategory from "../pages/CollectWithCategory";
@@ -17,24 +16,12 @@ import {
   VStack,
   useColorModeValue,
   Box,
+  Tag,
+  HStack,
 } from "@chakra-ui/react";
 import { BsHeart, BsHeartFill, BsCursorFill } from "react-icons/bs";
 import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
-
-const TagsContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TagWrapper = styled.div`
-  background-color: gray;
-  color: white;
-  border-radius: 0.5rem;
-  padding: 0 0.5rem;
-  margin-right: 0.5rem;
-  display: flex;
-`;
 
 export default function WorkView({ collections, setCollections }) {
   const user = useContext(AuthContext);
@@ -153,11 +140,18 @@ export default function WorkView({ collections, setCollections }) {
             <Text fontWeight="400" my={2} color="gray.500" minH="60px">
               {work.description}
             </Text>
-            <TagsContainer>
+            <HStack>
               {work.tags?.map((tag) => (
-                <TagWrapper key={tag}>{tag}</TagWrapper>
+                <Tag
+                  size="md"
+                  key={tag}
+                  borderRadius="full"
+                  colorScheme="purple"
+                >
+                  {tag}
+                </Tag>
               ))}
-            </TagsContainer>
+            </HStack>
             <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
               {`Created at ${work.created_time
                 ?.toDate()

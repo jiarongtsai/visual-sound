@@ -24,22 +24,10 @@ import {
   InputRightElement,
   VStack,
   useColorModeValue,
+  HStack,
+  Tag,
 } from "@chakra-ui/react";
 import { BsHeart, BsHeartFill, BsCursorFill } from "react-icons/bs";
-
-const TagsContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TagWrapper = styled.div`
-  background-color: gray;
-  color: white;
-  border-radius: 0.5rem;
-  padding: 0 0.5rem;
-  margin-right: 0.5rem;
-  display: flex;
-`;
 
 export default function WorkModal({
   likes,
@@ -188,11 +176,18 @@ export default function WorkModal({
                   <Text fontWeight="400" my={2} color="gray.500" minH="60px">
                     {work.description}
                   </Text>
-                  <TagsContainer>
+                  <HStack spacing={2} my={4}>
                     {work.tags?.map((tag) => (
-                      <TagWrapper key={tag}>{tag}</TagWrapper>
+                      <Tag
+                        key={tag}
+                        size="md"
+                        borderRadius="full"
+                        colorScheme="purple"
+                      >
+                        {tag}
+                      </Tag>
                     ))}
-                  </TagsContainer>
+                  </HStack>
                   <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
                     {`Created at ${work.created_time
                       ?.toDate()
