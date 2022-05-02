@@ -16,6 +16,12 @@ import {
   Heading,
   Button,
   useColorModeValue,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Center,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
@@ -164,21 +170,18 @@ export default function ProfileLayout() {
             </GridItem>
           </Grid>
         </Flex>
-        <Flex
-          borderBottom="1px"
-          borderColor="gray.500"
-          w="90%"
-          justify="center"
-          mb={5}
-        >
-          <Button>
-            <Link to="">Work</Link>
-          </Button>
-          <Button>
-            {" "}
-            <Link to="collection">Collection</Link>
-          </Button>
-        </Flex>
+
+        <Tabs colorScheme="purple" w="90%" mb={10}>
+          <TabList justifyContent="center">
+            <Tab>
+              <Link to="">Work</Link>
+            </Tab>
+            <Tab>
+              <Link to="collection">Collection</Link>
+            </Tab>
+          </TabList>
+        </Tabs>
+
         <Outlet />
       </Flex>
     </>
