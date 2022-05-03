@@ -47,7 +47,7 @@ export default function CollectWithCategory({
 
   async function collectWork(collectionName) {
     await Firebase.collectWork(user.uid, id, collectedList);
-
+    if (!collectionName) return;
     const collectionCopy = { ...collectionData };
 
     collectionCopy[collectionName]
@@ -130,7 +130,7 @@ export default function CollectWithCategory({
           <MenuList>
             <MenuOptionGroup>
               <Editable
-                defaultValue="...Type New Collection"
+                defaultValue="+ New collection name..."
                 onSubmit={() => collectWork(selection)}
               >
                 <EditablePreview px={3} />

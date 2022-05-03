@@ -1,5 +1,7 @@
 import {
   Flex,
+  Text,
+  Circle,
   Box,
   Image,
   Badge,
@@ -10,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
+import { Square } from "./visual/VisualElement";
 
 const data = {
   isNew: true,
@@ -24,71 +27,37 @@ const data = {
 //fix me
 
 // collection card 可以橫向滑動，然後點了就更換gallery的資料！
-// data {title, count, recentlyAdded, imageList{src, alt}}
-function CollectionWrapper() {
+// data {title, count, imageList{src, alt}}
+function CollectionWrapper({ collectionName, imageUrl, setCurrentTerm }) {
   return (
     <Flex
-      w={["90%", "60%", "30%"]}
-      maxW="350px"
-      m={4}
+      flexShrink="0"
+      w={["80px", "100px"]}
+      m={6}
+      direction="column"
       alignItems="center"
       justifyContent="center"
+      cursor="pointer"
+      onClick={() => setCurrentTerm(collectionName)}
     >
-      <Box
-        bg={useColorModeValue("white", "gray.800")}
-        maxW="sm"
-        borderWidth="1px"
-        rounded="md"
-        shadow="base"
-        position="relative"
-      >
-        <Image
-          src={data.imageURL}
-          alt={`Picture of ${data.name}`}
-          roundedTop="lg"
-        />
-
-        <Box p="6">
-          <Box d="flex" alignItems="baseline">
-            {data.isNew && (
-              <Badge rounded="full" px="2" fontSize="0.8em" colorScheme="red">
-                New
-              </Badge>
-            )}
-          </Box>
-          <Flex mt="1" justifyContent="space-between" alignContent="center">
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-              isTruncated
-            >
-              {data.name}
-            </Box>
-            <Tooltip
-              label="Add to cart"
-              bg="white"
-              placement={"top"}
-              color={"gray.800"}
-              fontSize={"1.2em"}
-            >
-              <chakra.a href={"#"} display={"flex"}>
-                <Icon as={FiShoppingCart} h={7} w={7} alignSelf={"center"} />
-              </chakra.a>
-            </Tooltip>
-          </Flex>
-
-          <Flex justifyContent="space-between" alignContent="center">
-            <Box fontSize="2xl" color={useColorModeValue("gray.800", "white")}>
-              <Box as="span" color={"gray.600"} fontSize="lg">
-                £
-              </Box>
-              {data.price.toFixed(2)}
-            </Box>
-          </Flex>
-        </Box>
-      </Box>
+      <Image
+        p={1}
+        w="100px"
+        h="100px"
+        objectFit="cover"
+        src={imageUrl}
+        alt={`Picture of ${collectionName}`}
+        rounded="full"
+        border="2px"
+        borderColor="transparent"
+        _hover={{
+          border: "2px",
+          borderColor: "purple.500",
+        }}
+      />
+      <Text fontWeight="600" my="2">
+        {collectionName}
+      </Text>
     </Flex>
   );
 }
