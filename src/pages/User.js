@@ -43,12 +43,14 @@ export default function User() {
   }, [user]);
 
   useEffect(() => {
-    Firebase.getProfile(uid).then((data) => {
+    const snapshot = Firebase.onSnapshotProfile(uid, (data) => {
       setProfile(data);
-      setIsFollowing(data.followers.includes(user?.uid));
-      setCurrentFollowers(data.followers?.length || 0);
     });
-  }, []);
+
+    return () => {
+      snapshot();
+    };
+  }, [user]);
 
   useEffect(() => {
     const pagingObserver = new IntersectionObserver((entries) => {
@@ -80,7 +82,7 @@ export default function User() {
   // };
 
   const chat = async (userID) => {
-    const mid = await Firebase.getChatroom(user.uid, userID);
+    const mid = await Firebase.getChatroom(user?.uid, userID);
     navigate(`/message/${mid}`);
   };
 
@@ -117,17 +119,11 @@ export default function User() {
   }
 
   function handleFollow() {
-    if (!isFollowing) {
-      Firebase.followUser(user.uid, uid, profile.followers).then(() => {
-        setIsFollowing(true);
-        setCurrentFollowers((v) => v + 1);
-      });
+    if (!profile.followers?.includes(user?.uid)) {
+      Firebase.followUser(user.uid, uid, profile.followers);
       return;
     }
-    Firebase.unfollowUser(user.uid, uid, profile.followers).then(() => {
-      setIsFollowing(false);
-      setCurrentFollowers((v) => v - 1);
-    });
+    Firebase.unfollowUser(user.uid, uid, profile.followers);
   }
 
   function handleChat() {
@@ -180,7 +176,9 @@ export default function User() {
                   }}
                   onClick={handleFollow}
                 >
-                  {!isFollowing ? "follow" : "unfollow"}
+                  {profile.followers?.includes(user?.uid)
+                    ? "unfollow"
+                    : "follow"}
                 </Button>
               </Flex>
             </GridItem>

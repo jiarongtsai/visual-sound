@@ -161,6 +161,7 @@ export default function CommunityCard({
               size="sm"
               onClick={() => setShow(!show)}
               mt="1rem"
+              cursor="pointer"
             >
               ...{show ? "Less" : "More"}
             </Text>

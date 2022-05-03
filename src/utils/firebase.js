@@ -341,6 +341,14 @@ const Firebase = {
 
     return docSnap.data();
   },
+  onSnapshotProfile(id, callback) {
+    const docRef = doc(this.db(), "users", id);
+    const snapshot = onSnapshot(docRef, (doc) => {
+      callback(doc.data());
+    });
+
+    return snapshot;
+  },
   async getUserWorks(uid) {
     const queryByUser = query(
       collection(this.db(), "works"),

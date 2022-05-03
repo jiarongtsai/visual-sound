@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
@@ -39,7 +38,13 @@ export default function ProfileLayout() {
   } = useDisclosure();
 
   useEffect(() => {
-    Firebase.getProfile(user.uid).then((data) => setProfile(data));
+    const snapshot = Firebase.onSnapshotProfile(user.uid, (data) =>
+      setProfile(data)
+    );
+
+    return () => {
+      snapshot();
+    };
   }, []);
 
   const unfollow = async (userID) => {
@@ -139,7 +144,7 @@ export default function ProfileLayout() {
             <GridItem colSpan={1} d="flex">
               {/* need real data */}
               <Text fontWeight="600" mr={2}>
-                {0}
+                {profile.works_count?.length || 0}
               </Text>
               <Text>Works</Text>
             </GridItem>
