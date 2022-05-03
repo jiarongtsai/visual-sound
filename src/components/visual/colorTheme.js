@@ -15,9 +15,9 @@ const colorTheme = {
   },
   macaroon: {
     background: "#D6EADF",
-    light: "#EAC4D5",
+    light: "#809BCE",
     medium: "#B8E0D2",
-    dark: "#809BCE",
+    dark: "#EAC4D5",
     special: "#95B8D1",
   },
   neon: {

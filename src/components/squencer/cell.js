@@ -3,9 +3,9 @@ import styled from "styled-components";
 const getBackground = (activated, triggered) => {
   switch (true) {
     case activated && triggered:
-      return "#65daa8";
+      return "#805ad5";
     case activated && !triggered:
-      return "#65daa2";
+      return "#805ad5";
     case !activated && triggered:
       return "#eef";
     default:
