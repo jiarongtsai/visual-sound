@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
@@ -57,7 +56,7 @@ export default function WorkModal({
     if (workIndex < 0) {
       Firebase.getWork(id).then((data) => {
         setCurrentLikeCount(data.liked_by.length);
-        setLike(data.liked_by.includes(user.uid));
+        setLike(data.liked_by.includes(user?.uid));
         setWork(data);
       });
       return;
@@ -66,7 +65,7 @@ export default function WorkModal({
     setWork(follwingWorks[workIndex]);
     setCurrentLikeCount(follwingWorks[workIndex].liked_by.length);
     setLike(likes[workIndex]);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const onSnapshotComments = Firebase.onSnapshotComments(

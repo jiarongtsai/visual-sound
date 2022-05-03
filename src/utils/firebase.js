@@ -27,8 +27,6 @@ import {
 } from "firebase/firestore";
 
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
-import { check } from "prettier";
-import { theWindow } from "tone/build/esm/core/context/AudioContext";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCAHli85vuDjMNmK3r0_1k3VQvYSysvUFg",
@@ -42,7 +40,7 @@ const firebaseConfig = {
 
 const Firebase = {
   app: initializeApp(firebaseConfig),
-  pageLimit: 10,
+  pageLimit: 12,
   ProviderFB() {
     return new FacebookAuthProvider();
   },
@@ -398,6 +396,7 @@ const Firebase = {
     });
   },
   async collectWork(uid, id, currentCollectedByList) {
+    if (currentCollectedByList.includes(uid)) return;
     await updateDoc(doc(this.db(), "works", id), {
       collected_by: [...currentCollectedByList, uid],
     });

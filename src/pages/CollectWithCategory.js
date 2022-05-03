@@ -2,11 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import {
   Menu,
   MenuItem,
-  MenuItemOption,
   MenuOptionGroup,
   MenuList,
   MenuButton,
-  Box,
   useColorModeValue,
   Link,
   IconButton,
@@ -34,20 +32,19 @@ export default function CollectWithCategory({
     Firebase.getProfile(user?.uid).then((data) => {
       setCollectionData(data.collection_map);
     });
-  }, []);
+  }, [collect]);
 
-  //fix me //rerender too much!!
   useEffect(() => {
-    if (workIndex < 0) {
-      setCollect(collectedList?.includes(user.uid) ? true : false);
+    if (collectedList && (workIndex < 0 || !workIndex)) {
+      setCollect(collectedList.includes(user.uid) ? true : false);
       return;
     }
     setCollect(collections[workIndex]);
-  }, [collections]);
+  }, [collections, collectedList]);
 
   async function collectWork(collectionName) {
     await Firebase.collectWork(user.uid, id, collectedList);
-    if (!collectionName) return;
+    if (!collectionName || !collectionName.trim()) return;
     const collectionCopy = { ...collectionData };
 
     collectionCopy[collectionName]
@@ -57,7 +54,8 @@ export default function CollectWithCategory({
     await Firebase.collectWorkByCategory(user.uid, collectionCopy);
 
     setSelection("");
-    setCollect(!collect);
+
+    setCollect(true);
 
     const newCollectionList = [...collections];
     newCollectionList[workIndex] = !newCollectionList[workIndex];
@@ -75,9 +73,10 @@ export default function CollectWithCategory({
       collectedList,
       removedCollectionData
     );
+
     setCollectionData(removedCollectionData);
     setSelection("");
-    setCollect(!collect);
+    setCollect(false);
     const newCollectionList = [...collections];
     newCollectionList[workIndex] = !newCollectionList[workIndex];
     setCollections(newCollectionList);
