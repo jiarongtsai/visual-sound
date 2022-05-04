@@ -14,42 +14,24 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import {
-  BsHeart,
-  BsHeartFill,
-  BsChat,
-  BsFillChatFill,
-  BsCursorFill,
-} from "react-icons/bs";
-import CollectWithCategory from "../pages/CollectWithCategory";
+import { BsChat, BsFillChatFill, BsCursorFill } from "react-icons/bs";
+import Collect from "./interaction/Collect";
+import Like from "./interaction/Like";
 import { useState, useEffect, useContext } from "react";
 import { UserWithTime } from "./UserVariants";
 import { AuthContext } from "./auth/Auth";
 import { Firebase } from "../utils/firebase";
 
 export default function CommunityCard({
-  work,
   i,
-  likes,
-  handleLike,
+  work,
   location,
-  collections,
-  setCollections,
-  follwingWorks,
+  setFollowingWorks,
 }) {
   const user = useContext(AuthContext);
-  const [workIndex, setWorkIndex] = useState(-1);
   const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
   const [input, setInput] = useState("");
-
-  useEffect(() => {
-    const index = follwingWorks
-      .map((singleWork) => singleWork.id.includes(work.id))
-      .findIndex((include) => include);
-
-    setWorkIndex(index);
-  }, []);
 
   function sendComment() {
     if (!input.trim()) return;
@@ -105,23 +87,12 @@ export default function CommunityCard({
           </Link>
         </Box>
         <Flex mx={-4}>
-          {likes[i] ? (
-            <IconButton
-              pt={1}
-              variant="ghost"
-              aria-label="like"
-              icon={<BsHeartFill />}
-              onClick={() => handleLike(work.id, i, work.liked_by)}
-            />
-          ) : (
-            <IconButton
-              pt={1}
-              variant="ghost"
-              aria-label="like"
-              icon={<BsHeart />}
-              onClick={() => handleLike(work.id, i, work.liked_by)}
-            />
-          )}
+          <Like
+            i={i}
+            id={work.id}
+            likedList={work.liked_by}
+            setFollowingWorks={setFollowingWorks}
+          />
 
           {comment ? (
             <IconButton
@@ -141,12 +112,11 @@ export default function CommunityCard({
             />
           )}
           <Spacer />
-          <CollectWithCategory
+          <Collect
+            i={i}
             id={work.id}
-            workIndex={workIndex}
             collectedList={work.collected_by}
-            collections={collections}
-            setCollections={setCollections}
+            setFollowingWorks={setFollowingWorks}
           />
         </Flex>
         <Stack mb={3} direction={"column"} spacing={0} fontSize={"sm"}>

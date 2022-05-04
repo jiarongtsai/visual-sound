@@ -13,19 +13,13 @@ import {
   EditablePreview,
 } from "@chakra-ui/react";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
-import { AuthContext } from "../components/auth/Auth";
-import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../auth/Auth";
+import { Firebase } from "../../utils/firebase";
 
-export default function CollectWithCategory({
-  id,
-  collectedList,
-  workIndex,
-  collections,
-  setCollections,
-}) {
+export default function Collect({ i, id, collectedList, setFollowingWorks }) {
   const user = useContext(AuthContext);
   const [collectionMap, setCollectionMap] = useState({});
-  const [selection, setSelection] = useState("");
+  const [input, setInput] = useState("");
 
   useEffect(() => {
     const snapshot = Firebase.onSnapshotProfile(user?.uid, (data) => {
@@ -36,9 +30,15 @@ export default function CollectWithCategory({
     };
   }, []);
 
+  //可以收藏到不只一個collection 嗎？ 還沒試
   async function collectWork(collectionName) {
-    await Firebase.collectWork(user.uid, id, collectedList);
-    if (!collectionName || !collectionName.trim()) return;
+    if (!collectionName.trim()) return;
+
+    const updatedCollectedByList = [...collectedList];
+    updatedCollectedByList.push(user.uid);
+
+    await Firebase.collectWork(id, updatedCollectedByList);
+
     const collectionCopy = { ...collectionMap };
 
     collectionCopy[collectionName]
@@ -47,30 +47,38 @@ export default function CollectWithCategory({
 
     await Firebase.collectWorkByCategory(user.uid, collectionCopy);
 
-    setSelection("");
+    setInput("");
 
-    const newCollectionList = [...collections];
-    newCollectionList[workIndex] = !newCollectionList[workIndex];
-    setCollections(newCollectionList);
+    setFollowingWorks &&
+      setFollowingWorks((pre) => [
+        ...pre.slice(0, i),
+        { ...pre[i], collected_by: updatedCollectedByList },
+        ...pre.slice(i + 1),
+      ]);
   }
 
   async function uncollectWork() {
     const collectionCopy = { ...collectionMap };
+    const updatedCollectionMap = removeCollectionByID(collectionCopy, id);
 
-    const removedCollectionMap = removeCollectionByID(collectionCopy, id);
-
-    await Firebase.uncollectWork(
-      user.uid,
-      id,
-      collectedList,
-      removedCollectionMap
+    const updatedCollectedByList = collectedList.filter(
+      (id) => id !== user.uid
     );
 
-    setCollectionMap(removedCollectionMap);
-    setSelection("");
-    const newCollectionList = [...collections];
-    newCollectionList[workIndex] = !newCollectionList[workIndex];
-    setCollections(newCollectionList);
+    await Firebase.uncollectWork(
+      id,
+      updatedCollectedByList,
+      user.uid,
+      updatedCollectionMap
+    );
+
+    setInput("");
+    setFollowingWorks &&
+      setFollowingWorks((pre) => [
+        ...pre.slice(0, i),
+        { ...pre[i], collected_by: updatedCollectedByList },
+        ...pre.slice(i + 1),
+      ]);
   }
 
   function removeCollectionByID(obj, id) {
@@ -90,12 +98,14 @@ export default function CollectWithCategory({
   const color = useColorModeValue("gray.200", "gray.700");
 
   return (
-    <div>
+    <>
       {collectedList?.includes(user?.uid) ? (
         <IconButton
           variant="ghost"
           aria-label="collected"
           icon={<BsFillBookmarkFill />}
+          py={1}
+          px={0.25}
           onClick={uncollectWork}
         />
       ) : (
@@ -104,8 +114,6 @@ export default function CollectWithCategory({
             as={Link}
             rounded={"md"}
             cursor={"pointer"}
-            py={1}
-            px={0.25}
             _hover={{
               textDecoration: "none",
               bg: color,
@@ -121,14 +129,14 @@ export default function CollectWithCategory({
             <MenuOptionGroup>
               <Editable
                 defaultValue="+ New collection name..."
-                onSubmit={() => collectWork(selection)}
+                onSubmit={() => collectWork(input)}
               >
                 <EditablePreview px={3} />
                 <EditableInput
                   mx={3}
                   w="90%"
-                  value={selection}
-                  onChange={(e) => setSelection(e.target.value)}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                 />
               </Editable>
               {collectionMap &&
@@ -145,6 +153,6 @@ export default function CollectWithCategory({
           </MenuList>
         </Menu>
       )}
-    </div>
+    </>
   );
 }

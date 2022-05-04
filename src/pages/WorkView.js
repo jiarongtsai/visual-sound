@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import CollectWithCategory from "../pages/CollectWithCategory";
+import Collect from "../components/interaction/Collect";
+import Like from "../components/interaction/Like";
 import { UserSmall } from "../components/UserVariants";
 import {
   Flex,
@@ -19,11 +20,11 @@ import {
   Tag,
   HStack,
 } from "@chakra-ui/react";
-import { BsHeart, BsHeartFill, BsCursorFill } from "react-icons/bs";
+import { BsCursorFill } from "react-icons/bs";
 import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
 
-export default function WorkView({ collections, setCollections }) {
+export default function WorkView({ followingWorks, setFollowingWorks }) {
   const user = useContext(AuthContext);
   const { id } = useParams();
   const [work, setWork] = useState({});
@@ -89,13 +90,6 @@ export default function WorkView({ collections, setCollections }) {
     sendComment();
   }
 
-  async function handleLike(id, list) {
-    if (!work.like_by?.includes(user.uid)) {
-      await Firebase.likeWork(user.uid, id, list);
-      return;
-    }
-    await Firebase.unlikeWork(user.uid, id, list);
-  }
   if (!work) return <div>Work Not Found</div>;
 
   return (
@@ -176,35 +170,13 @@ export default function WorkView({ collections, setCollections }) {
           </VStack>
 
           <Flex align="center">
-            {work.liked_by?.includes(user?.uid) ? (
-              <IconButton
-                pt={1}
-                variant="ghost"
-                aria-label="like"
-                icon={<BsHeartFill />}
-                onClick={() => handleLike(work.id, work.liked_by)}
-              />
-            ) : (
-              <IconButton
-                pt={1}
-                variant="ghost"
-                aria-label="like"
-                icon={<BsHeart />}
-                onClick={() => handleLike(work.id, work.liked_by)}
-              />
-            )}
+            <Like id={work.id} likedList={work.liked_by} />
             <Text color={"gray.500"}>
               {work.liked_by?.length || 0}
               {work.liked_by?.length > 1 ? " likes" : " like"}
             </Text>
             <Spacer />
-            <CollectWithCategory
-              id={work.id}
-              // workIndex={workIndex}
-              collectedList={work.collected_by}
-              collections={collections}
-              setCollections={setCollections}
-            />
+            <Collect id={work.id} collectedList={work.collected_by} />
           </Flex>
           <Flex align="center" justify="center" pt={2}>
             <InputGroup size="md" position="relative">

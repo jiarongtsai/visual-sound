@@ -21,9 +21,7 @@ import Navbar from "./Navbar";
 function App() {
   const location = useLocation();
   const state = location.state;
-  const [follwingWorks, setFollowingworks] = useState([]);
-  const [likes, setLikes] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [followingWorks, setFollowingWorks] = useState([]);
 
   return (
     <AuthProvider>
@@ -36,12 +34,8 @@ function App() {
               element={
                 <RequireAuth>
                   <Community
-                    follwingWorks={follwingWorks}
-                    setFollowingworks={setFollowingworks}
-                    likes={likes}
-                    setLikes={setLikes}
-                    collections={collections}
-                    setCollections={setCollections}
+                    followingWorks={followingWorks}
+                    setFollowingWorks={setFollowingWorks}
                   />
                 </RequireAuth>
               }
@@ -51,8 +45,8 @@ function App() {
               path="/work/:id"
               element={
                 <WorkView
-                  collections={collections}
-                  setCollections={setCollections}
+                  followingWorks={followingWorks}
+                  setFollowingWorks={setFollowingWorks}
                 />
               }
             />
@@ -96,11 +90,8 @@ function App() {
               path="/work/:id"
               element={
                 <WorkModal
-                  follwingWorks={follwingWorks}
-                  likes={likes}
-                  setLikes={setLikes}
-                  collections={collections}
-                  setCollections={setCollections}
+                  followingWorks={followingWorks}
+                  setFollowingWorks={setFollowingWorks}
                 />
               }
             />

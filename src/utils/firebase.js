@@ -434,21 +434,19 @@ const Firebase = {
     });
     return snapshot;
   },
-  async likeWork(uid, id, currentLikedByList) {
+  async likeWork(id, updatedLikedByList) {
     await updateDoc(doc(this.db(), "works", id), {
-      liked_by: [...currentLikedByList, uid],
+      liked_by: updatedLikedByList,
     });
   },
-  async unlikeWork(uid, id, currentLikedByList) {
-    const newLikeByList = currentLikedByList.filter((id) => id !== uid);
+  async unlikeWork(id, updatedLikedByList) {
     await updateDoc(doc(this.db(), "works", id), {
-      liked_by: newLikeByList,
+      liked_by: updatedLikedByList,
     });
   },
-  async collectWork(uid, id, currentCollectedByList) {
-    if (currentCollectedByList.includes(uid)) return;
+  async collectWork(id, updatedCollectedByList) {
     await updateDoc(doc(this.db(), "works", id), {
-      collected_by: [...currentCollectedByList, uid],
+      collected_by: updatedCollectedByList,
     });
   },
   async collectWorkByCategory(uid, collectionMap) {
@@ -456,13 +454,12 @@ const Firebase = {
       collection_map: collectionMap,
     });
   },
-  async uncollectWork(uid, id, currentCollectedByList, collctionMap) {
-    const newCollectByList = currentCollectedByList.filter((id) => id !== uid);
+  async uncollectWork(id, updatedCollectedByList, uid, updatedCollectionMap) {
     await updateDoc(doc(this.db(), "works", id), {
-      collected_by: newCollectByList,
+      collected_by: updatedCollectedByList,
     });
     await updateDoc(doc(this.db(), "users", uid), {
-      collction_map: collctionMap,
+      collction_map: updatedCollectionMap,
     });
   },
   async addComment(uid, id, content, count) {
@@ -528,7 +525,7 @@ const Firebase = {
     await setDoc(this.tagsRef(), { tags });
   },
   async getChatrooms() {
-    const result = await getDocs(collection(this.db(), "chatrooms"));
+    await getDocs(collection(this.db(), "chatrooms"));
   },
   onSnapshotChatrooms(uid, callback) {
     const queryCondition = query(
