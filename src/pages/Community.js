@@ -11,7 +11,6 @@ export default function Community({ followingWorks, setFollowingWorks }) {
   const location = useLocation();
 
   //fixme onsnapshot community!
-
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
       console.log(data);
@@ -23,8 +22,8 @@ export default function Community({ followingWorks, setFollowingWorks }) {
     console.log(followingWorks);
   }, [followingWorks]);
 
-  // if (followingWorks.length === 0)
-  //   return <div>Go 'Explore' to follow more users</div>;
+  if (followingWorks.length === 0)
+    return <div>Go 'Explore' to follow more users</div>;
 
   return (
     <Container mt={16}>

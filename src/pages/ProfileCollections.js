@@ -11,7 +11,6 @@ export default function ProfileCollections() {
   const user = useContext(AuthContext);
   const [collectedWorks, setCollectedWorks] = useState([]);
   const [currentTerm, setCurrentTerm] = useState("all");
-
   const location = useLocation();
   useEffect(() => {
     (async () => {
@@ -19,10 +18,12 @@ export default function ProfileCollections() {
       const UserData = await Firebase.getProfile(user.uid);
       const collectionMap = UserData.collection_map;
       if (!collectionMap) {
-        setCollectedWorks({
-          term: "all",
-          list: allCollections,
-        });
+        setCollectedWorks([
+          {
+            term: "all",
+            list: allCollections,
+          },
+        ]);
         return;
       }
       const categorized = categorize(collectionMap, allCollections);
@@ -45,22 +46,26 @@ export default function ProfileCollections() {
     return result;
   }
 
+  if (collectedWorks.length === 1)
+    return <div>Go 'Explore' to collect more works</div>;
+
   return (
     <>
-      {collectedWorks.length > 1 ? (
-        <Flex my={2} w={["960px"]} overflow="scroll">
-          {collectedWorks.map((category) => (
+      <Flex my={2} w={["960px"]} overflow="scroll">
+        {collectedWorks.map((category) =>
+          !category.list.length ? (
+            ""
+          ) : (
             <CollectionWrapper
               key={category.term}
               collectionName={category.term}
-              imageUrl={category.list[0].image_url}
+              imageUrl={category.list[0]?.image_url}
               setCurrentTerm={setCurrentTerm}
             />
-          ))}
-        </Flex>
-      ) : (
-        ""
-      )}
+          )
+        )}
+      </Flex>
+
       <GridWrapper>
         {collectedWorks
           .filter(({ term }) => term === currentTerm)[0]
