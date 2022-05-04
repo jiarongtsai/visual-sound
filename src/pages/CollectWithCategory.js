@@ -24,28 +24,22 @@ export default function CollectWithCategory({
   setCollections,
 }) {
   const user = useContext(AuthContext);
-  const [collectionData, setCollectionData] = useState({});
+  const [collectionMap, setCollectionMap] = useState({});
   const [selection, setSelection] = useState("");
-  const [collect, setCollect] = useState(false);
 
   useEffect(() => {
-    Firebase.getProfile(user?.uid).then((data) => {
-      setCollectionData(data.collection_map);
+    const snapshot = Firebase.onSnapshotProfile(user?.uid, (data) => {
+      setCollectionMap(data.collection_map);
     });
-  }, [collect]);
-
-  useEffect(() => {
-    if (collectedList && (workIndex < 0 || !workIndex)) {
-      setCollect(collectedList.includes(user.uid) ? true : false);
-      return;
-    }
-    setCollect(collections[workIndex]);
-  }, [collections, collectedList]);
+    return () => {
+      snapshot();
+    };
+  }, []);
 
   async function collectWork(collectionName) {
     await Firebase.collectWork(user.uid, id, collectedList);
     if (!collectionName || !collectionName.trim()) return;
-    const collectionCopy = { ...collectionData };
+    const collectionCopy = { ...collectionMap };
 
     collectionCopy[collectionName]
       ? collectionCopy[collectionName].push(id)
@@ -55,28 +49,25 @@ export default function CollectWithCategory({
 
     setSelection("");
 
-    setCollect(true);
-
     const newCollectionList = [...collections];
     newCollectionList[workIndex] = !newCollectionList[workIndex];
     setCollections(newCollectionList);
   }
 
   async function uncollectWork() {
-    const collectionCopy = { ...collectionData };
+    const collectionCopy = { ...collectionMap };
 
-    const removedCollectionData = removeCollectionByID(collectionCopy, id);
+    const removedCollectionMap = removeCollectionByID(collectionCopy, id);
 
     await Firebase.uncollectWork(
       user.uid,
       id,
       collectedList,
-      removedCollectionData
+      removedCollectionMap
     );
 
-    setCollectionData(removedCollectionData);
+    setCollectionMap(removedCollectionMap);
     setSelection("");
-    setCollect(false);
     const newCollectionList = [...collections];
     newCollectionList[workIndex] = !newCollectionList[workIndex];
     setCollections(newCollectionList);
@@ -100,7 +91,7 @@ export default function CollectWithCategory({
 
   return (
     <div>
-      {collect ? (
+      {collectedList?.includes(user?.uid) ? (
         <IconButton
           variant="ghost"
           aria-label="collected"
@@ -140,8 +131,8 @@ export default function CollectWithCategory({
                   onChange={(e) => setSelection(e.target.value)}
                 />
               </Editable>
-              {collectionData &&
-                Object.keys(collectionData).map((term) => (
+              {collectionMap &&
+                Object.keys(collectionMap).map((term) => (
                   <MenuItem
                     key={term}
                     value={term}

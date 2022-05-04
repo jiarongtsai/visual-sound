@@ -392,6 +392,14 @@ const Firebase = {
       ...authorInfo,
     };
   },
+  snapshotWork(id, callback) {
+    const docRef = doc(this.db(), "works", id);
+    const snapshot = onSnapshot(docRef, async (doc) => {
+      const authorInfo = await this.getUserBasicInfo(doc.data().author_id);
+      callback({ ...doc.data(), id: doc.id, ...authorInfo });
+    });
+    return snapshot;
+  },
   async likeWork(uid, id, currentLikedByList) {
     await updateDoc(doc(this.db(), "works", id), {
       liked_by: [...currentLikedByList, uid],

@@ -17,6 +17,7 @@ export default function Community({
   const user = useContext(AuthContext);
   const location = useLocation();
 
+  //fixme onsnapshot community!
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
       setFollowingworks(data);

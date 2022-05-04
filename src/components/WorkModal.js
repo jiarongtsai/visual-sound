@@ -46,26 +46,31 @@ export default function WorkModal({
   const [work, setWork] = useState({});
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
-  const [like, setLike] = useState(false);
-  const [currentLikeCount, setCurrentLikeCount] = useState(0);
   const endRef = useRef(null);
 
   const borderColor = useColorModeValue("gray.300", "gray.800");
 
   useEffect(() => {
-    if (workIndex < 0) {
-      Firebase.getWork(id).then((data) => {
-        setCurrentLikeCount(data.liked_by.length);
-        setLike(data.liked_by.includes(user?.uid));
-        setWork(data);
-      });
-      return;
-    }
+    const snapshot = Firebase.snapshotWork(id, (data) => {
+      setWork(data);
+    });
 
-    setWork(follwingWorks[workIndex]);
-    setCurrentLikeCount(follwingWorks[workIndex].liked_by.length);
-    setLike(likes[workIndex]);
-  }, [user]);
+    return () => {
+      snapshot();
+    };
+    // if (workIndex < 0) {
+    //   Firebase.getWork(id).then((data) => {
+    //     setCurrentLikeCount(data.liked_by.length);
+    //     setLike(data.liked_by.includes(user?.uid));
+    //     setWork(data);
+    //   });
+    //   return;
+    // }
+
+    // setWork(follwingWorks[workIndex]);
+    // setCurrentLikeCount(follwingWorks[workIndex].liked_by.length);
+    // setLike(likes[workIndex]);
+  }, []);
 
   useEffect(() => {
     const onSnapshotComments = Firebase.onSnapshotComments(
@@ -115,15 +120,12 @@ export default function WorkModal({
   }
 
   async function handleLike(id, list) {
-    if (!like) {
+    if (!work.like_by?.includes(user.uid)) {
       await Firebase.likeWork(user.uid, id, list);
-      setCurrentLikeCount((v) => v + 1);
     } else {
       await Firebase.unlikeWork(user.uid, id, list);
-      setCurrentLikeCount((v) => v - 1);
     }
 
-    setLike(!like);
     const newLikeList = [...likes];
     newLikeList[workIndex] = !newLikeList[workIndex];
     setLikes(newLikeList);
@@ -217,7 +219,7 @@ export default function WorkModal({
                   <div ref={endRef}></div>
                 </VStack>
                 <Flex align="center">
-                  {like ? (
+                  {work.liked_by?.includes(user?.uid) ? (
                     <IconButton
                       pt={1}
                       variant="ghost"
@@ -236,8 +238,8 @@ export default function WorkModal({
                   )}
 
                   <Text color={"gray.500"}>
-                    {currentLikeCount}
-                    {currentLikeCount > 1 ? " likes" : " like"}
+                    {work.liked_by?.length || 0}
+                    {work.liked_by?.length > 1 ? " likes" : " like"}
                   </Text>
                   <Spacer />
                   <CollectWithCategory

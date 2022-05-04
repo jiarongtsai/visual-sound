@@ -30,27 +30,27 @@ export default function WorkView({ collections, setCollections }) {
   const [relatedWorks, setRelatedWorks] = useState([]);
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
-  const [like, setLike] = useState(false);
-  const [currentLikeCount, setCurrentLikeCount] = useState(0);
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
 
   const [isShown, setIsShown] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      const workData = await Firebase.getWork(id);
-      setCurrentLikeCount(workData.liked_by.length);
-      setLike(workData.liked_by.includes(user?.uid));
-      setWork(workData);
+    const snapshot = Firebase.snapshotWork(id, (data) => {
+      setWork(data);
+    });
 
-      const relatedResult = await Firebase.getRelatedWorks(
-        workData.author_id,
-        workData.tags
-      );
-      setRelatedWorks(relatedResult);
-    })();
+    return () => {
+      snapshot();
+    };
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(work).length === 0) return;
+    Firebase.getRelatedWorks(work.author_id, work.tags).then((data) => {
+      setRelatedWorks(data);
+    });
+  }, [work]);
 
   useEffect(() => {
     const onSnapshotComments = Firebase.onSnapshotComments(
@@ -90,18 +90,14 @@ export default function WorkView({ collections, setCollections }) {
   }
 
   async function handleLike(id, list) {
-    if (!like) {
+    if (!work.like_by?.includes(user.uid)) {
       await Firebase.likeWork(user.uid, id, list);
-      setCurrentLikeCount((v) => v + 1);
-    } else {
-      await Firebase.unlikeWork(user.uid, id, list);
-      setCurrentLikeCount((v) => v - 1);
+      return;
     }
-
-    setLike(!like);
+    await Firebase.unlikeWork(user.uid, id, list);
   }
-
   if (!work) return <div>Work Not Found</div>;
+
   return (
     <>
       <Flex
@@ -180,7 +176,7 @@ export default function WorkView({ collections, setCollections }) {
           </VStack>
 
           <Flex align="center">
-            {like ? (
+            {work.liked_by?.includes(user?.uid) ? (
               <IconButton
                 pt={1}
                 variant="ghost"
@@ -198,8 +194,8 @@ export default function WorkView({ collections, setCollections }) {
               />
             )}
             <Text color={"gray.500"}>
-              {currentLikeCount}
-              {currentLikeCount > 1 ? " likes" : " like"}
+              {work.liked_by?.length || 0}
+              {work.liked_by?.length > 1 ? " likes" : " like"}
             </Text>
             <Spacer />
             <CollectWithCategory
