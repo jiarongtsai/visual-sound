@@ -284,7 +284,7 @@ const Firebase = {
 
     const allFollowingWorks = [];
 
-    async function gerAllworks() {
+    async function getFollowingWorks() {
       for (const list of splitFollowingList) {
         //bind() ?? or just change to firebase
         //late update??
@@ -292,7 +292,7 @@ const Firebase = {
         allFollowingWorks.push(...works);
       }
     }
-    const w = gerAllworks.bind(Firebase);
+    const w = getFollowingWorks.bind(Firebase);
     w();
 
     const sortedFollowingWorks = allFollowingWorks.sort((a, b) => {
@@ -303,6 +303,40 @@ const Firebase = {
     });
 
     return sortedFollowingWorks;
+  },
+  async snapshotFollowingWorks(uid, callback) {
+    const followingList = await this.getFollowingList(uid);
+
+    if (!followingList || followingList.length === 0) return [];
+
+    if (followingList.length <= 10) {
+      this.snapshotUnderTenFollowingWorks(followingList, callback);
+      return;
+    }
+
+    const splitFollowingList = [];
+
+    while (followingList.length) {
+      splitFollowingList.push(followingList.splice(0, 10));
+    }
+
+    for (const list of splitFollowingList) {
+      this.snapshotUnderTenFollowingWorks(list, callback);
+    }
+  },
+  snapshotUnderTenFollowingWorks(list, callback) {
+    const queryCondition = query(
+      this.worksRef(),
+      where("author_id", "in", list),
+      orderBy("created_time", "desc")
+    );
+    const snapshot = onSnapshot(queryCondition, (docs) => {
+      docs.forEach((doc) => {
+        callback({ ...doc.data(), id: doc.id });
+      });
+    });
+
+    return snapshot;
   },
   async getUnderTenFollowingsWorks(list) {
     const queryCondition = query(

@@ -18,6 +18,22 @@ export default function Community({
   const location = useLocation();
 
   //fixme onsnapshot community!
+
+  // useEffect(() => {
+  //   // Firebase.snapshotUnderTenFollowingWorks(
+  //   //   ["WcnMR7ymq9Xubv0zZlDawo1L4SO2", "oWhlyRTSEMPFknaRnA5MNNB8iZC2"],
+  //   //   (data) => {
+  //   //     // console.log(data);
+  //   //   }
+  //   // );
+
+  //   Firebase.snapshotFollowingWorks(user.uid, (data) => {
+  //     // setFollowingworks((pre) => [...pre, data]);
+  //   });
+  // }, []);
+
+  console.log(follwingWorks);
+
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
       setFollowingworks(data);
