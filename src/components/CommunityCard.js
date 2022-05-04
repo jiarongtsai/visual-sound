@@ -1,3 +1,4 @@
+import { useState, useEffect, useContext } from "react";
 import {
   Box,
   Center,
@@ -17,7 +18,7 @@ import { Link } from "react-router-dom";
 import { BsChat, BsFillChatFill, BsCursorFill } from "react-icons/bs";
 import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
-import { useState, useEffect, useContext } from "react";
+import Comment from "./interaction/Comment";
 import { UserWithTime } from "./UserVariants";
 import { AuthContext } from "./auth/Auth";
 import { Firebase } from "../utils/firebase";
@@ -26,6 +27,7 @@ export default function CommunityCard({
   i,
   work,
   location,
+  followingWorks,
   setFollowingWorks,
 }) {
   const user = useContext(AuthContext);
@@ -159,39 +161,37 @@ export default function CommunityCard({
               </Box>
             );
           })}
-          <Link
-            to={`/work/${work.id}`}
-            state={{ backgroundLocation: location }}
-          >
-            <Text fontWeight={600} fontSize={"sm"}>
-              {work.comments_count
-                ? `View all ${work.comments_count} comments`
-                : "Be the 1st to comment"}
+
+          {work.comments_count ? (
+            <Link
+              to={`/work/${work.id}`}
+              state={{ backgroundLocation: location }}
+            >
+              <Text fontWeight={600} fontSize={"sm"}>
+                View all {work.comments_count}
+                {work.comments_count > 1 ? " comments" : " comment"}
+              </Text>
+            </Link>
+          ) : (
+            <Text
+              fontWeight={600}
+              fontSize={"sm"}
+              cursor="pointer"
+              onClick={() => setComment(!comment)}
+            >
+              Be the 1st to comment
             </Text>
-          </Link>
+          )}
         </Stack>
+
         <Stack>
           <Collapse in={comment}>
-            <InputGroup m={1} mt={2} w="98%" size="sm" position="relative">
-              <Input
-                rounded="full"
-                placeholder="Leave a comment....."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={sendCommentKeyDown}
-              />
-              <InputRightElement>
-                <IconButton
-                  variant="ghost"
-                  rounded="full"
-                  position="absolute"
-                  right={2}
-                  aria-label="Search database"
-                  icon={<BsCursorFill />}
-                  onClick={sendComment}
-                />
-              </InputRightElement>
-            </InputGroup>
+            <Comment
+              i={i}
+              work={work}
+              followingWorks={followingWorks}
+              setFollowingWorks={setFollowingWorks}
+            />
           </Collapse>
         </Stack>
       </Box>

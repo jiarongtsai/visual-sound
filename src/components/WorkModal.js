@@ -6,6 +6,7 @@ import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
+import Comment from "./interaction/Comment";
 import { UserWithTime, UserSmall } from "./UserVariants";
 import {
   Modal,
@@ -151,7 +152,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                     thumbnail={work.author_thumbnail}
                   />
 
-                  <Text fontWeight="400" my={2} color="gray.500" minH="60px">
+                  <Text fontWeight="400" my={2} color="gray.500">
                     {work.description}
                   </Text>
                   <HStack spacing={2} my={4}>
@@ -209,27 +210,14 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                     setFollowingWorks={setFollowingWorks}
                   />
                 </Flex>
+
                 <Flex align="center" justify="center" pt={2}>
-                  <InputGroup size="md" position="relative">
-                    <Input
-                      rounded="full"
-                      placeholder="Leave comment....."
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={sendCommentKeyDown}
-                    />
-                    <InputRightElement>
-                      <IconButton
-                        variant="ghost"
-                        rounded="full"
-                        position="absolute"
-                        right={2}
-                        aria-label="Search database"
-                        icon={<BsCursorFill />}
-                        onClick={sendComment}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
+                  <Comment
+                    i={index}
+                    work={work}
+                    followingWorks={followingWorks}
+                    setFollowingWorks={setFollowingWorks}
+                  />
                 </Flex>
               </Flex>
             </Flex>

@@ -350,7 +350,6 @@ const Firebase = {
         };
       })
     );
-    console.log(allworks);
     return allworks;
   },
   async getUserBasicInfo(id) {

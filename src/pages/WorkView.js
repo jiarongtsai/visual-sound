@@ -5,31 +5,26 @@ import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import Collect from "../components/interaction/Collect";
 import Like from "../components/interaction/Like";
+import Comment from "../components/interaction/Comment";
 import { UserSmall } from "../components/UserVariants";
 import {
   Flex,
-  IconButton,
   Spacer,
   Text,
-  Input,
-  InputGroup,
-  InputRightElement,
   VStack,
   useColorModeValue,
   Box,
   Tag,
   HStack,
 } from "@chakra-ui/react";
-import { BsCursorFill } from "react-icons/bs";
 import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
 
-export default function WorkView({ followingWorks, setFollowingWorks }) {
+export default function WorkView({ setFollowingWorks }) {
   const user = useContext(AuthContext);
   const { id } = useParams();
   const [work, setWork] = useState({});
   const [relatedWorks, setRelatedWorks] = useState([]);
-  const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
@@ -75,19 +70,6 @@ export default function WorkView({ followingWorks, setFollowingWorks }) {
       onSnapshotComments();
     };
   }, []);
-
-  function sendComment() {
-    if (!input.trim()) return;
-    const count = comments.length + 1 || 1;
-    Firebase.addComment(user.uid, id, input, count).then(() => {
-      setInput("");
-    });
-  }
-
-  function sendCommentKeyDown(e) {
-    if (e.key !== "Enter") return;
-    sendComment();
-  }
 
   if (!work) return <div>Work Not Found</div>;
 
@@ -188,26 +170,7 @@ export default function WorkView({ followingWorks, setFollowingWorks }) {
             />
           </Flex>
           <Flex align="center" justify="center" pt={2}>
-            <InputGroup size="md" position="relative">
-              <Input
-                rounded="full"
-                placeholder="Leave comment....."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={sendCommentKeyDown}
-              />
-              <InputRightElement>
-                <IconButton
-                  variant="ghost"
-                  rounded="full"
-                  position="absolute"
-                  right={2}
-                  aria-label="Search database"
-                  icon={<BsCursorFill />}
-                  onClick={sendComment}
-                />
-              </InputRightElement>
-            </InputGroup>
+            <Comment i={-1} work={work} />
           </Flex>
         </Flex>
       </Flex>
