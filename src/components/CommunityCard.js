@@ -35,8 +35,15 @@ export default function CommunityCard({
 
   function sendComment() {
     if (!input.trim()) return;
-    const count = work.comments_count.length + 1 || 1;
+    const count = work.comments_count + 1 || 1;
     Firebase.addComment(user.uid, work.id, input, count).then(() => {
+      const updatedLatestComment = [...work.latestComments];
+      updatedLatestComment.push({
+        author_id: user.uid,
+        author_name: user.displayName,
+        content: input,
+      });
+
       setInput("");
     });
   }
@@ -140,9 +147,9 @@ export default function CommunityCard({
           )}
         </Stack>
         <Stack spacing={1}>
-          {work.latestComments?.map((comment) => {
+          {work.latestComments?.map((comment, i) => {
             return (
-              <Box key={comment.id} fontSize={"sm"}>
+              <Box key={i} fontSize={"sm"}>
                 <Text as={"a"} mr={2} fontWeight={600}>
                   {comment.author_name}
                 </Text>

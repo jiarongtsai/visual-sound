@@ -29,7 +29,7 @@ import {
 } from "@chakra-ui/react";
 import { BsCursorFill } from "react-icons/bs";
 
-export default function WorkModal() {
+export default function WorkModal({ followingWorks, setFollowingWorks }) {
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -37,6 +37,7 @@ export default function WorkModal() {
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const endRef = useRef(null);
+  const [index, setIndex] = useState(-1);
 
   const borderColor = useColorModeValue("gray.300", "gray.800");
 
@@ -48,6 +49,11 @@ export default function WorkModal() {
     return () => {
       snapshot();
     };
+  }, []);
+
+  useEffect(() => {
+    const currentIndex = followingWorks.findIndex((work) => work.id === id);
+    setIndex(currentIndex);
   }, []);
 
   useEffect(() => {
@@ -185,13 +191,23 @@ export default function WorkModal() {
                   <div ref={endRef}></div>
                 </VStack>
                 <Flex align="center">
-                  <Like id={work.id} likedList={work.liked_by} />
+                  <Like
+                    i={index}
+                    id={work.id}
+                    likedList={work.liked_by}
+                    setFollowingWorks={setFollowingWorks}
+                  />
                   <Text color={"gray.500"}>
                     {work.liked_by?.length || 0}
                     {work.liked_by?.length > 1 ? " likes" : " like"}
                   </Text>
                   <Spacer />
-                  <Collect id={work.id} collectedList={work.collected_by} />
+                  <Collect
+                    i={index}
+                    id={work.id}
+                    collectedList={work.collected_by}
+                    setFollowingWorks={setFollowingWorks}
+                  />
                 </Flex>
                 <Flex align="center" justify="center" pt={2}>
                   <InputGroup size="md" position="relative">

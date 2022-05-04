@@ -22,13 +22,14 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    const snapshot = Firebase.onSnapshotProfile(user?.uid, (data) => {
+    if (!user) return;
+    const snapshot = Firebase.onSnapshotProfile(user.uid, (data) => {
       setCollectionMap(data.collection_map);
     });
     return () => {
       snapshot();
     };
-  }, []);
+  }, [user]);
 
   //可以收藏到不只一個collection 嗎？ 還沒試
   async function collectWork(collectionName) {
@@ -49,7 +50,7 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
 
     setInput("");
 
-    setFollowingWorks &&
+    i >= 0 &&
       setFollowingWorks((pre) => [
         ...pre.slice(0, i),
         { ...pre[i], collected_by: updatedCollectedByList },
@@ -73,7 +74,7 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
     );
 
     setInput("");
-    setFollowingWorks &&
+    i >= 0 &&
       setFollowingWorks((pre) => [
         ...pre.slice(0, i),
         { ...pre[i], collected_by: updatedCollectedByList },

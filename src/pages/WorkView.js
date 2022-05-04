@@ -33,7 +33,6 @@ export default function WorkView({ followingWorks, setFollowingWorks }) {
   const [comments, setComments] = useState([]);
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
-
   const [isShown, setIsShown] = useState([]);
 
   useEffect(() => {
@@ -130,7 +129,7 @@ export default function WorkView({ followingWorks, setFollowingWorks }) {
               thumbnail={work.author_thumbnail}
             />
 
-            <Text fontWeight="400" my={2} color="gray.500" minH="60px">
+            <Text fontWeight="400" my={2} color="gray.500">
               {work.description}
             </Text>
             <HStack>
@@ -170,13 +169,23 @@ export default function WorkView({ followingWorks, setFollowingWorks }) {
           </VStack>
 
           <Flex align="center">
-            <Like id={work.id} likedList={work.liked_by} />
+            <Like
+              i={-1}
+              id={work.id}
+              likedList={work.liked_by}
+              setFollowingWorks={setFollowingWorks}
+            />
             <Text color={"gray.500"}>
               {work.liked_by?.length || 0}
               {work.liked_by?.length > 1 ? " likes" : " like"}
             </Text>
             <Spacer />
-            <Collect id={work.id} collectedList={work.collected_by} />
+            <Collect
+              i={-1}
+              id={work.id}
+              collectedList={work.collected_by}
+              setFollowingWorks={setFollowingWorks}
+            />
           </Flex>
           <Flex align="center" justify="center" pt={2}>
             <InputGroup size="md" position="relative">

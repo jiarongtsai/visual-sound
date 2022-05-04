@@ -17,7 +17,7 @@ export default function Like({ i, id, likedList, setFollowingWorks }) {
       updatedLikedByList.push(user.uid);
       await Firebase.likeWork(id, updatedLikedByList);
     }
-    setFollowingWorks &&
+    i >= 0 &&
       setFollowingWorks((pre) => [
         ...pre.slice(0, i),
         { ...pre[i], liked_by: updatedLikedByList },

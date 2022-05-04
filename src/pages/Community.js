@@ -14,12 +14,18 @@ export default function Community({ followingWorks, setFollowingWorks }) {
 
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
+      console.log(data);
       setFollowingWorks(data);
     });
   }, []);
 
-  if (followingWorks.length === 0)
-    return <div>Go 'Explore' to follow more users</div>;
+  useEffect(() => {
+    console.log(followingWorks);
+  }, [followingWorks]);
+
+  // if (followingWorks.length === 0)
+  //   return <div>Go 'Explore' to follow more users</div>;
+
   return (
     <Container mt={16}>
       {followingWorks.map((work, i) => (

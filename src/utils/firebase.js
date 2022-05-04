@@ -282,24 +282,17 @@ const Firebase = {
       splitFollowingList.push(followingList.splice(0, 10));
     }
 
-    const allFollowingWorks = [];
+    const allFollowingWorkPromise = [];
 
-    async function getFollowingWorks() {
-      for (const list of splitFollowingList) {
-        //bind() ?? or just change to firebase
-        //late update??
-        const works = await this.getUnderTenFollowingsWorks(list);
-        allFollowingWorks.push(...works);
-      }
-    }
-    const w = getFollowingWorks.bind(Firebase);
-    w();
+    splitFollowingList.forEach((list) => {
+      const result = this.getUnderTenFollowingsWorks(list);
+      allFollowingWorkPromise.push(result);
+    });
 
-    const sortedFollowingWorks = allFollowingWorks.sort((a, b) => {
-      return (
-        b.latestMessage.created_time.seconds -
-        a.latestMessage.created_time.seconds
-      );
+    const dataArray = await Promise.all(allFollowingWorkPromise);
+    //cool: search about flat() function
+    const sortedFollowingWorks = dataArray.flat().sort((a, b) => {
+      return b.created_time.seconds - a.created_time.seconds;
     });
 
     return sortedFollowingWorks;
@@ -357,6 +350,7 @@ const Firebase = {
         };
       })
     );
+    console.log(allworks);
     return allworks;
   },
   async getUserBasicInfo(id) {
