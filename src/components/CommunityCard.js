@@ -10,12 +10,9 @@ import {
   IconButton,
   Image,
   Collapse,
-  Input,
-  InputGroup,
-  InputRightElement,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { BsChat, BsFillChatFill, BsCursorFill } from "react-icons/bs";
+import { BsChat, BsFillChatFill } from "react-icons/bs";
 import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
 import Comment from "./interaction/Comment";
@@ -33,27 +30,6 @@ export default function CommunityCard({
   const user = useContext(AuthContext);
   const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
-  const [input, setInput] = useState("");
-
-  function sendComment() {
-    if (!input.trim()) return;
-    const count = work.comments_count + 1 || 1;
-    Firebase.addComment(user.uid, work.id, input, count).then(() => {
-      const updatedLatestComment = [...work.latestComments];
-      updatedLatestComment.push({
-        author_id: user.uid,
-        author_name: user.displayName,
-        content: input,
-      });
-
-      setInput("");
-    });
-  }
-
-  function sendCommentKeyDown(e) {
-    if (e.key !== "Enter") return;
-    sendComment();
-  }
 
   return (
     <Center my={4}>

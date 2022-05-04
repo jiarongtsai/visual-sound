@@ -17,25 +17,19 @@ import {
   ModalFooter,
   ModalCloseButton,
   Flex,
-  IconButton,
   Spacer,
   Text,
-  Input,
-  InputGroup,
-  InputRightElement,
   VStack,
   useColorModeValue,
   HStack,
   Tag,
 } from "@chakra-ui/react";
-import { BsCursorFill } from "react-icons/bs";
 
 export default function WorkModal({ followingWorks, setFollowingWorks }) {
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [work, setWork] = useState({});
-  const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
   const endRef = useRef(null);
   const [index, setIndex] = useState(-1);
@@ -89,19 +83,6 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
 
   function onDismiss() {
     navigate(-1);
-  }
-
-  function sendComment() {
-    if (!input.trim()) return;
-    const count = comments.length + 1 || 1;
-    Firebase.addComment(user.uid, id, input, count).then(() => {
-      setInput("");
-    });
-  }
-
-  function sendCommentKeyDown(e) {
-    if (e.key !== "Enter") return;
-    sendComment();
   }
 
   if (!work || !user) return null;

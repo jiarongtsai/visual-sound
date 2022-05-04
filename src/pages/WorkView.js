@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
@@ -29,6 +29,7 @@ export default function WorkView({ setFollowingWorks }) {
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const [isShown, setIsShown] = useState([]);
+  const endRef = useRef(null);
 
   useEffect(() => {
     const snapshot = Firebase.snapshotWork(id, (data) => {
@@ -70,6 +71,12 @@ export default function WorkView({ setFollowingWorks }) {
       onSnapshotComments();
     };
   }, []);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [comments]);
 
   if (!work) return <div>Work Not Found</div>;
 
@@ -149,7 +156,7 @@ export default function WorkView({ setFollowingWorks }) {
               );
             })}
           </VStack>
-
+          <div ref={endRef}></div>
           <Flex align="center">
             <Like
               i={-1}
