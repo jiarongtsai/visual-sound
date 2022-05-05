@@ -16,6 +16,7 @@ import WorkModal from "./WorkModal";
 import WorkView from "../pages/WorkView";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Create from "../pages/Create";
 import Navbar from "./Navbar";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <ChakraProvider theme={theme}>
         <Routes location={state?.backgroundLocation || location}>
           <Route path="/" element={<Navbar />}>
+            <Route path="create" element={<Create />} />
             <Route index element={<Main />} />
             <Route
               path="community"

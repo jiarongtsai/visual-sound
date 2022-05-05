@@ -5,9 +5,7 @@ import { PlayerProvider } from "../components/PlayerProvider";
 export default function Main() {
   return (
     <PlayerProvider>
-      {({ soundPlayer }) => {
-        return <MySequencer player={soundPlayer} />;
-      }}
+      {({ soundPlayer }) => <MySequencer player={soundPlayer} />}
     </PlayerProvider>
   );
 }

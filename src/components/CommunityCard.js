@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import {
   Box,
   Center,
@@ -17,8 +17,6 @@ import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
 import Comment from "./interaction/Comment";
 import { UserWithTime } from "./UserVariants";
-import { AuthContext } from "./auth/Auth";
-import { Firebase } from "../utils/firebase";
 
 export default function CommunityCard({
   i,
@@ -27,7 +25,6 @@ export default function CommunityCard({
   followingWorks,
   setFollowingWorks,
 }) {
-  const user = useContext(AuthContext);
   const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
 
