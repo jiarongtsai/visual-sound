@@ -31,7 +31,7 @@ export default () => {
         x: snare_01,
         c: snare_01,
         s: snare_03,
-        d: snare_02,
+        d: snare_03,
         v: tom_01,
         b: tom_01,
         n: tom_02,

@@ -19,12 +19,13 @@ import {
   BsPlayFill,
   BsArrowCounterclockwise,
 } from "react-icons/bs";
+import * as Tone from "tone";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import useMelody from "../soundHook/useMelody";
 import useDrumkit from "../soundHook/useDrumkit";
 import useKeybroadBindings from "../components/customHook/useKeybroadBindings";
-import * as Tone from "tone";
+import "./Create.css";
 
 export default function Create() {
   const [playing, setPlaying] = useState(false);
@@ -94,8 +95,6 @@ export default function Create() {
   const onChange = (input) => {
     setInput(input);
     console.log("Input changed", input);
-    melodyPlayer.player("a").start();
-    drumKitPlayer.player("a").start();
   };
 
   const handleShift = () => {
@@ -104,7 +103,13 @@ export default function Create() {
   };
 
   const onKeyPress = (button) => {
-    console.log("Button pressed", button);
+    switch (button) {
+      case "1":
+        console.log("hello");
+        break;
+      default:
+        console.log("Button pressed", button);
+    }
 
     if (button === "{shift}" || button === "{lock}") handleShift();
   };
@@ -147,7 +152,7 @@ export default function Create() {
           px={10}
           rounded="md"
           shadow="base"
-          //   onMouseLeave={onControllerClose} //trmp
+          //   onMouseLeave={onControllerClose} //temp
           bg={useColorModeValue("white", "gray.600")}
           d="flex"
           flexDirection="column"
@@ -184,8 +189,20 @@ export default function Create() {
             <Keyboard
               keyboardRef={(r) => (keyboard.current = r)}
               layoutName={layout}
+              display={{
+                "{shift}": "shift ⇧",
+                "{escape}": "esc ⎋",
+                "{tab}": " ⇥",
+                "{bksp}": "back ⌫",
+                "{enter}": "enter ↵",
+                "{lock}": "lock",
+              }}
               onChange={onChange}
               onKeyPress={onKeyPress}
+              theme={`hg-theme-default default${
+                track ? " keybroad" : " drumKit"
+              }`}
+              autoUseTouchEvents={true}
             />
           </Box>
           {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
