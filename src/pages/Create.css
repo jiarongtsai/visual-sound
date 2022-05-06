@@ -13,7 +13,7 @@
     justify-content: center;
     align-items: center;
     background: rgba(155, 155, 155, 0.5);
-    color: white;
+    color: rgba(155, 155, 155, 0.5);
   }
   
   .simple-keyboard.default + .simple-keyboard-preview {
@@ -34,7 +34,7 @@
 
   .simple-keyboard.keybroad .hg-button[data-skbtn="{shift}"] {
     background: rgba(155, 155, 155, 0.5);
-    color: white;
+    color: rgba(155, 155, 155, 0.5);
 }
 
   .simple-keyboard.keybroad .hg-button[data-skbtn = "s"]{
@@ -250,6 +250,13 @@
   color: #805ad5;
   opacity: .6;
 }
+
+.simple-keyboard.default .hg-button-active {
+  background: #805ad5;
+  color: #805ad5;
+  opacity: .6;
+}
+
 
 
 

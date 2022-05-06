@@ -11,7 +11,6 @@ import {
   IconButton,
   useDisclosure,
   useColorModeValue,
-  Text,
 } from "@chakra-ui/react";
 import {
   BsSkipStartFill,
@@ -38,7 +37,7 @@ export default function Create() {
     onClose: onControllerClose,
   } = useDisclosure();
 
-  const melodyPlayer = useMelody();
+  //   const melodyPlayer = useMelody();
   const drumKitPlayer = useDrumkit();
   const [track, setTrack] = useState(true);
 
@@ -49,15 +48,55 @@ export default function Create() {
     synth.triggerAttackRelease(`${note}`, "8n");
   }
 
+  function toggleClass(key) {
+    const target = document.querySelector(`[data-skbtn='${key}']`);
+    target.classList.add("hg-button-active");
+    // ??? should it be clean?
+    const timer = setTimeout(
+      () => target.classList.remove("hg-button-active"),
+      100
+    );
+  }
+
   useKeybroadBindings({
-    1: () => setTrack(true),
-    2: () => setTrack(true),
-    3: () => setTrack(true),
-    4: () => setTrack(true),
-    5: () => setTrack(false),
-    6: () => setTrack(false),
-    7: () => setTrack(false),
-    8: () => setTrack(false),
+    1: () => {
+      setTrack(true);
+      toggleClass("1");
+    },
+    2: () => {
+      setTrack(true);
+      toggleClass("2");
+    },
+    3: () => {
+      setTrack(true);
+      toggleClass("3");
+    },
+    4: () => {
+      setTrack(true);
+      toggleClass("4");
+    },
+    5: () => {
+      setTrack(false);
+      toggleClass("5");
+    },
+    6: () => {
+      setTrack(false);
+      toggleClass("6");
+    },
+    7: () => {
+      setTrack(false);
+      toggleClass("7");
+    },
+    8: () => {
+      setTrack(false);
+      toggleClass("8");
+    },
+    9: () => {
+      toggleClass("9");
+    },
+    0: () => {
+      toggleClass("0");
+    },
     // w: () => console.log(2),
     // e: () => console.log(3),
     // r: () => console.log(1),
@@ -69,27 +108,87 @@ export default function Create() {
     // p: () => console.log(3),
     // "[": () => console.log(3),
     // "]": () => console.log(3),
-    a: () => (track ? playNote("C#4") : drumKitPlayer.player("a").start()),
-    s: () => (track ? playNote("C#4") : drumKitPlayer.player("s").start()),
-    d: () => (track ? playNote("D#4") : drumKitPlayer.player("d").start()),
-    f: () => (track ? "" : drumKitPlayer.player("f").start()),
-    g: () => (track ? playNote("F#4") : drumKitPlayer.player("g").start()),
-    h: () => (track ? playNote("G#4") : drumKitPlayer.player("h").start()),
-    j: () => (track ? playNote("A#4") : drumKitPlayer.player("j").start()),
-    k: () => (track ? "" : drumKitPlayer.player("k").start()),
-    l: () => (track ? playNote("C#5") : drumKitPlayer.player("l").start()),
-    ";": () => (track ? playNote("D#5") : drumKitPlayer.player("lr").start()),
+    a: () => {
+      toggleClass("a");
+      track ? console.log("") : drumKitPlayer.player("a").start();
+    },
+    s: () => {
+      toggleClass("s");
+      track ? playNote("C#4") : drumKitPlayer.player("s").start();
+    },
+    d: () => {
+      toggleClass("d");
+      track ? playNote("D#4") : drumKitPlayer.player("d").start();
+    },
+    f: () => {
+      toggleClass("f");
+      track ? console.log("") : drumKitPlayer.player("f").start();
+    },
+    g: () => {
+      toggleClass("g");
+      track ? playNote("F#4") : drumKitPlayer.player("g").start();
+    },
+    h: () => {
+      toggleClass("h");
+      track ? playNote("G#4") : drumKitPlayer.player("h").start();
+    },
+    j: () => {
+      toggleClass("j");
+      track ? playNote("A#4") : drumKitPlayer.player("j").start();
+    },
+    k: () => {
+      toggleClass("k");
+      track ? console.log("") : drumKitPlayer.player("k").start();
+    },
+    l: () => {
+      toggleClass("l");
+      track ? playNote("C#5") : drumKitPlayer.player("l").start();
+    },
+    ";": () => {
+      toggleClass(";");
+      track ? playNote("D#5") : drumKitPlayer.player("lr").start();
+    },
     // "'": () => console.log(2),
-    z: () => (track ? playNote("C4") : drumKitPlayer.player("z").start()),
-    x: () => (track ? playNote("D4") : drumKitPlayer.player("x").start()),
-    c: () => (track ? playNote("E4") : drumKitPlayer.player("c").start()),
-    v: () => (track ? playNote("F4") : drumKitPlayer.player("v").start()),
-    b: () => (track ? playNote("G4") : drumKitPlayer.player("b").start()),
-    n: () => (track ? playNote("A4") : drumKitPlayer.player("n").start()),
-    m: () => (track ? playNote("B4") : drumKitPlayer.player("m").start()),
-    ",": () => (track ? playNote("C5") : drumKitPlayer.player("mr").start()),
-    ".": () => (track ? playNote("D5") : drumKitPlayer.player("mrr").start()),
-    "/": () => (track ? playNote("E5") : ""),
+    z: () => {
+      toggleClass("z");
+      track ? playNote("C4") : drumKitPlayer.player("z").start();
+    },
+    x: () => {
+      toggleClass("x");
+      track ? playNote("D4") : drumKitPlayer.player("x").start();
+    },
+    c: () => {
+      toggleClass("c");
+      track ? playNote("E4") : drumKitPlayer.player("c").start();
+    },
+    v: () => {
+      toggleClass("v");
+      track ? playNote("F4") : drumKitPlayer.player("v").start();
+    },
+    b: () => {
+      toggleClass("b");
+      track ? playNote("G4") : drumKitPlayer.player("b").start();
+    },
+    n: () => {
+      toggleClass("n");
+      track ? playNote("A4") : drumKitPlayer.player("n").start();
+    },
+    m: () => {
+      toggleClass("m");
+      track ? playNote("B4") : drumKitPlayer.player("m").start();
+    },
+    ",": () => {
+      toggleClass(",");
+      track ? playNote("C5") : drumKitPlayer.player("mr").start();
+    },
+    ".": () => {
+      toggleClass(".");
+      track ? playNote("D5") : drumKitPlayer.player("mrr").start();
+    },
+    "/": () => {
+      toggleClass("/");
+      track ? playNote("E5") : console.log("");
+    },
   });
 
   const onChange = (input) => {
@@ -104,8 +203,65 @@ export default function Create() {
 
   const onKeyPress = (button) => {
     switch (button) {
-      case "1":
-        console.log("hello");
+      case "a":
+        track ? console.log("") : drumKitPlayer.player("a").start();
+        break;
+      case "s":
+        track ? playNote("C#4") : drumKitPlayer.player("s").start();
+        break;
+      case "d":
+        track ? playNote("D#4") : drumKitPlayer.player("d").start();
+        break;
+      case "f":
+        track ? console.log("") : drumKitPlayer.player("f").start();
+        break;
+      case "g":
+        track ? playNote("F#4") : drumKitPlayer.player("g").start();
+        break;
+      case "h":
+        track ? playNote("G#4") : drumKitPlayer.player("h").start();
+        break;
+      case "j":
+        track ? playNote("A#4") : drumKitPlayer.player("j").start();
+        break;
+      case "k":
+        track ? console.log("") : drumKitPlayer.player("k").start();
+        break;
+      case "l":
+        track ? playNote("C#5") : drumKitPlayer.player("l").start();
+        break;
+      case ";":
+        track ? playNote("D#5") : drumKitPlayer.player(";").start();
+        break;
+      case "z":
+        track ? playNote("C4") : drumKitPlayer.player("z").start();
+        break;
+      case "x":
+        track ? playNote("D4") : drumKitPlayer.player("x").start();
+        break;
+      case "c":
+        track ? playNote("E4") : drumKitPlayer.player("c").start();
+        break;
+      case "v":
+        track ? playNote("F4") : drumKitPlayer.player("v").start();
+        break;
+      case "b":
+        track ? playNote("G4") : drumKitPlayer.player("b").start();
+        break;
+      case "n":
+        track ? playNote("A4") : drumKitPlayer.player("n").start();
+        break;
+      case "m":
+        track ? playNote("B4") : drumKitPlayer.player("m").start();
+        break;
+      case ",":
+        track ? playNote("C5") : drumKitPlayer.player(",").start();
+        break;
+      case ".":
+        track ? playNote("D5") : drumKitPlayer.player(".").start();
+        break;
+      case "/":
+        track ? playNote("E5") : drumKitPlayer.player("/").start();
         break;
       default:
         console.log("Button pressed", button);
