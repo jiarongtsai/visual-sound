@@ -1,48 +1,64 @@
 import { useState, useEffect } from "react";
 import * as Tone from "tone";
-import kick from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Kick01.wav";
-import snare_01 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Snr01.wav";
-import snare_02 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Snr02.wav";
-import snare_03 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Snr03.wav";
-import tom_01 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Tom01.wav";
-import tom_02 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Tom02.wav";
-import tom_03 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_Tom03.wav";
+import kick_01 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Kick_02.wav";
+import kick_02 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Kick_01.wav";
+import snare_01 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Snr_02.wav";
+import snareSide from "../asset/DrumKit_3_Acoustic/CyCdh_K3SdSt_03.wav";
+import tomHigh from "../asset/DrumKit_3_Acoustic/CyCdh_K3Tom_01.wav";
+import tomMid from "../asset/DrumKit_3_Acoustic/CyCdh_K3Tom_04.wav";
+import tomLow from "../asset/DrumKit_3_Acoustic/CyCdh_K3Tom_05.wav";
 import clap_01 from "../asset/DrumKit5_Electro/CYCdh_ElecK02_Clap01.wav";
 import clap_02 from "../asset/DrumKit5_Electro/CYCdh_ElecK02_Clap02.wav";
-
-import pedalHat from "../asset/DrumKit6_Electro/CYCdh_ElecK03_PdHat.wav";
-import openHat from "../asset/DrumKit6_Electro/CYCdh_ElecK03_OpHat.wav";
-import closeHat from "../asset/DrumKit6_Electro/CYCdh_ElecK03_ClHat.wav";
-// import FX_01 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_FX01.wav";
-// import FX_02 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_FX02.wav";
-// import FX_03 from "../asset/DrumKit4_Electro/CYCdh_ElecK01_FX03.wav";
-import rideCymbal from "../asset/DrumKit7_Electro/CYCdh_ElecK04_Cymbal01.wav";
-import crashCymbal from "../asset/DrumKit7_Electro/CYCdh_ElecK04_Cymbal02.wav";
+import closeHat_01 from "../asset/DrumKit_3_Acoustic/CyCdh_K3ClHat_01.wav";
+import closeHat_02 from "../asset/DrumKit_3_Acoustic/CyCdh_K3ClHat_04.wav";
+import halfHat from "../asset/DrumKit_3_Acoustic/CyCdh_K3HfHat.wav";
+import openHat_01 from "../asset/DrumKit_3_Acoustic/CyCdh_K3OpHat_01.wav";
+import openHat_02 from "../asset/DrumKit_3_Acoustic/CyCdh_K3OpHat_03.wav";
+import openHat_03 from "../asset/DrumKit_3_Acoustic/CyCdh_K3OpHat_02.wav";
+import rim from "../asset/DrumKit_3_Acoustic/CyCdh_K3Rim_01.wav";
+import crashCymbal_01 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_03.wav";
+import crashCymbal_02 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_01.wav";
+import crashCymbal_03 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_04.wav";
+import crashCymbal_04 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_05.wav";
+import crashCymbal_05 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_02.wav";
+import crashCymbal_06 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_07.wav";
 
 export default () => {
   const [drumKitPlayer, setDrumKitPlayer] = useState(null);
   useEffect(() => {
     const soundPlayer = new Tone.Players(
       {
-        z: kick,
-        f: kick,
-        a: clap_01,
-        k: clap_02,
-        x: snare_01,
-        c: snare_01,
-        s: snare_03,
-        d: snare_03,
-        v: tom_01,
-        b: tom_01,
-        n: tom_02,
-        m: tom_02,
-        mr: tom_03,
-        mrr: tom_03,
-        g: closeHat,
-        h: pedalHat,
-        j: openHat,
-        lr: rideCymbal,
-        l: crashCymbal,
+        b: kick_01,
+        n: kick_01,
+        a: closeHat_01,
+        s: closeHat_02,
+        d: halfHat,
+        z: openHat_01,
+        x: openHat_02,
+        c: openHat_03,
+        v: kick_02,
+        f: snare_01,
+        g: snare_01,
+        q: clap_01,
+        w: clap_02,
+        e: rim,
+        r: snareSide,
+        h: tomHigh,
+        j: tomHigh,
+        k: tomMid,
+        l: tomMid,
+        m: tomLow,
+        ",": tomLow,
+        t: crashCymbal_01,
+        y: crashCymbal_02,
+        u: crashCymbal_03,
+        i: crashCymbal_04,
+        o: crashCymbal_05,
+        p: crashCymbal_06,
+
+        // j: openHat,
+        // ";": rideCymbal,
+        // l: crashCymbal,
       },
       () => {
         console.log("drumKit loaded");

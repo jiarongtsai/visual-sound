@@ -17,6 +17,7 @@ import {
   BsPauseFill,
   BsPlayFill,
   BsArrowCounterclockwise,
+  BsChevronDoubleLeft,
 } from "react-icons/bs";
 import * as Tone from "tone";
 import Keyboard from "react-simple-keyboard";
@@ -30,6 +31,8 @@ export default function Create() {
   const [playing, setPlaying] = useState(false);
   const [input, setInput] = useState("");
   const [layout, setLayout] = useState("default");
+  const [octave, setOctave] = useState([4, 5]);
+
   const keyboard = useRef();
   const {
     isOpen: isControllerOpen,
@@ -58,83 +61,133 @@ export default function Create() {
     );
   }
 
+  console.log(octave);
+
   useKeybroadBindings({
     1: () => {
-      setTrack(true);
       toggleClass("1");
     },
     2: () => {
-      setTrack(true);
       toggleClass("2");
     },
     3: () => {
-      setTrack(true);
       toggleClass("3");
     },
     4: () => {
-      setTrack(true);
       toggleClass("4");
     },
     5: () => {
-      setTrack(false);
       toggleClass("5");
+      track ? playNote(`C#${octave[1]}`) : drumKitPlayer.player("5").start();
     },
     6: () => {
-      setTrack(false);
       toggleClass("6");
+      track ? playNote(`D#${octave[1]}`) : drumKitPlayer.player("6").start();
     },
     7: () => {
-      setTrack(false);
       toggleClass("7");
+      !track && drumKitPlayer.player("7").start();
     },
     8: () => {
-      setTrack(false);
       toggleClass("8");
+      track ? playNote(`F#${octave[1]}`) : drumKitPlayer.player("8").start();
     },
     9: () => {
       toggleClass("9");
+      track ? playNote(`G#${octave[1]}`) : drumKitPlayer.player("9").start();
     },
     0: () => {
       toggleClass("0");
+      track ? playNote(`A#${octave[1]}`) : drumKitPlayer.player("0").start();
     },
-    // w: () => console.log(2),
-    // e: () => console.log(3),
-    // r: () => console.log(1),
-    // t: () => console.log(2),
-    // y: () => console.log(3),
-    // u: () => console.log(1),
-    // i: () => console.log(2),
-    // o: () => console.log(3),
-    // p: () => console.log(3),
-    // "[": () => console.log(3),
-    // "]": () => console.log(3),
+    q: () => {
+      toggleClass("q");
+      !track && drumKitPlayer.player("q").start();
+    },
+    w: () => {
+      toggleClass("w");
+      !track && drumKitPlayer.player("w").start();
+    },
+    e: () => {
+      toggleClass("e");
+      !track && drumKitPlayer.player("e").start();
+    },
+    r: () => {
+      toggleClass(",");
+      if (track) {
+        playNote(`C${octave[1]}`);
+        toggleClass("r");
+        return;
+      }
+      drumKitPlayer.player("r").start();
+    },
+    t: () => {
+      toggleClass("t");
+      track ? playNote(`D${octave[1]}`) : drumKitPlayer.player("t").start();
+    },
+    y: () => {
+      toggleClass("y");
+      track ? playNote(`E${octave[1]}`) : drumKitPlayer.player("y").start();
+    },
+    u: () => {
+      toggleClass("u");
+      track ? playNote(`F${octave[1]}`) : drumKitPlayer.player("u").start();
+    },
+    i: () => {
+      toggleClass("i");
+      track ? playNote(`G${octave[1]}`) : drumKitPlayer.player("i").start();
+    },
+    o: () => {
+      toggleClass("o");
+      track ? playNote(`A${octave[1]}`) : drumKitPlayer.player("o").start();
+    },
+    p: () => {
+      toggleClass("p");
+      track ? playNote(`B${octave[1]}`) : drumKitPlayer.player("p").start();
+    },
+    "[": () => {
+      toggleClass("[");
+      if (octave[0] > 1) {
+        const newOctave = [...octave].map((i) => i - 1);
+        setOctave(newOctave);
+      }
+    },
+    "]": () => {
+      toggleClass("]");
+      if (octave[0] < 7) {
+        const newOctave = [...octave].map((i) => i + 1);
+        setOctave(newOctave);
+      }
+    },
     a: () => {
       toggleClass("a");
-      track ? console.log("") : drumKitPlayer.player("a").start();
+      !track && drumKitPlayer.player("a").start();
+      //   track ? console.log("") : drumKitPlayer.player("a").start();
     },
     s: () => {
       toggleClass("s");
-      track ? playNote("C#4") : drumKitPlayer.player("s").start();
+      track ? playNote(`C#${octave[0]}`) : drumKitPlayer.player("s").start();
     },
     d: () => {
       toggleClass("d");
-      track ? playNote("D#4") : drumKitPlayer.player("d").start();
+      track ? playNote(`D#${octave[0]}`) : drumKitPlayer.player("d").start();
     },
     f: () => {
       toggleClass("f");
-      track ? console.log("") : drumKitPlayer.player("f").start();
+      !track && drumKitPlayer.player("f").start();
+      //   track ? console.log("") : drumKitPlayer.player("f").start();
     },
     g: () => {
       toggleClass("g");
-      track ? playNote("F#4") : drumKitPlayer.player("g").start();
+      track ? playNote(`F#${octave[0]}`) : drumKitPlayer.player("g").start();
     },
     h: () => {
       toggleClass("h");
-      track ? playNote("G#4") : drumKitPlayer.player("h").start();
+      track ? playNote(`G#${octave[0]}`) : drumKitPlayer.player("h").start();
     },
     j: () => {
       toggleClass("j");
-      track ? playNote("A#4") : drumKitPlayer.player("j").start();
+      track ? playNote(`A#${octave[0]}`) : drumKitPlayer.player("j").start();
     },
     k: () => {
       toggleClass("k");
@@ -142,54 +195,63 @@ export default function Create() {
     },
     l: () => {
       toggleClass("l");
-      track ? playNote("C#5") : drumKitPlayer.player("l").start();
+      !track && drumKitPlayer.player("l").start();
+      //   track ? playNote("C#5") : drumKitPlayer.player("l").start();
     },
     ";": () => {
       toggleClass(";");
-      track ? playNote("D#5") : drumKitPlayer.player("lr").start();
+      //   track ? playNote("D#5") : drumKitPlayer.player(";").start();
     },
     // "'": () => console.log(2),
     z: () => {
       toggleClass("z");
-      track ? playNote("C4") : drumKitPlayer.player("z").start();
+      track ? playNote(`C${octave[0]}`) : drumKitPlayer.player("z").start();
     },
     x: () => {
       toggleClass("x");
-      track ? playNote("D4") : drumKitPlayer.player("x").start();
+      track ? playNote(`D${octave[0]}`) : drumKitPlayer.player("x").start();
     },
     c: () => {
       toggleClass("c");
-      track ? playNote("E4") : drumKitPlayer.player("c").start();
+      track ? playNote(`E${octave[0]}`) : drumKitPlayer.player("c").start();
     },
     v: () => {
       toggleClass("v");
-      track ? playNote("F4") : drumKitPlayer.player("v").start();
+      track ? playNote(`F${octave[0]}`) : drumKitPlayer.player("v").start();
     },
     b: () => {
       toggleClass("b");
-      track ? playNote("G4") : drumKitPlayer.player("b").start();
+      track ? playNote(`G${octave[0]}`) : drumKitPlayer.player("b").start();
     },
     n: () => {
       toggleClass("n");
-      track ? playNote("A4") : drumKitPlayer.player("n").start();
+      track ? playNote(`A${octave[0]}`) : drumKitPlayer.player("n").start();
     },
     m: () => {
       toggleClass("m");
-      track ? playNote("B4") : drumKitPlayer.player("m").start();
+      track ? playNote(`B${octave[0]}`) : drumKitPlayer.player("m").start();
     },
     ",": () => {
       toggleClass(",");
-      track ? playNote("C5") : drumKitPlayer.player("mr").start();
+      if (track) {
+        toggleClass("r");
+        playNote(`C${octave[1]}`);
+        return;
+      }
+
+      drumKitPlayer.player(",").start();
     },
-    ".": () => {
-      toggleClass(".");
-      track ? playNote("D5") : drumKitPlayer.player("mrr").start();
-    },
-    "/": () => {
-      toggleClass("/");
-      track ? playNote("E5") : console.log("");
+
+    Escape: () => {
+      setTrack((pre) => !pre);
     },
   });
+
+  //   document.addEventListener("keydown", (e) => {
+  //     console.log(e.key);
+  //     console.log(e.code);
+  //     console.log(e.shiftKey);
+  //   });
 
   const onChange = (input) => {
     setInput(input);
@@ -201,74 +263,74 @@ export default function Create() {
     setLayout(newLayoutName);
   };
 
-  const onKeyPress = (button) => {
-    switch (button) {
-      case "a":
-        track ? console.log("") : drumKitPlayer.player("a").start();
-        break;
-      case "s":
-        track ? playNote("C#4") : drumKitPlayer.player("s").start();
-        break;
-      case "d":
-        track ? playNote("D#4") : drumKitPlayer.player("d").start();
-        break;
-      case "f":
-        track ? console.log("") : drumKitPlayer.player("f").start();
-        break;
-      case "g":
-        track ? playNote("F#4") : drumKitPlayer.player("g").start();
-        break;
-      case "h":
-        track ? playNote("G#4") : drumKitPlayer.player("h").start();
-        break;
-      case "j":
-        track ? playNote("A#4") : drumKitPlayer.player("j").start();
-        break;
-      case "k":
-        track ? console.log("") : drumKitPlayer.player("k").start();
-        break;
-      case "l":
-        track ? playNote("C#5") : drumKitPlayer.player("l").start();
-        break;
-      case ";":
-        track ? playNote("D#5") : drumKitPlayer.player(";").start();
-        break;
-      case "z":
-        track ? playNote("C4") : drumKitPlayer.player("z").start();
-        break;
-      case "x":
-        track ? playNote("D4") : drumKitPlayer.player("x").start();
-        break;
-      case "c":
-        track ? playNote("E4") : drumKitPlayer.player("c").start();
-        break;
-      case "v":
-        track ? playNote("F4") : drumKitPlayer.player("v").start();
-        break;
-      case "b":
-        track ? playNote("G4") : drumKitPlayer.player("b").start();
-        break;
-      case "n":
-        track ? playNote("A4") : drumKitPlayer.player("n").start();
-        break;
-      case "m":
-        track ? playNote("B4") : drumKitPlayer.player("m").start();
-        break;
-      case ",":
-        track ? playNote("C5") : drumKitPlayer.player(",").start();
-        break;
-      case ".":
-        track ? playNote("D5") : drumKitPlayer.player(".").start();
-        break;
-      case "/":
-        track ? playNote("E5") : drumKitPlayer.player("/").start();
-        break;
-      default:
-        console.log("Button pressed", button);
-    }
+  //   const onKeyPress = (button) => {
+  //     switch (button) {
+  //       case "a":
+  //         track ? console.log("") : drumKitPlayer.player("a").start();
+  //         break;
+  //       case "s":
+  //         track ? playNote(`C#${octave[0]}`) : drumKitPlayer.player("s").start();
+  //         break;
+  //       case "d":
+  //         track ? playNote(`D#${octave[0]}`) : drumKitPlayer.player("d").start();
+  //         break;
+  //       case "f":
+  //         track ? console.log("") : drumKitPlayer.player("f").start();
+  //         break;
+  //       case "g":
+  //         track ? playNote(`F#${octave[0]}`) : drumKitPlayer.player("g").start();
+  //         break;
+  //       case "h":
+  //         track ? playNote(`G#${octave[0]}`) : drumKitPlayer.player("h").start();
+  //         break;
+  //       case "j":
+  //         track ? playNote(`A#${octave[0]}`) : drumKitPlayer.player("j").start();
+  //         break;
+  //       case "k":
+  //         // track ? console.log("") : drumKitPlayer.player("k").start();
+  //         break;
+  //       case "l":
+  //         // track ? playNote("C#5") : drumKitPlayer.player("l").start();
+  //         break;
+  //       case ";":
+  //         // track ? playNote("D#5") : drumKitPlayer.player(";").start();
+  //         break;
+  //       case "z":
+  //         track ? playNote("C4") : drumKitPlayer.player("z").start();
+  //         break;
+  //       case "x":
+  //         track ? playNote("D4") : drumKitPlayer.player("x").start();
+  //         break;
+  //       case "c":
+  //         track ? playNote("E4") : drumKitPlayer.player("c").start();
+  //         break;
+  //       case "v":
+  //         track ? playNote("F4") : drumKitPlayer.player("v").start();
+  //         break;
+  //       case "b":
+  //         track ? playNote("G4") : drumKitPlayer.player("b").start();
+  //         break;
+  //       case "n":
+  //         track ? playNote("A4") : drumKitPlayer.player("n").start();
+  //         break;
+  //       case "m":
+  //         track ? playNote("B4") : drumKitPlayer.player("m").start();
+  //         break;
+  //       case ",":
+  //         track ? playNote("C5") : drumKitPlayer.player(",").start();
+  //         break;
+  //       case ".":
+  //         track ? playNote("D5") : drumKitPlayer.player(".").start();
+  //         break;
+  //       case "/":
+  //         track ? playNote("E5") : drumKitPlayer.player("/").start();
+  //         break;
+  //       default:
+  //         console.log("Button pressed", button);
+  //     }
 
-    if (button === "{shift}" || button === "{lock}") handleShift();
-  };
+  //     if (button === "{shift}" || button === "{lock}") handleShift();
+  //   };
 
   const onChangeInput = (event) => {
     const input = event.target.value;
@@ -336,14 +398,26 @@ export default function Create() {
               //   onClick={handleCleanUp}
             />
           </HStack>
-          <Box w={["100%", "100%", "70%"]}>
-            <input
-              value={input}
-              placeholder={"Tap on the virtual keyboard to start"}
-              onChange={onChangeInput}
-            />
+          <Box w={["100%", "100%", "70%", "70%", "50%"]}>
+            <input value={input} onChange={onChangeInput} />
             <Keyboard
               keyboardRef={(r) => (keyboard.current = r)}
+              layout={{
+                default: [
+                  "` 1 2 3 4 5 6 7 8 9 0 - = {bksp}",
+                  "{tab} q w e r t y u i o p [ ] \\",
+                  "{lock} a s d f g h j k l ; ' {enter}",
+                  "{shift} z x c v b n m , . / {shift}",
+                  ".com @ {space} @ .com",
+                ],
+                shift: [
+                  "~ ! @ # $ % ^ &amp; * ( ) _ + {bksp}",
+                  "{tab} Q W E R T Y U I O P { } |",
+                  '{lock} A S D F G H J K L : " {enter}',
+                  "{shift} Z X C V B N M &lt; &gt; ? {shift}",
+                  ".com @ {space}",
+                ],
+              }}
               layoutName={layout}
               display={{
                 "{shift}": "shift ⇧",
@@ -352,9 +426,10 @@ export default function Create() {
                 "{bksp}": "back ⌫",
                 "{enter}": "enter ↵",
                 "{lock}": "lock",
+                "{space}": "play/pause",
               }}
               onChange={onChange}
-              onKeyPress={onKeyPress}
+              //   onKeyPress={onKeyPress}
               theme={`hg-theme-default default${
                 track ? " keybroad" : " drumKit"
               }`}
