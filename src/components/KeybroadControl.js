@@ -1,13 +1,15 @@
-import React, { useState, useRef } from "react";
-import { Box } from "@chakra-ui/react";
+import React, { useState, useEffect, useRef } from "react";
+import { Box, IconButton } from "@chakra-ui/react";
+import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import * as Tone from "tone";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import useDrumkit from "../soundHook/useDrumkit";
 import useKeybroadBindings from "../components/customHook/useKeybroadBindings";
 import "../pages/Create.css";
+import A1 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Tom_05.wav";
 
-export default function KeybroadControl() {
+export default function KeybroadControl({ playing, setPlaying }) {
   const [input, setInput] = useState("");
   const [layout, setLayout] = useState("default");
   const [octave, setOctave] = useState([4, 5]);
@@ -15,13 +17,79 @@ export default function KeybroadControl() {
   const keyboard = useRef();
 
   const drumKitPlayer = useDrumkit();
-
   //melody
   const synth = new Tone.Synth().toDestination();
+
+  let bgMelody = [
+    "C3",
+    ["E3", "G3", "D3", "C3"],
+    "A3",
+    "B2",
+    "C2",
+    "E3",
+    ["A2", "G2"],
+    "C4",
+  ];
+
+  const sequence1 = new Tone.Sequence(
+    function (time, note) {
+      synth.triggerAttackRelease(note, 0.5);
+      console.log(time, note);
+    },
+
+    bgMelody,
+    "4n"
+  );
 
   function playNote(note) {
     synth.triggerAttackRelease(`${note}`, "8n");
   }
+
+  const [isLoaded, setLoaded] = useState(false);
+  const sampler = useRef(null);
+
+  //   useEffect(() => {
+  //     sampler.current = new Tone.Sampler(
+  //       { A1 },
+  //       {
+  //         onload: () => {
+  //           setLoaded(true);
+  //         },
+  //       }
+  //     ).toDestination();
+
+  //     const unSchedule = Tone.Transport.scheduleRepeat(function (time) {
+  //       drumKitPlayer && drumKitPlayer.player("a").start(time + 0);
+  //       //   drumKitPlayer && drumKitPlayer.player("f").start(time + "8n");
+  //       //   drumKitPlayer && drumKitPlayer.player("h").start(time + "4n");
+  //       //   drumKitPlayer && drumKitPlayer.player("k").start(time + "1m");
+  //       //   drumKitPlayer && drumKitPlayer.player("i").start();
+  //       //   drumKitPlayer && drumKitPlayer.player("l").start(4.5);
+  //       //   drumKitPlayer && drumKitPlayer.player("r").start(5.5);
+  //       //   sampler.current.triggerAttackRelease("A1", 3);
+  //       console.log(time, drumKitPlayer);
+  //     }, "2m");
+
+  //     return unSchedule;
+  //   }, [drumKitPlayer]);
+
+  const handleClick = () => {
+    sampler.current.triggerAttack("A1");
+    // Tone.Transport.start();
+  };
+
+  const play = () => {
+    if (!playing) {
+      Tone.Transport.start();
+      Tone.start();
+      sequence1.start();
+      setPlaying(true);
+      return;
+    }
+    Tone.Transport.stop();
+    sequence1.stop();
+    setPlaying(false);
+  };
 
   function toggleClass(key) {
     const target = document.querySelector(`[data-skbtn='${key}']`);
@@ -32,11 +100,6 @@ export default function KeybroadControl() {
       100
     );
   }
-
-  Tone.Transport.scheduleRepeat(function (time) {
-    //do something with the time
-    synth.triggerAttackRelease("C4", "8n");
-  }, "8n");
 
   useKeybroadBindings({
     1: () => {
@@ -306,6 +369,15 @@ export default function KeybroadControl() {
   };
   return (
     <Box w={["100%", "100%", "70%", "70%", "50%"]} mb={8}>
+      <button disabled={!isLoaded} onClick={handleClick}>
+        start
+      </button>
+      <Flex></Flex>
+      <IconButton
+        aria-label="play or pause"
+        icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+        onClick={play}
+      />
       <input value={input} onChange={onChangeInput} />
       <Keyboard
         keyboardRef={(r) => (keyboard.current = r)}

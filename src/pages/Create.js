@@ -23,6 +23,7 @@ import {
 
 import KeybroadControl from "../components/KeybroadControl";
 import Sequence from "../components/Sequence";
+import DrumMachine from "../components/drumMachine/DrumMachine";
 
 export default function Create() {
   const [playing, setPlaying] = useState(false);
@@ -92,8 +93,9 @@ export default function Create() {
               //   onClick={handleCleanUp}
             />
           </HStack>
-          <KeybroadControl />
-          <Sequence />
+          <KeybroadControl playing={playing} setPlaying={setPlaying} />
+          {/* <Sequence /> */}
+          {/* <DrumMachine /> */}
           {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
               <IconButton aria-label="stop" icon={<BsFillStopFill />} /> */}
           {/* <Grid sequence={sequence} toggleStep={toggleStep} /> */}

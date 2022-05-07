@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./sequence.css";
 import * as Tone from "tone";
-import classNames from "classnames";
+// import classNames from "classnames";
 
 // Function which creates a 5x8 grid,
 // with our chosen notes on the vertical axis
@@ -9,8 +9,6 @@ function GenerateGrid() {
   const grid = [];
   for (let i = 0; i < 8; i++) {
     let column = [
-      { note: "A", isActive: false },
-      { note: "G", isActive: false },
       { note: "E", isActive: false },
       { note: "D", isActive: false },
       { note: "C", isActive: false },
@@ -115,9 +113,9 @@ export default function Sequence() {
       <div className="note-wrapper">
         {grid.map((column, columnIndex) => (
           <div
-            className={classNames("note-column", {
-              "note-column--active": currentColumn === columnIndex,
-            })}
+            className={`note-column ${
+              currentColumn === columnIndex ? " note-column--active" : ""
+            }`}
             key={columnIndex + "column"}
           >
             {column.map(({ note, isActive }, noteIndex) => (
