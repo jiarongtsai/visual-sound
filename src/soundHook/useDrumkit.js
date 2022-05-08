@@ -23,6 +23,31 @@ import crashCymbal_04 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_05.wav";
 import crashCymbal_05 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_02.wav";
 import crashCymbal_06 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Crash_07.wav";
 
+//   useEffect(() => {
+//     sampler.current = new Tone.Sampler(
+//       { A1 },
+//       {
+//         onload: () => {
+//           setLoaded(true);
+//         },
+//       }
+//     ).toDestination();
+
+//     const unSchedule = Tone.Transport.scheduleRepeat(function (time) {
+//       drumKitPlayer && drumKitPlayer.player("a").start(time + 0);
+//       //   drumKitPlayer && drumKitPlayer.player("f").start(time + "8n");
+//       //   drumKitPlayer && drumKitPlayer.player("h").start(time + "4n");
+//       //   drumKitPlayer && drumKitPlayer.player("k").start(time + "1m");
+//       //   drumKitPlayer && drumKitPlayer.player("i").start();
+//       //   drumKitPlayer && drumKitPlayer.player("l").start(4.5);
+//       //   drumKitPlayer && drumKitPlayer.player("r").start(5.5);
+//       //   sampler.current.triggerAttackRelease("A1", 3);
+//       console.log(time, drumKitPlayer);
+//     }, "2m");
+
+//     return unSchedule;
+//   }, [drumKitPlayer]);
+
 export default () => {
   const [drumKitPlayer, setDrumKitPlayer] = useState(null);
   useEffect(() => {

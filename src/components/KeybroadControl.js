@@ -1,6 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, IconButton } from "@chakra-ui/react";
-import { BsPauseFill, BsPlayFill } from "react-icons/bs";
+import {
+  Box,
+  IconButton,
+  Flex,
+  FormControl,
+  FormLabel,
+  Code,
+  Button,
+} from "@chakra-ui/react";
+import {
+  BsChevronDoubleLeft,
+  BsPauseFill,
+  BsPlayFill,
+  BsFillRecordFill,
+} from "react-icons/bs";
+import {
+  AsyncCreatableSelect,
+  AsyncSelect,
+  CreatableSelect,
+  Select,
+} from "chakra-react-select";
 import * as Tone from "tone";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
@@ -8,36 +27,75 @@ import useDrumkit from "../soundHook/useDrumkit";
 import useKeybroadBindings from "../components/customHook/useKeybroadBindings";
 import "../pages/Create.css";
 import A1 from "../asset/DrumKit_3_Acoustic/CyCdh_K3Tom_05.wav";
+import BPMController from "./squencer/BPMController";
+
+function renderNotes() {
+  const arr = ["C", "D", "E", "F", "G", "A", "B"];
+  const num = [1, 2, 3, 4, 5, 6, 7, 8];
+  let n;
+  const result = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < num.length; j++) {
+      n = arr[i] + num[j];
+      result.push({ value: n, label: n });
+
+      if (["A", "C", "D", "F", "G"].includes(arr[i])) {
+        n = arr[i] + "#" + num[j];
+        result.push({ value: n, label: n });
+      }
+    }
+  }
+  return result;
+}
+
+const soundOptions = renderNotes();
+
+const soundInitialState = [
+  { name: "1_1" },
+  { name: "1_2" },
+  { name: "1_3" },
+  { name: "1_4" },
+  { name: "2_1" },
+  { name: "2_2" },
+  { name: "2_3" },
+  { name: "2_4" },
+  { name: "3_1" },
+  { name: "3_2" },
+  { name: "3_3" },
+  { name: "3_4" },
+  { name: "4_1" },
+  { name: "4_2" },
+  { name: "4_3" },
+  { name: "4_4" },
+];
 
 export default function KeybroadControl({ playing, setPlaying }) {
+  const [BPMValue, setBPMValue] = useState(120);
   const [input, setInput] = useState("");
   const [layout, setLayout] = useState("default");
   const [octave, setOctave] = useState([4, 5]);
   const [track, setTrack] = useState(true);
+  const [recording, setRecording] = useState(false);
+  const [soundRecorder, setSoundRecorder] = useState(soundInitialState);
+  let recordNotes = [];
+  const [melody, setMelody] = useState([]);
   const keyboard = useRef();
 
   const drumKitPlayer = useDrumkit();
+
+  useEffect(() => {
+    Tone.Transport.bpm.value = BPMValue;
+  }, [BPMValue]);
   //melody
   const synth = new Tone.Synth().toDestination();
-
-  let bgMelody = [
-    "C3",
-    ["E3", "G3", "D3", "C3"],
-    "A3",
-    "B2",
-    "C2",
-    "E3",
-    ["A2", "G2"],
-    "C4",
-  ];
 
   const sequence1 = new Tone.Sequence(
     function (time, note) {
       synth.triggerAttackRelease(note, 0.5);
       console.log(time, note);
     },
-
-    bgMelody,
+    melody,
     "4n"
   );
 
@@ -91,6 +149,17 @@ export default function KeybroadControl({ playing, setPlaying }) {
     setPlaying(false);
   };
 
+  const handelRecord = () => {
+    setRecording(true);
+    console.log("start");
+
+    setTimeout(() => {
+      setRecording(false);
+      console.log("over");
+    }, 5000);
+  };
+
+  console.log(melody);
   function toggleClass(key) {
     const target = document.querySelector(`[data-skbtn='${key}']`);
     target.classList.add("hg-button-active");
@@ -117,10 +186,16 @@ export default function KeybroadControl({ playing, setPlaying }) {
     5: () => {
       toggleClass("5");
       track ? playNote(`C#${octave[1]}`) : drumKitPlayer.player("5").start();
+      if (recording) {
+        setMelody((pre) => [...pre, `C#${octave[1]}`]);
+      }
     },
     6: () => {
       toggleClass("6");
       track ? playNote(`D#${octave[1]}`) : drumKitPlayer.player("6").start();
+      if (recording) {
+        setMelody((pre) => [...pre, `D#${octave[1]}`]);
+      }
     },
     7: () => {
       toggleClass("7");
@@ -367,16 +442,39 @@ export default function KeybroadControl({ playing, setPlaying }) {
     setInput(input);
     keyboard.current.setInput(input);
   };
+
   return (
     <Box w={["100%", "100%", "70%", "70%", "50%"]} mb={8}>
-      <button disabled={!isLoaded} onClick={handleClick}>
+      {/* <Button disabled={!isLoaded} onClick={handleClick}>
         start
-      </button>
-      <Flex></Flex>
+      </Button> */}
+      <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
+      <FormControl p={4}>
+        <FormLabel>
+          Select Colors and Flavours <Code>size="md" (default)</Code>
+        </FormLabel>
+        <Flex alignContent="stretch" justifyContent="space-between" wrap="wrap">
+          {soundRecorder.map((sound, i) => (
+            <Box my={1} minW="90px" key={sound.name}>
+              <Select
+                size="sm"
+                name={sound.name}
+                options={soundOptions}
+                placeholder="Select..."
+              />
+            </Box>
+          ))}
+        </Flex>
+      </FormControl>
       <IconButton
         aria-label="play or pause"
         icon={playing ? <BsPauseFill /> : <BsPlayFill />}
         onClick={play}
+      />
+      <IconButton
+        aria-label="record"
+        icon={<BsFillRecordFill />}
+        onClick={handelRecord}
       />
       <input value={input} onChange={onChangeInput} />
       <Keyboard
