@@ -123,7 +123,7 @@ export default function UploadModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent minHeight="80%">
         <ModalHeader
           borderBottom="1px"
           borderColor={borderColor}
@@ -132,9 +132,9 @@ export default function UploadModal({
           Upload your new work
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody pt={8} pb="0">
           <Flex direction={["column", "row"]} justify="space-between">
-            <Flex direction="column" w={["100%", "60%"]}>
+            <Flex direction="column" w={["100%", "100%", "68%"]}>
               <Text>Preview</Text>
               <PlayerProvider>
                 {({ soundPlayer }) => {
@@ -149,10 +149,10 @@ export default function UploadModal({
                 }}
               </PlayerProvider>
             </Flex>
-            <Flex direction="column" w={["100%", "35%"]}>
+            <Flex direction="column" w={["100%", "100%", "30%"]}>
               <VStack
                 align="flex-start"
-                h="55vh"
+                h="65vh"
                 overflowY={"scroll"}
                 p={1}
                 spacing={4}

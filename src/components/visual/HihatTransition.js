@@ -2,12 +2,14 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 
+const hihatArray = ["45%", "50%", "55%"];
+
 const HihatElement = styled(animated.div)`
   position: absolute;
-  top: 45%;
+  top: ${(props) => props.top};
   left: 37.5%;
   width: 25%;
-  height: 10%;
+  height: 3%;
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   background: ${(props) => props.theme.light};
@@ -22,11 +24,11 @@ export function HihatTransition({ effect, setEffect }) {
     onRest: () => setEffect(false),
   });
 
-  return (
-    <>
-      {hihatTransition((style, item) =>
-        item ? <HihatElement style={style} /> : <></>
-      )}
-    </>
+  return hihatTransition((style, item) =>
+    item
+      ? hihatArray.map((hihat, i) => (
+          <HihatElement key={hihat} style={style} top={hihat} />
+        ))
+      : ""
   );
 }

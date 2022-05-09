@@ -91,7 +91,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
     <>
       <Modal size="6xl" isOpen={true} onClose={onDismiss}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent minHeight="80%">
           <ModalHeader
             pb={0}
             borderBottom="1px"
@@ -106,12 +106,12 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
             />
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody pt={8} pb="0">
             <Flex
               direction={["column", "column", "row"]}
               justify="space-between"
             >
-              <Flex direction="column" w={["100%", "100%", "60%"]}>
+              <Flex direction="column" w={["100%", "100%", "68%"]}>
                 <PlayerProvider>
                   {({ soundPlayer }) => {
                     return (
@@ -125,8 +125,8 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                   }}
                 </PlayerProvider>
               </Flex>
-              <Flex direction="column" w={["100%", "100%", "35%"]}>
-                <VStack align="flex-start" h="43vh" overflowY={"scroll"} p={1}>
+              <Flex direction="column" w={["100%", "100%", "30%"]}>
+                <VStack align="flex-start" h="55vh" overflowY={"scroll"} p={1}>
                   <UserSmall
                     id={work.author_id}
                     name={work.author_name}

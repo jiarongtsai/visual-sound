@@ -121,11 +121,9 @@ const Sequencer = ({ player }) => {
 
   const toggleStep = (line, step) => {
     const sequenceCopy = [...sequence];
-    console.log(sequenceCopy);
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
-    console.log(sequenceCopy);
-    console.log([line, step]);
+
     setSequence(sequenceCopy);
     if (!playing) {
       player.player(lineMap[line]).start();
@@ -371,7 +369,7 @@ const Sequencer = ({ player }) => {
           <HStack spacing={2}>
             <Button
               onClick={onOpen}
-              colorScheme="purple"
+              colorScheme="gray"
               leftIcon={<BsBoxArrowUp />}
               size="sm"
             >
@@ -379,7 +377,7 @@ const Sequencer = ({ player }) => {
             </Button>
             <Button
               onClick={getImage}
-              colorScheme="purple"
+              colorScheme="gray"
               leftIcon={<BsFillCameraFill />}
               size="sm"
             >
@@ -400,9 +398,9 @@ const Sequencer = ({ player }) => {
         <ThemeProvider theme={colorTheme[themeColor]}>
           <Wrapper ref={ref}>
             <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
+            <KickTransition effect={kickEffect} setEffect={setKickEffect} />
             <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
             <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
-            <KickTransition effect={kickEffect} setEffect={setKickEffect} />
             <OpenhatTransition
               effect={openhatEffect}
               setEffect={setOpenhatEffect}

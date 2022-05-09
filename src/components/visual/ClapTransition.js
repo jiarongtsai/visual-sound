@@ -2,11 +2,11 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 
-const ClapElement = styled(animated.div)`
+const ClapElementRandom = styled(animated.div)`
   position: absolute;
   top: 0;
-  left: ${(props) => props.theme.randomPercentage};
-  width: 3px;
+  left: ${(props) => props.position};
+  width: 4px;
   height: 100%;
   background: ${(props) => props.theme.special};
 `;
@@ -24,7 +24,7 @@ export function ClapTransition({ effect, setEffect }) {
     enter: {
       x: 0,
       y: 0,
-      opacity: 0.8,
+      opacity: 0.7,
       transform: "rotate(3.5turn)",
       freq: "0.1, 0.0",
     },
@@ -41,7 +41,14 @@ export function ClapTransition({ effect, setEffect }) {
   return (
     <>
       {clapTransition((style, item) =>
-        item ? <ClapElement style={style} /> : <></>
+        item ? (
+          <ClapElementRandom
+            style={style}
+            position={Math.ceil(Math.random() * 100) + "%"}
+          />
+        ) : (
+          ""
+        )
       )}
     </>
   );
