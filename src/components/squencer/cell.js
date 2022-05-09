@@ -22,6 +22,7 @@ const Cell = styled.div.attrs(({ activated, triggered }) => ({
   grid-column: ${(props) => props.column};
   grid-row: ${(props) => props.row};
   margin: 2px;
+  cursor: pointer;
 `;
 
 export default Cell;

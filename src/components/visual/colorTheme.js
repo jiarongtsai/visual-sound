@@ -5,6 +5,7 @@ const colorTheme = {
     medium: "orange",
     dark: "tomato",
     special: "teal",
+    randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
   energe: {
     background: "#219EBC",
@@ -12,6 +13,7 @@ const colorTheme = {
     medium: "#FB8500",
     dark: "#023047",
     special: "#8ECAE6",
+    randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
   macaroon: {
     background: "#D6EADF",
@@ -19,6 +21,7 @@ const colorTheme = {
     medium: "#B8E0D2",
     dark: "#EAC4D5",
     special: "#95B8D1",
+    randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
   neon: {
     background: "#3A0CA3",
@@ -26,13 +29,15 @@ const colorTheme = {
     medium: "#B5179E",
     dark: "#0CECDD",
     special: "#4895EF",
+    randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
   vintage: {
     background: "#125B50",
     light: "#FF8C32",
     medium: "#FAF5E4",
-    dark: "#FF6363",
+    dark: "#FFFFFF",
     special: "##F8B400",
+    randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
 };
 

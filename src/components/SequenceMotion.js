@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useTransition } from "react-spring";
 import styled, { ThemeProvider } from "styled-components";
 import { colorTheme } from "./visual/colorTheme";
-import { animated } from "react-spring";
+import { BoomTransition } from "./visual/BoomTransition";
+import { ClapTransition } from "./visual/ClapTransition";
+import { HihatTransition } from "./visual/HihatTransition";
+import { KickTransition } from "./visual/KickTransition";
+import { OpenhatTransition } from "./visual/OpenhatTransition";
+import { RideTransition } from "./visual/RideTransition";
+import { SnareTransition } from "./visual/SnareTransition";
+import { TomTransition } from "./visual/TomTransition";
+import { TinkTransition } from "./visual/TinkTransition";
 
 const Wrapper = styled.div`
   position: relative;
@@ -15,51 +22,20 @@ const Wrapper = styled.div`
   background: ${(props) => props.theme.background};
 `;
 
-const Square = styled(animated.div)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 25px;
-  height: 25px;
-  background: ${(props) => props.theme.medium};
-  border-radius: 10%;
-`;
-
-const Ellipse = styled(animated.div)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 25px;
-  height: 25px;
-  background: ${(props) => props.theme.dark};
-  border-radius: 50%;
-`;
-
-const Triangle = styled(animated.div)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-bottom: 25px solid ${(props) => props.theme.light};
-`;
-
 //sequence
 const steps = 16;
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
 const initialCellState = { triggered: false, activated: false };
 const initialState = [
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
-  new Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
 ];
 
 export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
@@ -135,67 +111,8 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
     setSequence(sequenceCopy);
   };
 
-  const boomTransition = useTransition(boomEffect, {
-    config: { mass: 1, tension: 10, friction: 4 },
-    from: { opacity: 0, transform: "scale(0)" },
-    enter: { opacity: 0.5, transform: "scale(4)" },
-    leave: { opacity: 0, transform: "scale(0)" },
-  });
-
-  const clapTransition = useTransition(clapEffect, {
-    config: { mass: 1, tension: 500, friction: 18 },
-    from: { x: -1000, y: -100, opacity: 0, transform: "rotate(1turn)" },
-    enter: { x: 0, y: 0, opacity: 0.8, transform: "rotate(3.5turn)" },
-    leave: { x: 1000, y: -100, opacity: 0, transform: "rotate(1turn)" },
-  });
-
-  const hihatTransition = useTransition(hihatEffect, {
-    config: { mass: 1, tension: 500, friction: 18 },
-    from: { x: 0, y: 500, opacity: 0 },
-    enter: { x: -300, y: 0, opacity: 0.8 },
-    leave: { x: 0, y: 500, opacity: 0 },
-  });
-
-  const kickTransition = useTransition(kickEffect, {
-    from: { x: -400, y: 100, opacity: 0, transform: "scale(0)" },
-    enter: { x: -200, y: 100, opacity: 0.8, transform: "scale(2)" },
-    leave: { x: 0, y: 100, opacity: 0, transform: "scale(0)" },
-  });
-
-  const openhatTransition = useTransition(openhatEffect, {
-    config: { mass: 1, tension: 500, friction: 18 },
-    from: { x: -1000, y: -1000, opacity: 0, transform: "scale(2)" },
-    enter: { x: -100, y: -50, opacity: 0.8, transform: "scale(4)" },
-    leave: { x: 1000, y: 1000, opacity: 0, transform: "scale(2)" },
-  });
-
-  const rideTransition = useTransition(rideEffect, {
-    from: { x: -100, y: 1000, opacity: 0, transform: "rotate(1turn)" },
-    enter: { x: 0, y: -100, opacity: 0.8, transform: "rotate(5.5turn)" },
-    leave: { x: 100, y: 1000, opacity: 0, transform: "rotate(9.5turn)" },
-  });
-
-  const snareTransition = useTransition(snareEffect, {
-    from: { x: -1000, y: 300, opacity: 0 },
-    enter: { x: 100, y: 50, opacity: 0.8 },
-    leave: { x: 1000, y: 300, opacity: 0 },
-  });
-
-  const tomTransition = useTransition(tomEffect, {
-    config: { mass: 1, tension: 100, friction: 18 },
-    from: { x: -100, y: 1000, opacity: 0, transform: "scale(0)" },
-    enter: { x: 100, y: 100, opacity: 0.8, transform: "scale(2)" },
-    leave: { x: 300, y: 1000, opacity: 0, transform: "scale(0)" },
-  });
-
-  const tinkTransition = useTransition(tinkEffect, {
-    from: { x: 300, y: 500, opacity: 0 },
-    enter: { x: 200, y: 50, opacity: 0.8 },
-    leave: { x: 300, y: 500, opacity: 0 },
-  });
-
   useEffect(() => {
-    const timeOutspeed = (15 / bpm) * 1000;
+    const timeOutspeed = (60 / bpm) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
@@ -211,33 +128,18 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
     <>
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
         <Wrapper>
-          {boomTransition((style, item) =>
-            item ? <Ellipse style={style} /> : ""
-          )}
-          {clapTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {hihatTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {kickTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {openhatTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
-          {rideTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {snareTransition((style, item) =>
-            item ? <Square style={style} /> : ""
-          )}
-          {tomTransition((style, item) =>
-            item ? <Ellipse style={style} /> : ""
-          )}
-          {tinkTransition((style, item) =>
-            item ? <Triangle style={style} /> : ""
-          )}
+          <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
+          <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
+          <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
+          <KickTransition effect={kickEffect} setEffect={setKickEffect} />
+          <OpenhatTransition
+            effect={openhatEffect}
+            setEffect={setOpenhatEffect}
+          />
+          <RideTransition effect={rideEffect} setEffect={setRideEffect} />
+          <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
+          <TomTransition effect={tomEffect} setEffect={setTomEffect} />
+          <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
         </Wrapper>
       </ThemeProvider>
     </>
