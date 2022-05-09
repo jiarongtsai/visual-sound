@@ -74,7 +74,7 @@ export default function Create() {
         >
           <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
           <Heading size="md">Editing Panel</Heading>
-
+          {/* 
           <HStack spacing={2} my={8}>
             <IconButton
               aria-label="skip to start"
@@ -92,7 +92,7 @@ export default function Create() {
               icon={<BsArrowCounterclockwise />}
               //   onClick={handleCleanUp}
             />
-          </HStack>
+          </HStack> */}
           <KeybroadControl playing={playing} setPlaying={setPlaying} />
           {/* <Sequence /> */}
           {/* <DrumMachine /> */}
