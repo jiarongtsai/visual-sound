@@ -64,6 +64,7 @@ export default function Navbar() {
           w="100%"
           bg={useColorModeValue("white", "gray.900")}
           style={{ zIndex: 99 }}
+          shadow="base"
         >
           <IconButton
             ml={2}

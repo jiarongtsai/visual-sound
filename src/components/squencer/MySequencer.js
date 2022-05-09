@@ -402,13 +402,53 @@ const Sequencer = ({ player }) => {
       />
       <Flex
         direction={"column"}
-        w="80vw"
-        h="80vh"
-        mt={24}
-        mx="auto"
+        position="absolute"
+        w="100vw"
+        h="100vh"
+        top="64px"
+        left="0"
         justify="center"
         align="center"
       >
+        <Flex
+          w="20vw"
+          position="absolute"
+          top="0"
+          right="0"
+          style={{ zIndex: 99 }}
+          m={4}
+          direction="column"
+          alignItems="center"
+        >
+          <HStack spacing={2}>
+            <Button
+              onClick={onOpen}
+              colorScheme="purple"
+              leftIcon={<BsBoxArrowUp />}
+              size="sm"
+            >
+              upload
+            </Button>
+            <Button
+              onClick={getImage}
+              colorScheme="purple"
+              leftIcon={<BsFillCameraFill />}
+              size="sm"
+            >
+              screenshot
+            </Button>
+          </HStack>
+          {image && (
+            <Image
+              w="20vw"
+              src={image}
+              alt={"Screenshot"}
+              mt={2}
+              shadow="base"
+            />
+          )}
+        </Flex>
+
         <ThemeProvider theme={colorTheme[themeColor]}>
           <Wrapper ref={ref}>
             {boomTransition((style, item) =>
@@ -440,33 +480,6 @@ const Sequencer = ({ player }) => {
             )}
           </Wrapper>
         </ThemeProvider>
-        <Flex justify="center" align="center" my={3}>
-          <Button
-            onClick={onOpen}
-            colorScheme="purple"
-            leftIcon={<BsBoxArrowUp />}
-            mr={4}
-          >
-            upload
-          </Button>
-          <Button
-            onClick={getImage}
-            colorScheme="purple"
-            leftIcon={<BsFillCameraFill />}
-          >
-            screenshot
-          </Button>
-        </Flex>
-        {image && (
-          <Image
-            w="20vw"
-            src={image}
-            alt={"Screenshot"}
-            position="absolute"
-            right="10px"
-            bottom="10px"
-          />
-        )}
         <Button
           w="100vw"
           position="fixed"

@@ -121,7 +121,7 @@ export default function UploadModal({
 
   if (!user) return null;
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader
