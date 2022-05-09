@@ -14,6 +14,7 @@ import {
   Text,
   Heading,
   Image,
+  VStack,
 } from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
@@ -33,8 +34,17 @@ import {
 } from "react-icons/bs";
 
 import BPMController from "./BPMController";
-import { getValue } from "@testing-library/user-event/dist/utils";
-
+import {
+  Clap,
+  CloseHat,
+  OpenHat,
+  CrashCymbal,
+  Kick,
+  PedalHat,
+  Snare,
+  Tom,
+  Tom2,
+} from "../visual/icon.js";
 //sequence
 const steps = 16;
 const initialCellState = { triggered: false, activated: false };
@@ -342,7 +352,7 @@ const Sequencer = ({ player }) => {
   });
 
   useEffect(() => {
-    const timeOutspeed = (15 / BPMValue) * 1000;
+    const timeOutspeed = (60 / BPMValue) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
@@ -404,7 +414,7 @@ const Sequencer = ({ player }) => {
         direction={"column"}
         position="absolute"
         w="100vw"
-        h="100vh"
+        h="95vh"
         top="64px"
         left="0"
         justify="center"
@@ -415,7 +425,7 @@ const Sequencer = ({ player }) => {
           position="absolute"
           top="0"
           right="0"
-          style={{ zIndex: 99 }}
+          style={{ zIndex: 9 }}
           m={4}
           direction="column"
           alignItems="center"
@@ -510,7 +520,7 @@ const Sequencer = ({ player }) => {
             px={10}
             rounded="md"
             shadow="base"
-            onMouseLeave={onControllerClose}
+            // onMouseLeave={onControllerClose}
             bg={useColorModeValue("white", "gray.600")}
             d="flex"
             flexDirection="column"
@@ -518,7 +528,7 @@ const Sequencer = ({ player }) => {
             alignItems="center"
           >
             <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
-            <Heading size="md">Editing Panel</Heading>
+            {/* <Heading size="md">Editing Panel</Heading> */}
             <Flex
               direction={["column", "column", "row"]}
               justifyContent={[
@@ -527,7 +537,8 @@ const Sequencer = ({ player }) => {
                 "space-around",
               ]}
               w="70%"
-              my={4}
+              mt={4}
+              mb={8}
               mx="auto"
             >
               <Box mx="auto">
@@ -550,33 +561,112 @@ const Sequencer = ({ player }) => {
                   })}
                 </HStack>
               </Box>
+              <Box mx="auto">
+                {/* <Text>Player</Text> */}
+                <HStack spacing={2} mt={4}>
+                  <IconButton
+                    aria-label="skip to start"
+                    icon={<BsSkipStartFill />}
+                    onClick={handleBacktoHead}
+                  />
+                  <IconButton
+                    aria-label="play or pause"
+                    icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                    onClick={() => setPlaying(!playing)}
+                  />
 
+                  <IconButton
+                    aria-label="clean up"
+                    icon={<BsArrowCounterclockwise />}
+                    onClick={handleCleanUp}
+                  />
+                </HStack>
+              </Box>
               <Box my={[8, 8, 0]} mx="auto">
                 <Text>BPM</Text>
                 <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
               </Box>
             </Flex>
-            <HStack spacing={2}>
-              <IconButton
-                aria-label="skip to start"
-                icon={<BsSkipStartFill />}
-                onClick={handleBacktoHead}
-              />
-              <IconButton
-                aria-label="play or pause"
-                icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                onClick={() => setPlaying(!playing)}
-              />
 
-              <IconButton
-                aria-label="clean up"
-                icon={<BsArrowCounterclockwise />}
-                onClick={handleCleanUp}
-              />
-            </HStack>
             {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
               <IconButton aria-label="stop" icon={<BsFillStopFill />} /> */}
-            <Grid sequence={sequence} toggleStep={toggleStep} />
+            <Flex
+              w="80%"
+              mt={4}
+              mb={8}
+              mx="auto"
+              alignItems="flex-end"
+              position="relative"
+            >
+              <VStack position="absolute" top="6%" left="11%" spacing={1}>
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<Kick />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<Clap />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<PedalHat />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<Kick />}
+                />
+                <IconButton
+                  p="10px"
+                  aria-label="play or pause"
+                  icon={<Tom />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<CrashCymbal />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<Snare />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<Tom2 />}
+                />
+                <IconButton
+                  p="6px"
+                  aria-label="play or pause"
+                  icon={<CrashCymbal />}
+                />
+              </VStack>
+              <VStack w="100%" mx="auto">
+                <HStack w="70%" justifyContent="space-around">
+                  <Text fontWeight="600">1</Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600">2</Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600">3</Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600">4</Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                </HStack>
+                <Grid sequence={sequence} toggleStep={toggleStep} />
+              </VStack>
+            </Flex>
           </Box>
         </Slide>
       </Flex>

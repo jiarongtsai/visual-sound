@@ -9,7 +9,7 @@ const getBackground = (activated, triggered) => {
     case !activated && triggered:
       return "#eef";
     default:
-      return "#f9f9f9";
+      return "#ccc";
   }
 };
 
