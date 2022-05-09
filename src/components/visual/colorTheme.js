@@ -1,10 +1,10 @@
 const colorTheme = {
   main: {
     background: "white",
-    light: "green",
+    light: "yellow",
     medium: "orange",
-    dark: "tomato",
-    special: "teal",
+    dark: "red",
+    special: "tail",
     randomPercentage: Math.ceil(Math.random() * 100) + "%",
   },
   energe: {

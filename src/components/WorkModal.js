@@ -89,7 +89,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
 
   return (
     <>
-      <Modal size="4xl" isOpen={true} onClose={onDismiss}>
+      <Modal size="6xl" isOpen={true} onClose={onDismiss}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
