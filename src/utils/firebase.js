@@ -485,6 +485,11 @@ const Firebase = {
     return latestComments;
   },
   async addNewWork(workRef, data) {
+    const userInfo = await this.getProfile(data.author_id);
+    const count = (userInfo.works_count || 0) + 1;
+    await updateDoc(doc(this.db(), "users", data.author_id), {
+      works_count: count,
+    });
     await setDoc(workRef, {
       ...data,
       created_time: Timestamp.fromDate(new Date(Date.now())),

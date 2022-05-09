@@ -3,16 +3,16 @@ import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 
 const rideVariant = [
-  { positionX: "10%" },
-  { positionX: "20%" },
-  { positionX: "40%" },
-  { positionX: "75%" },
+  { positionx: "10%" },
+  { positionx: "20%" },
+  { positionx: "40%" },
+  { positionx: "75%" },
 ];
 
 const RideElement = styled(animated.div)`
   position: absolute;
-  top: ${(props) => props.positionX};
-  left: ${(props) => props.positionY};
+  top: ${(props) => props.positionx};
+  left: ${(props) => props.positiony};
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   border-bottom: 50px solid ${(props) => props.theme.medium};
@@ -34,10 +34,10 @@ export function RideTransition({ effect, setEffect }) {
         item
           ? rideVariant.map((ride) => (
               <RideElement
-                key={ride.positionX}
+                key={ride.positionx}
                 style={style}
-                positionX={ride.positionX}
-                positionY={Math.ceil(Math.random() * 100) + "%"}
+                positionx={ride.positionx}
+                positiony={Math.ceil(Math.random() * 100) + "%"}
               />
             ))
           : ""

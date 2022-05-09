@@ -32,7 +32,11 @@ export default function EditProfileModal({
   setProfile,
 }) {
   const user = useContext(AuthContext);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    user_bio: profile.user_bio,
+    user_name: profile.user_name,
+    user_thumbnail: profile.user_thumbnail,
+  });
   const [preview, setPreview] = useState("");
   useEffect(() => {
     if (!preview) setPreview(profile.user_thumbnail);

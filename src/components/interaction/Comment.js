@@ -59,7 +59,7 @@ export default function Comment({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={sendCommentKeyDown}
         />
-        <InputRightElement>
+        <InputRightElement style={{ zIndex: "0" }}>
           <IconButton
             variant="ghost"
             rounded="full"

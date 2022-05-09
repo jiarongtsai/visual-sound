@@ -144,7 +144,7 @@ export default function ProfileLayout() {
             <GridItem colSpan={1} d="flex">
               {/* need real data */}
               <Text fontWeight="600" mr={2}>
-                {profile.works_count?.length || 0}
+                {profile.works_count || 0}
               </Text>
               <Text>Works</Text>
             </GridItem>

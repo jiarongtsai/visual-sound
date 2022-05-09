@@ -159,6 +159,7 @@ export default function User() {
             gap={3}
             alignItems="center"
             justifyItems={["center", "center", "flex-start"]}
+            mb={12}
           >
             <GridItem colSpan={[3, 3, 2]}>
               <Heading fontSize="xl">{profile.user_name}</Heading>
@@ -185,7 +186,7 @@ export default function User() {
             <GridItem colSpan={1} d="flex">
               {/* need real data */}
               <Text fontWeight="600" mr={2}>
-                {0}
+                {profile.works_count || 0}
               </Text>
               <Text>Works</Text>
             </GridItem>
