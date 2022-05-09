@@ -278,6 +278,7 @@ const Sequencer = ({ player }) => {
     from: { opacity: 0, transform: "scale(0)" },
     enter: { opacity: 0.8, transform: "scale(4)" },
     leave: { opacity: 0, transform: "scale(0)" },
+    onRest: () => setBoomEffect(false),
   });
 
   const clapTransition = useTransition(clapEffect, {
@@ -285,6 +286,7 @@ const Sequencer = ({ player }) => {
     from: { x: -1000, y: -100, opacity: 0, transform: "rotate(1turn)" },
     enter: { x: 0, y: 0, opacity: 0.8, transform: "rotate(3.5turn)" },
     leave: { x: 1000, y: -100, opacity: 0, transform: "rotate(1turn)" },
+    onRest: () => setClapEffect(false),
   });
 
   const hihatTransition = useTransition(hihatEffect, {
@@ -292,12 +294,14 @@ const Sequencer = ({ player }) => {
     from: { x: 0, y: 500, opacity: 0 },
     enter: { x: -300, y: 0, opacity: 0.8 },
     leave: { x: 0, y: 500, opacity: 0 },
+    onRest: () => setHihatEffect(false),
   });
 
   const kickTransition = useTransition(kickEffect, {
     from: { x: -400, y: 100, opacity: 0, transform: "scale(0)" },
     enter: { x: -200, y: 100, opacity: 0.8, transform: "scale(2)" },
     leave: { x: 0, y: 100, opacity: 0, transform: "scale(0)" },
+    onRest: () => setKickEffect(false),
   });
 
   const openhatTransition = useTransition(openhatEffect, {
@@ -305,18 +309,21 @@ const Sequencer = ({ player }) => {
     from: { x: -1000, y: -1000, opacity: 0, transform: "scale(2)" },
     enter: { x: -100, y: -50, opacity: 0.8, transform: "scale(4)" },
     leave: { x: 1000, y: 1000, opacity: 0, transform: "scale(2)" },
+    onRest: () => setOpenhatEffect(false),
   });
 
   const rideTransition = useTransition(rideEffect, {
     from: { x: -100, y: 1000, opacity: 0, transform: "rotate(1turn)" },
     enter: { x: 0, y: -100, opacity: 0.8, transform: "rotate(5.5turn)" },
     leave: { x: 100, y: 1000, opacity: 0, transform: "rotate(9.5turn)" },
+    onRest: () => setRideEffect(false),
   });
 
   const snareTransition = useTransition(snareEffect, {
     from: { x: -1000, y: 300, opacity: 0 },
     enter: { x: 100, y: 50, opacity: 0.8 },
     leave: { x: 1000, y: 300, opacity: 0 },
+    onRest: () => setSnareEffect(false),
   });
 
   const tomTransition = useTransition(tomEffect, {
@@ -324,12 +331,14 @@ const Sequencer = ({ player }) => {
     from: { x: -100, y: 1000, opacity: 0, transform: "scale(0)" },
     enter: { x: 100, y: 100, opacity: 0.8, transform: "scale(2)" },
     leave: { x: 300, y: 1000, opacity: 0, transform: "scale(0)" },
+    onRest: () => setTomEffect(false),
   });
 
   const tinkTransition = useTransition(tinkEffect, {
     from: { x: 300, y: 500, opacity: 0 },
     enter: { x: 200, y: 50, opacity: 0.8 },
     leave: { x: 300, y: 500, opacity: 0 },
+    onRest: () => setTinkEffect(false),
   });
 
   useEffect(() => {
