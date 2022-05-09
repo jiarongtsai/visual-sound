@@ -17,6 +17,7 @@ import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
 import Comment from "./interaction/Comment";
 import { UserWithTime } from "./UserVariants";
+import SequenceMotion from "../components/SequenceMotion";
 
 export default function CommunityCard({
   i,
@@ -27,6 +28,7 @@ export default function CommunityCard({
 }) {
   const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
+  const [previewVisual, setPreviewVisual] = useState(false);
 
   return (
     <Center my={4}>
@@ -60,11 +62,27 @@ export default function CommunityCard({
             to={`/work/${work.id}`}
             state={{ backgroundLocation: location }}
           >
+            <Box
+              h={[400, 550]}
+              w={[400, 550]}
+              position="absolute"
+              pointerEvents="none"
+              d={previewVisual ? "block" : "none"}
+              overflow="hidden"
+            >
+              <SequenceMotion
+                sheetmusic={work.sheetmusic}
+                bpm={work.bpm}
+                themeColor={work.themeColor}
+              />
+            </Box>
             <Image
               h={[400, 550]}
               w={[400, 550]}
               src={work.image_url}
               objectFit="cover"
+              onMouseEnter={() => setPreviewVisual(true)}
+              onMouseLeave={() => setPreviewVisual(false)}
             />
           </Link>
         </Box>

@@ -16,8 +16,8 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
-  width: 300px;
+  height: 100%;
+  width: 100%;
   margin: 0 auto;
   background: ${(props) => props.theme.background};
 `;
