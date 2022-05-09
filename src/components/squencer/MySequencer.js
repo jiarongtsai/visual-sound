@@ -370,6 +370,10 @@ const Sequencer = ({ player }) => {
             <Button
               onClick={onOpen}
               colorScheme="gray"
+              bg={useColorModeValue("gray.100", "gray.600")}
+              _hover={{
+                bg: useColorModeValue("gray.200", "gray.700"),
+              }}
               leftIcon={<BsBoxArrowUp />}
               size="sm"
             >
@@ -378,6 +382,10 @@ const Sequencer = ({ player }) => {
             <Button
               onClick={getImage}
               colorScheme="gray"
+              bg={useColorModeValue("gray.100", "gray.600")}
+              _hover={{
+                bg: useColorModeValue("gray.200", "gray.700"),
+              }}
               leftIcon={<BsFillCameraFill />}
               size="sm"
             >
@@ -399,6 +407,7 @@ const Sequencer = ({ player }) => {
           <Wrapper ref={ref}>
             <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
             <KickTransition effect={kickEffect} setEffect={setKickEffect} />
+            <TomTransition effect={tomEffect} setEffect={setTomEffect} />
             <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
             <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
             <OpenhatTransition
@@ -407,7 +416,6 @@ const Sequencer = ({ player }) => {
             />
             <RideTransition effect={rideEffect} setEffect={setRideEffect} />
             <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
-            <TomTransition effect={tomEffect} setEffect={setTomEffect} />
             <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
           </Wrapper>
         </ThemeProvider>
@@ -420,6 +428,8 @@ const Sequencer = ({ player }) => {
           onClick={onControllerOpen}
           onMouseEnter={onControllerOpen}
           style={{ zIndex: 199 }}
+          color="gray.800"
+          opacity="0.5"
         >
           Show Edit Panel
         </Button>
@@ -441,7 +451,7 @@ const Sequencer = ({ player }) => {
             px={10}
             rounded="md"
             shadow="base"
-            // onMouseLeave={onControllerClose}
+            onMouseLeave={onControllerClose}
             bg={useColorModeValue("white", "gray.600")}
             d="flex"
             flexDirection="column"
@@ -524,46 +534,55 @@ const Sequencer = ({ player }) => {
                   p="6px"
                   aria-label="play or pause"
                   icon={<Kick />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<Clap />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<PedalHat />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<Kick />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="10px"
                   aria-label="play or pause"
                   icon={<Tom />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<CrashCymbal />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<Snare />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<Tom2 />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
                 <IconButton
                   p="6px"
                   aria-label="play or pause"
                   icon={<CrashCymbal />}
+                  bg={useColorModeValue("gray.100", "gray.400")}
                 />
               </VStack>
               <VStack w="100%" mx="auto">

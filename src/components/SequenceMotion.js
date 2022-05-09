@@ -129,16 +129,16 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
         <Wrapper>
           <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
+          <KickTransition effect={kickEffect} setEffect={setKickEffect} />
+          <TomTransition effect={tomEffect} setEffect={setTomEffect} />
           <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
           <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
-          <KickTransition effect={kickEffect} setEffect={setKickEffect} />
           <OpenhatTransition
             effect={openhatEffect}
             setEffect={setOpenhatEffect}
           />
           <RideTransition effect={rideEffect} setEffect={setRideEffect} />
           <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
-          <TomTransition effect={tomEffect} setEffect={setTomEffect} />
           <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
         </Wrapper>
       </ThemeProvider>
