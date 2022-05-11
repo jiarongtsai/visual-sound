@@ -14,7 +14,7 @@ export default function BPMController({ BPMValue, setBPMValue }) {
 
   return (
     <Slider
-      w="180px"
+      w={["50vw", "30vw", "20vw", "12vw"]}
       id="slider"
       defaultValue={120}
       min={40}
@@ -25,13 +25,13 @@ export default function BPMController({ BPMValue, setBPMValue }) {
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
-      <SliderMark value={60} mt="2" ml="-2.5" fontSize="sm">
+      <SliderMark value={60} mt="4" ml="-2.5" fontSize="sm">
         60
       </SliderMark>
-      <SliderMark value={120} mt="2" ml="-2.5" fontSize="sm">
+      <SliderMark value={120} mt="4" ml="-2.5" fontSize="sm">
         120
       </SliderMark>
-      <SliderMark value={180} mt="2" ml="-2.5" fontSize="sm">
+      <SliderMark value={180} mt="4" ml="-2.5" fontSize="sm">
         180
       </SliderMark>
       <SliderTrack>

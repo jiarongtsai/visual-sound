@@ -112,7 +112,7 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
   };
 
   useEffect(() => {
-    const timeOutspeed = (60 / bpm) * 1000;
+    const timeOutspeed = (15 / bpm) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);

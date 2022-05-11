@@ -162,7 +162,14 @@ export default function UploadModal({
                   <Text color="gray.500" fontSize="sm">
                     Screenshot
                   </Text>
-                  {image && <Image src={image} w="100%" />}
+                  {image && (
+                    <Image
+                      src={image}
+                      w="100%"
+                      maxH="300px"
+                      objectFit="cover"
+                    />
+                  )}
                 </Box>
                 <Box w="100%">
                   <Text color="gray.500" fontSize="sm">

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, createRef } from "react";
 import {
+  Grid as GridContainer,
+  GridItem,
   Flex,
   Button,
   useDisclosure,
@@ -14,13 +16,14 @@ import {
   Heading,
   Image,
   VStack,
+  Square,
 } from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
-import Grid from "./grid";
 import UploadModal from "../UploadModal";
 import { Wrapper } from "../visual/VisualElement";
 import { colorTheme } from "../visual/colorTheme";
+import Grid from "./grid";
 import {
   BsPlayFill,
   BsPauseFill,
@@ -44,15 +47,15 @@ import { TinkTransition } from "../visual/TinkTransition";
 
 import BPMController from "./BPMController";
 import {
-  Clap,
-  CloseHat,
-  OpenHat,
-  CrashCymbal,
-  Kick,
-  PedalHat,
-  Snare,
-  Tom,
-  Tom2,
+  IconClap,
+  IconHiHat,
+  IconOpenHat,
+  IconRideCymbal,
+  IconKick,
+  IconBoom,
+  IconSnare,
+  IconTom,
+  IconTink,
 } from "../visual/icon.js";
 
 //sequence
@@ -288,7 +291,7 @@ const Sequencer = ({ player }) => {
   });
 
   useEffect(() => {
-    const timeOutspeed = (60 / BPMValue) * 1000;
+    const timeOutspeed = (15 / BPMValue) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
@@ -357,7 +360,7 @@ const Sequencer = ({ player }) => {
         align="center"
       >
         <Flex
-          w="20vw"
+          // w="20vw"
           position="absolute"
           top="0"
           right="0"
@@ -394,7 +397,7 @@ const Sequencer = ({ player }) => {
           </HStack>
           {image && (
             <Image
-              w="20vw"
+              w="200px"
               src={image}
               alt={"Screenshot"}
               mt={2}
@@ -451,7 +454,7 @@ const Sequencer = ({ player }) => {
             px={10}
             rounded="md"
             shadow="base"
-            onMouseLeave={onControllerClose}
+            // onMouseLeave={onControllerClose}
             bg={useColorModeValue("white", "gray.600")}
             d="flex"
             flexDirection="column"
@@ -459,22 +462,24 @@ const Sequencer = ({ player }) => {
             alignItems="center"
           >
             <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
-            {/* <Heading size="md">Editing Panel</Heading> */}
+            <Heading size="md">Editing Panel</Heading>
+
             <Flex
-              direction={["column", "column", "row"]}
+              direction={["column", "column", "row", "row"]}
               justifyContent={[
                 "space-between",
                 "space-between",
                 "space-around",
               ]}
+              flexWrap="wrap"
               w="70%"
               mt={4}
               mb={8}
               mx="auto"
             >
-              <Box mx="auto">
+              <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "5%"]}>
                 <Text>Color Theme</Text>
-                <HStack spacing={2}>
+                <HStack spacing={2} mt={2}>
                   {Object.entries(colorTheme).map(([key, value], i) => {
                     return (
                       <Button
@@ -492,9 +497,14 @@ const Sequencer = ({ player }) => {
                   })}
                 </HStack>
               </Box>
-              <Box mx="auto">
+              <Box
+                mx="auto"
+                order={["9", "9", "9", "0"]}
+                flexBasis={["60%", "60%", "60%", "30%"]}
+                mt={[0, 0, 6, 0]}
+              >
                 {/* <Text>Player</Text> */}
-                <HStack spacing={2} mt={4}>
+                <HStack spacing={2} mt={4} justifyContent="center">
                   <IconButton
                     aria-label="skip to start"
                     icon={<BsSkipStartFill />}
@@ -513,99 +523,70 @@ const Sequencer = ({ player }) => {
                   />
                 </HStack>
               </Box>
-              <Box my={[8, 8, 0]} mx="auto">
-                <Text>BPM</Text>
+              <Box
+                my={[8, 8, 0]}
+                mx="auto"
+                flexBasis="30%"
+                pl={[0, 0, "10%", "5%", "10%"]}
+              >
+                <Text>Bpm</Text>
                 <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
               </Box>
             </Flex>
-
             {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
               <IconButton aria-label="stop" icon={<BsFillStopFill />} /> */}
             <Flex
-              w="80%"
-              mt={4}
-              mb={8}
-              mx="auto"
+              direction="column"
               alignItems="flex-end"
-              position="relative"
+              w={["100%", "90%", "65%"]}
+              mx="auto"
+              minW="300px"
+              overflowX="scroll"
             >
-              <VStack position="absolute" top="6%" left="11%" spacing={1}>
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<Kick />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<Clap />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<PedalHat />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<Kick />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="10px"
-                  aria-label="play or pause"
-                  icon={<Tom />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<CrashCymbal />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<Snare />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<Tom2 />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-                <IconButton
-                  p="6px"
-                  aria-label="play or pause"
-                  icon={<CrashCymbal />}
-                  bg={useColorModeValue("gray.100", "gray.400")}
-                />
-              </VStack>
-              <VStack w="100%" mx="auto">
-                <HStack w="70%" justifyContent="space-around">
-                  <Text fontWeight="600">1</Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600">2</Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600">3</Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600">4</Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                </HStack>
+              <HStack
+                style={{ width: `calc(100% - 44px)` }}
+                justifyContent="space-around"
+                alignItems="baseline"
+              >
+                <Text fontWeight="600" fontSize="lg">
+                  1
+                </Text>
+                <Text fontSize="sm">2</Text>
+                <Text fontSize="sm">3</Text>
+                <Text fontSize="sm">4</Text>
+                <Text fontWeight="600" fontSize="lg">
+                  2
+                </Text>
+                <Text fontSize="sm">2</Text>
+                <Text fontSize="sm">3</Text>
+                <Text fontSize="sm">4</Text>
+                <Text fontWeight="600" fontSize="lg">
+                  3
+                </Text>
+                <Text fontSize="sm">2</Text>
+                <Text fontSize="sm">3</Text>
+                <Text fontSize="sm">4</Text>
+                <Text fontWeight="600" fontSize="lg">
+                  4
+                </Text>
+                <Text fontSize="sm">2</Text>
+                <Text fontSize="sm">3</Text>
+                <Text fontSize="sm">4</Text>
+              </HStack>
+              <HStack w="100%">
+                <VStack spacing={1}>
+                  <IconBoom />
+                  <IconClap />
+                  <IconHiHat />
+                  <IconKick />
+                  <IconOpenHat />
+                  <IconRideCymbal />
+                  <IconSnare />
+                  <IconTom />
+                  <IconTink />
+                </VStack>
                 <Grid sequence={sequence} toggleStep={toggleStep} />
-              </VStack>
+              </HStack>
             </Flex>
           </Box>
         </Slide>
