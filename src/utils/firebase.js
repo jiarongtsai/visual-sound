@@ -79,7 +79,10 @@ const Firebase = {
     );
     const user = userCredential.user;
 
-    await updateProfile(user, { displayName: username });
+    await updateProfile(user, {
+      displayName: username,
+      photoURL: `https://joeschmoe.io/api/v1/${username}`,
+    });
 
     const currentUser = await this.addNewUser(user);
     return currentUser;

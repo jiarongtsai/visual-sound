@@ -86,7 +86,7 @@ export default function Message() {
       name: "Send Message to...",
       userList: newChatList,
       invokeFunction: openNewChat,
-      buttonText: "Send Message",
+      buttonText: "Message",
     });
     onOpen();
   }

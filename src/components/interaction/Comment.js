@@ -51,7 +51,7 @@ export default function Comment({
 
   return (
     <>
-      <InputGroup m={1} mt={2} w="98%" size="md" position="relative">
+      <InputGroup m={1} mt={2} w="98%" size="sm" position="relative">
         <Input
           rounded="full"
           placeholder="Leave a comment....."

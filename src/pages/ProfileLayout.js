@@ -71,7 +71,7 @@ export default function ProfileLayout() {
       name: "Follower List",
       userList: FollowerListWithInfo,
       invokeFunction: chat,
-      buttonText: "Send Message",
+      buttonText: "Message",
     });
     onOpen();
   }
@@ -111,7 +111,9 @@ export default function ProfileLayout() {
           <Box flexBasis="30%">
             <Image
               src={profile.user_thumbnail}
-              w="50%"
+              w="150px"
+              h="150px"
+              objectFit="cover"
               rounded="full"
               mx="auto"
             />
@@ -142,8 +144,7 @@ export default function ProfileLayout() {
               </Button>
             </GridItem>
             <GridItem colSpan={1} d="flex">
-              {/* need real data */}
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.works_count || 0}
               </Text>
               <Text>Works</Text>
@@ -154,7 +155,7 @@ export default function ProfileLayout() {
               onClick={openFollowers}
               cursor="pointer"
             >
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.followers?.length || 0}
               </Text>
               <Text>Followers</Text>
@@ -165,7 +166,7 @@ export default function ProfileLayout() {
               onClick={openFollowing}
               cursor="pointer"
             >
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.following?.length || 0}
               </Text>
               <Text>Following</Text>

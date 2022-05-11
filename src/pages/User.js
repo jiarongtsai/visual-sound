@@ -1,8 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { Thumbnail } from "../components/element/Thumbnail";
-import styled from "styled-components";
 import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
 import {
@@ -144,7 +142,9 @@ export default function User() {
           <Box flexBasis="30%">
             <Image
               src={profile.user_thumbnail}
-              w="50%"
+              w="150px"
+              h="150px"
+              objectFit="cover"
               rounded="full"
               mx="auto"
             />
@@ -168,6 +168,7 @@ export default function User() {
                   Message
                 </Button>
                 <Button
+                  w="92px"
                   variant={"outline"}
                   _hover={{
                     textDecoration: "none",
@@ -183,7 +184,7 @@ export default function User() {
             </GridItem>
             <GridItem colSpan={1} d="flex">
               {/* need real data */}
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.works_count || 0}
               </Text>
               <Text>Works</Text>
@@ -194,7 +195,7 @@ export default function User() {
               onClick={openFollowers}
               cursor="pointer"
             >
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.followers?.length || 0}
               </Text>
               <Text>Followers</Text>
@@ -205,7 +206,7 @@ export default function User() {
               onClick={openFollowing}
               cursor="pointer"
             >
-              <Text fontWeight="600" mr={2}>
+              <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.following?.length || 0}
               </Text>
               <Text>Following</Text>

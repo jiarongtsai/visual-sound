@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import React, { useState, useEffect, useContext } from "react";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
-import { ModalBackground } from "./element/ModalBackground";
-// import { ModalContent } from "./element/ModalContent";
 
 import {
   Modal,
@@ -86,7 +82,9 @@ export default function EditProfileModal({
             <Flex direction="column" align="center" position="relative">
               <Image
                 src={preview}
-                w="40%"
+                w="180px"
+                h="180px"
+                objectFit="cover"
                 rounded="full"
                 border="1px"
                 borderColor={useColorModeValue("gray.200", "gray.500")}
@@ -119,7 +117,7 @@ export default function EditProfileModal({
                 />
               </label>
             </Flex>
-            <Flex direction="column" justify="center">
+            <Flex direction="column" justify="center" mt={2}>
               <label>Username</label>
               <Input
                 name="user_name"
@@ -128,7 +126,7 @@ export default function EditProfileModal({
                 onChange={(e) => handleInputs(e)}
               />
             </Flex>
-            <Flex direction="column" justify="center">
+            <Flex direction="column" justify="center" mt={2}>
               <label>Bio</label>
               <Textarea
                 name="user_bio"
