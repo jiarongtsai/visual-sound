@@ -28,8 +28,6 @@ export default function User() {
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);
   const navigate = useNavigate();
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [currentFollowers, setCurrentFollowers] = useState(0);
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
   const pagingRef = useRef(null);

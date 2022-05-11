@@ -39,7 +39,7 @@ const IconRideCymbal = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <RideCymbal width="28px" aria-label="clap" opacity="0.7" />
+      <RideCymbal width="27px" aria-label="clap" opacity="0.7" />
     </Square>
   );
 };
@@ -63,7 +63,7 @@ const IconKick = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <Kick width="26px" aria-label="clap" opacity="0.7" />
+      <Kick width="25px" aria-label="clap" opacity="0.7" />
     </Square>
   );
 };
@@ -85,7 +85,7 @@ const IconTom = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <Tom width="32px" aria-label="clap" opacity="0.8" />
+      <Tom width="31px" aria-label="clap" opacity="0.8" />
     </Square>
   );
 };
@@ -96,7 +96,7 @@ const IconOpenHat = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <OpenHat width="26px" aria-label="clap" opacity="0.7" />
+      <OpenHat width="25px" aria-label="clap" opacity="0.7" />
     </Square>
   );
 };
@@ -107,7 +107,7 @@ const IconHiHat = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <HiHat width="26px" aria-label="clap" opacity="0.7" />
+      <HiHat width="25px" aria-label="clap" opacity="0.7" />
     </Square>
   );
 };
@@ -118,7 +118,7 @@ const IconBoom = () => {
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
     >
-      <Boom width="26px" aria-label="clap" opacity="0.7" />
+      <Boom width="25px" aria-label="clap" opacity="0.7" />
     </Square>
   );
 };

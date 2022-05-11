@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Flex,
   Box,
@@ -15,11 +15,12 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-
 import { useNavigate, useLocation } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
 
 export default function Login() {
+  const user = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [isRegister, switchPanel] = useState(false);
   const navigate = useNavigate();
@@ -30,6 +31,10 @@ export default function Login() {
   });
 
   const from = location.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    if (user) navigate(from, { replace: true });
+  }, [user]);
 
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -62,20 +67,19 @@ export default function Login() {
   }
 
   return (
-    <Stack spacing={8} mt={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+    <Stack spacing={8} mt={16} mx={"auto"} maxW={"lg"} py={12} px={6}>
       <Stack align={"center"}>
-        <Heading fontSize={"4xl"} textAlign={"center"}>
-          {isRegister ? "Register" : "Sign In"}
+        <Heading fontSize={"3xl"} textAlign={"center"}>
+          {isRegister ? "Register" : "Sign in"}
         </Heading>
-        <Text fontSize={"lg"} color={"gray.600"}>
-          to enjoy the world of music
-        </Text>
+        <Text color={"gray.600"}>Enjoy the world of music</Text>
       </Stack>
       <Box
         rounded={"lg"}
         bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"lg"}
-        p={8}
+        boxShadow={"base"}
+        px={12}
+        py={8}
       >
         <Stack spacing={4}>
           {isRegister ? (
