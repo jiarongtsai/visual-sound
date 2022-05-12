@@ -15,36 +15,31 @@ import {
   useDisclosure,
   useColorMode,
   useColorModeValue,
+  Divider,
+  Slide,
   Stack,
+  Fade,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAuth, signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth/Auth";
 
-const Links = ["community", "explore", "message"];
-
-const NavLink = ({ children }) => (
-  <Box
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-  >
-    <Link to={children}>{children}</Link>
-  </Box>
-);
+const Links = [
+  { value: "community", label: "Community" },
+  { value: "explore", label: "Explore" },
+  { value: "message", label: "Message" },
+];
 
 export default function Navbar() {
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure();
+  // const location = useLocation();
+  // console.log(location.pathname);
 
   function UserSignOut() {
     const auth = getAuth();
@@ -52,7 +47,8 @@ export default function Navbar() {
       navigate("/");
     });
   }
-
+  const bgHover = useColorModeValue("gray.300", "gray.600");
+  const bgDefault = useColorModeValue("gray.100", "gray.700");
   return (
     <Box>
       <Box bg={useColorModeValue("gray.50", "gray.900")} position={"relative"}>
@@ -68,12 +64,12 @@ export default function Navbar() {
         >
           <IconButton
             ml={2}
-            mr={14}
+            mr={[0, 0, 14]}
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
             display={{ md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
+            onClick={onToggle}
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
@@ -90,69 +86,152 @@ export default function Navbar() {
                 </Heading>
               </Button>
             </Box>
-            <HStack
-              as={"nav"}
-              spacing={4}
-              display={{ base: "none", md: "flex" }}
-            >
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+            <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
+              {Links.map((link, i) => (
+                <Box
+                  key={i}
+                  px={3}
+                  py={2}
+                  rounded={"md"}
+                  _hover={{
+                    textDecoration: "none",
+                    bg: bgDefault,
+                  }}
+                >
+                  <Link to={link.value}>{link.label}</Link>
+                </Box>
               ))}
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
-            <Button variant={"ghost"} onClick={toggleColorMode}>
+            <Button variant={"ghost"} onClick={toggleColorMode} mr={[4, 4, 0]}>
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
-
-            {user ? (
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                  mx={4}
+            <Box display={{ base: "none", md: "flex" }}>
+              {user ? (
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                    mx={4}
+                  >
+                    <Avatar size={"sm"} src={user.photoURL} />
+                  </MenuButton>
+                  <MenuList>
+                    <Link to="/profile">
+                      <MenuItem>Profile</MenuItem>
+                    </Link>
+                    <Link to="/profile/collection">
+                      <MenuItem>My Collection</MenuItem>
+                    </Link>
+                    <MenuDivider />
+                    <MenuItem onClick={UserSignOut}>Log out</MenuItem>
+                  </MenuList>
+                </Menu>
+              ) : (
+                <Button
+                  as={"a"}
+                  fontSize={"sm"}
+                  fontWeight={400}
+                  variant={"ghost"}
+                  href={"/login"}
                 >
-                  <Avatar size={"sm"} src={user.photoURL} />
-                </MenuButton>
-                <MenuList>
-                  <Link to="/profile">
-                    <MenuItem>Profile</MenuItem>
-                  </Link>
-                  <Link to="/profile/collection">
-                    <MenuItem>My Collection</MenuItem>
-                  </Link>
-                  <MenuDivider />
-                  <MenuItem onClick={UserSignOut}>Log out</MenuItem>
-                </MenuList>
-              </Menu>
-            ) : (
-              <Button
-                as={"a"}
-                fontSize={"sm"}
-                fontWeight={400}
-                variant={"ghost"}
-                href={"/login"}
-              >
-                Sign In
-              </Button>
-            )}
+                  Sign In
+                </Button>
+              )}
+            </Box>
           </Flex>
         </Flex>
 
-        {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={6}>
-              <br />
-              <br />
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+        <Fade in={isOpen}>
+          <Box
+            w="100vw"
+            h="100vh"
+            bg="blackAlpha.600"
+            position="fixed"
+            top="0"
+            left="0"
+            display={{ md: "none" }}
+            style={{ zIndex: 50 }}
+          />
+        </Fade>
+        <Slide
+          direction="left"
+          in={isOpen}
+          style={{ zIndex: 97 }}
+          onClick={onToggle}
+        >
+          <Box
+            mt="64px"
+            bg={useColorModeValue("gray.200", "gray.700")}
+            shadow="base"
+            w="45vw"
+            h="100vh"
+            display={{ md: "none" }}
+          >
+            <Stack as={"nav"}>
+              {Links.map((link, i) => (
+                <Box
+                  key={i}
+                  py={4}
+                  px={6}
+                  _hover={{
+                    bg: bgHover,
+                  }}
+                >
+                  <Link to={link.value}>{link.label}</Link>
+                </Box>
               ))}
+              <Divider />
+              {user ? (
+                <>
+                  <Box
+                    py={4}
+                    px={6}
+                    _hover={{
+                      bg: bgHover,
+                    }}
+                  >
+                    <Link to="/profile">Profile</Link>
+                  </Box>
+                  <Box
+                    py={4}
+                    px={6}
+                    _hover={{
+                      bg: bgHover,
+                    }}
+                  >
+                    <Link to="/profile/collection"> My Collection</Link>
+                  </Box>
+                  <Divider />
+                  <Button
+                    justifyContent="flex-start"
+                    pl={6}
+                    fontWeight={600}
+                    variant={"ghost"}
+                    onClick={UserSignOut}
+                  >
+                    Log out
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  as={"a"}
+                  justifyContent="flex-start"
+                  pl={6}
+                  fontWeight={600}
+                  variant={"ghost"}
+                  href={"/login"}
+                >
+                  Sign In
+                </Button>
+              )}
             </Stack>
           </Box>
-        ) : null}
+        </Slide>
       </Box>
 
       <Box minH="100vh" p={4} bg={useColorModeValue("gray.100", "gray.800")}>
