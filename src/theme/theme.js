@@ -8,7 +8,7 @@ const Input = {
 };
 
 const colors = {
-  component: {
+  components: {
     Input,
   },
   // brand: {

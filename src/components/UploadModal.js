@@ -189,19 +189,21 @@ export default function UploadModal({
                     Add Tags to your work <br />
                     (separate tags by comma, Space or Enter)
                   </Text>
-                  <HStack spacing={2} my={4}>
+                  <Flex spacing={2} my={4} wrap="wrap">
                     {tags.map((tag) => (
                       <Tag
                         size="md"
                         key={tag}
                         borderRadius="full"
                         colorScheme="purple"
+                        my={1}
+                        mr={1}
                       >
                         <TagLabel>{tag}</TagLabel>
                         <TagCloseButton onClick={() => deleteTag(tag)} />
                       </Tag>
                     ))}
-                  </HStack>
+                  </Flex>
                   <Input
                     w="100%"
                     name="tags"
