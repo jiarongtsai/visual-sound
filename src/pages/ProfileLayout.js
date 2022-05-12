@@ -183,7 +183,7 @@ export default function ProfileLayout() {
           </Grid>
         </Flex>
 
-        <Tabs colorScheme="purple" w="90%" mb={10} index={currentFocus}>
+        <Tabs colorScheme="purple" w="90%" mb={8} index={currentFocus}>
           <TabList justifyContent="center">
             <Tab>
               <Link to="">Work</Link>

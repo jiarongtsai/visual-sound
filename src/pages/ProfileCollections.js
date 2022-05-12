@@ -51,7 +51,7 @@ export default function ProfileCollections() {
 
   return (
     <>
-      <Flex my={2} w={["960px"]} overflow="scroll">
+      <Flex w="70%" maxW="960px" overflow="scroll">
         {collectedWorks.map((category) =>
           !category.list.length ? (
             ""
@@ -60,6 +60,7 @@ export default function ProfileCollections() {
               key={category.term}
               collectionName={category.term}
               imageUrl={category.list[0]?.image_url}
+              currentTerm={currentTerm}
               setCurrentTerm={setCurrentTerm}
             />
           )
