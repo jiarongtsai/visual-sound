@@ -51,7 +51,14 @@ export default function Comment({
 
   return (
     <>
-      <InputGroup m={1} mt={2} w="98%" size="sm" position="relative">
+      <InputGroup
+        m={1}
+        mt={2}
+        w="98%"
+        size="sm"
+        position="relative"
+        style={{ zIndex: "0" }}
+      >
         <Input
           rounded="full"
           placeholder="Leave a comment....."
@@ -59,7 +66,7 @@ export default function Comment({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={sendCommentKeyDown}
         />
-        <InputRightElement style={{ zIndex: "0" }}>
+        <InputRightElement>
           <IconButton
             variant="ghost"
             rounded="full"
