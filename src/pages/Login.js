@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Flex,
+  Spinner,
   Box,
   FormControl,
   FormLabel,
@@ -13,14 +13,16 @@ import {
   Text,
   useColorModeValue,
   Link,
+  Flex,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
+import Loader from "../components/Loader";
 
 export default function Login() {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [isRegister, switchPanel] = useState(false);
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ export default function Login() {
     email: "jiarongtsai19@gmail.com",
     password: "web123",
   });
-
+  const bg = useColorModeValue("white", "gray.700");
   const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
@@ -66,6 +68,8 @@ export default function Login() {
     console.log("I forgot");
   }
 
+  if (loading) return <Loader />;
+
   return (
     <Stack spacing={8} mt={16} mx={"auto"} maxW={"lg"} py={12} px={6}>
       <Stack align={"center"}>
@@ -74,13 +78,7 @@ export default function Login() {
         </Heading>
         <Text color={"gray.600"}>Enjoy the world of music</Text>
       </Stack>
-      <Box
-        rounded={"lg"}
-        bg={useColorModeValue("white", "gray.700")}
-        boxShadow={"base"}
-        px={12}
-        py={8}
-      >
+      <Box rounded={"lg"} bg={bg} boxShadow={"base"} px={12} py={8}>
         <Stack spacing={4}>
           {isRegister ? (
             <FormControl id="firstName" isRequired>

@@ -5,7 +5,7 @@ import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { IconButton } from "@chakra-ui/react";
 
 export default function Like({ i, id, likedList, setFollowingWorks }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
 
   async function handleLike() {
     let updatedLikedByList;

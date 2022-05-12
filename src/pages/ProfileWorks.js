@@ -4,7 +4,7 @@ import { Firebase } from "../utils/firebase";
 import Gallery from "../components/Gallery";
 
 export default function ProfileWorks() {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [userWorks, setUserWorks] = useState([]);
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();

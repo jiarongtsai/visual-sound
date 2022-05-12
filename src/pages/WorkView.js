@@ -21,7 +21,7 @@ import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
 
 export default function WorkView({ setFollowingWorks }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const { id } = useParams();
   const [work, setWork] = useState({});
   const [relatedWorks, setRelatedWorks] = useState([]);

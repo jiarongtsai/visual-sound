@@ -17,7 +17,7 @@ import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 
 export default function Collect({ i, id, collectedList, setFollowingWorks }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [collectionMap, setCollectionMap] = useState({});
   const [input, setInput] = useState("");
 

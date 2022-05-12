@@ -27,7 +27,7 @@ export default function EditProfileModal({
   profile,
   setProfile,
 }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [inputs, setInputs] = useState({
     user_bio: profile.user_bio,
     user_name: profile.user_name,

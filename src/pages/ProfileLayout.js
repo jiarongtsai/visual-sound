@@ -25,7 +25,7 @@ export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
   const [action, setAction] = useState({});
   const [currentFocus, setCurrentFocus] = useState(0);
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {

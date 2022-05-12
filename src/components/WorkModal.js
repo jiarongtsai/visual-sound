@@ -24,9 +24,10 @@ import {
   HStack,
   Tag,
 } from "@chakra-ui/react";
+import Loader from "./Loader";
 
 export default function WorkModal({ followingWorks, setFollowingWorks }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [work, setWork] = useState({});
@@ -85,7 +86,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
     navigate(-1);
   }
 
-  if (!work || !user) return null;
+  if (loading || Object.keys(work).length === 0) return <Loader />;
 
   return (
     <>

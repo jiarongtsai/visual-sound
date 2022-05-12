@@ -1,13 +1,14 @@
 import React, { useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import { Container, Box } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { Firebase } from "../utils/firebase";
 
 import { AuthContext } from "../components/auth/Auth";
 import CommunityCard from "../components/CommunityCard";
+import Loader from "../components/Loader";
 
 export default function Community({ followingWorks, setFollowingWorks }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const location = useLocation();
 
   //fixme onsnapshot community!
@@ -17,11 +18,13 @@ export default function Community({ followingWorks, setFollowingWorks }) {
     });
   }, []);
 
+  if (loading && followingWorks.length === 0) return <Loader />;
+
   if (followingWorks.length === 0)
     return (
-      <Box mt={16} mx="auto">
+      <Flex h="100vh" justify="center" align="center">
         Go 'Explore' to follow more users
-      </Box>
+      </Flex>
     );
 
   return (

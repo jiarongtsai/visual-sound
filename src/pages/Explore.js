@@ -15,7 +15,7 @@ import Gallery from "../components/Gallery";
 import { AuthContext } from "../components/auth/Auth";
 
 export default function Explore() {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [exploreworks, setExploreworks] = useState([]);
   const [alltags, setAlltags] = useState([]);
   const [isShown, setIsShown] = useState([]);

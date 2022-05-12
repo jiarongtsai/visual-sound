@@ -19,7 +19,7 @@ export default function MessageList({
   setCurrentChatroom,
   currentChatroom,
 }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
 
   return (
     <>

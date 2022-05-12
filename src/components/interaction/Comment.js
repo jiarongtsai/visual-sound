@@ -15,7 +15,7 @@ export default function Comment({
   followingWorks,
   setFollowingWorks,
 }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [input, setInput] = useState("");
 
   function sendComment() {

@@ -21,7 +21,7 @@ import {
   Fade,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useMatch, useResolvedPath } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAuth, signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -33,13 +33,39 @@ const Links = [
   { value: "message", label: "Message" },
 ];
 
+function CustomLink({ children, to, ...props }) {
+  let resolved = useResolvedPath(to);
+  let match = useMatch({ path: resolved.pathname, end: true });
+  const bgDefault = useColorModeValue("gray.100", "gray.600");
+
+  return (
+    <Box
+      px={[6, 6, 3]}
+      py={[4, 4, 2]}
+      rounded={"md"}
+      fontWeight={[400, 400, 600]}
+      _hover={{
+        bg: bgDefault,
+      }}
+    >
+      <Link
+        style={{
+          borderBottom: match ? "2px solid #805ad5" : "",
+        }}
+        to={to}
+        {...props}
+      >
+        {children}
+      </Link>
+    </Box>
+  );
+}
+
 export default function Navbar() {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onToggle } = useDisclosure();
-  // const location = useLocation();
-  // console.log(location.pathname);
 
   function UserSignOut() {
     const auth = getAuth();
@@ -48,7 +74,7 @@ export default function Navbar() {
     });
   }
   const bgHover = useColorModeValue("gray.300", "gray.600");
-  const bgDefault = useColorModeValue("gray.100", "gray.700");
+
   return (
     <Box>
       <Box bg={useColorModeValue("gray.50", "gray.900")} position={"relative"}>
@@ -88,18 +114,9 @@ export default function Navbar() {
             </Box>
             <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
               {Links.map((link, i) => (
-                <Box
-                  key={i}
-                  px={3}
-                  py={2}
-                  rounded={"md"}
-                  _hover={{
-                    textDecoration: "none",
-                    bg: bgDefault,
-                  }}
-                >
-                  <Link to={link.value}>{link.label}</Link>
-                </Box>
+                <CustomLink key={i} to={link.value}>
+                  {link.label}
+                </CustomLink>
               ))}
             </HStack>
           </HStack>
@@ -174,38 +191,17 @@ export default function Navbar() {
           >
             <Stack as={"nav"}>
               {Links.map((link, i) => (
-                <Box
-                  key={i}
-                  py={4}
-                  px={6}
-                  _hover={{
-                    bg: bgHover,
-                  }}
-                >
-                  <Link to={link.value}>{link.label}</Link>
-                </Box>
+                <CustomLink key={i} to={link.value}>
+                  {link.label}
+                </CustomLink>
               ))}
               <Divider />
               {user ? (
                 <>
-                  <Box
-                    py={4}
-                    px={6}
-                    _hover={{
-                      bg: bgHover,
-                    }}
-                  >
-                    <Link to="/profile">Profile</Link>
-                  </Box>
-                  <Box
-                    py={4}
-                    px={6}
-                    _hover={{
-                      bg: bgHover,
-                    }}
-                  >
-                    <Link to="/profile/collection"> My Collection</Link>
-                  </Box>
+                  <CustomLink to="/profile">Profile</CustomLink>
+                  <CustomLink to="/profile/collection">
+                    My Collection
+                  </CustomLink>
                   <Divider />
                   <Button
                     justifyContent="flex-start"
@@ -234,7 +230,11 @@ export default function Navbar() {
         </Slide>
       </Box>
 
-      <Box minH="100vh" p={4} bg={useColorModeValue("gray.100", "gray.800")}>
+      <Box
+        style={{ minHeight: `calc(100% - 64px)` }}
+        p={4}
+        bg={useColorModeValue("gray.100", "gray.800")}
+      >
         <Outlet />
       </Box>
     </Box>

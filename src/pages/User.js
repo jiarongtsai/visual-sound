@@ -21,7 +21,7 @@ export default function User() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [action, setAction] = useState({});
 
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const { uid } = useParams();
   const [profile, setProfile] = useState({});
   const [userWorks, setUserWorks] = useState([]);

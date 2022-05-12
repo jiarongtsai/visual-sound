@@ -10,7 +10,7 @@ import UsersModal from "../components/UsersModal";
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
   const [currentChatroom, setCurrentChatroom] = useState({});
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const { mid } = useParams();
   const navigate = useNavigate();
   const [action, setAction] = useState({});

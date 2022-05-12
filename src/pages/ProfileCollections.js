@@ -8,7 +8,7 @@ import CollectionWrapper from "../components/CollectionWrapper";
 import { Flex } from "@chakra-ui/react";
 
 export default function ProfileCollections() {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [collectedWorks, setCollectedWorks] = useState([]);
   const [currentTerm, setCurrentTerm] = useState("all");
   const location = useLocation();

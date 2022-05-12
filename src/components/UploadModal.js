@@ -44,7 +44,7 @@ export default function UploadModal({
   isOpen,
   onClose,
 }) {
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
   const [inputs, setInputs] = useState({});
   const [alltags, setAlltags] = useState([]);
   const [tags, setTags] = useState([]);
@@ -52,7 +52,6 @@ export default function UploadModal({
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
 
-  console.log(selectedOption);
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
       setAlltags(data);
@@ -128,8 +127,6 @@ export default function UploadModal({
       });
     });
   }
-
-  console.log(tags);
 
   if (!user) return null;
   return (

@@ -21,7 +21,7 @@ import { UserWithName } from "../UserVariants";
 
 export default function MessageView({ currentChatroom, openNewChatList }) {
   const { mid } = useParams();
-  const user = useContext(AuthContext);
+  const [user, loading, error] = useContext(AuthContext);
 
   const [chats, setChats] = useState([]);
   const [currentChatInfo, SetCurrentCahtInfo] = useState({});
