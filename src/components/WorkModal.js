@@ -141,7 +141,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                       <Tag
                         key={tag}
                         size="md"
-                        borderRadius="full"
+                        borderRadius="md"
                         colorScheme="purple"
                       >
                         {tag}

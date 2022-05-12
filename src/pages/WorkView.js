@@ -123,12 +123,7 @@ export default function WorkView({ setFollowingWorks }) {
             </Text>
             <HStack>
               {work.tags?.map((tag) => (
-                <Tag
-                  size="md"
-                  key={tag}
-                  borderRadius="full"
-                  colorScheme="purple"
-                >
+                <Tag size="md" key={tag} borderRadius="md" colorScheme="purple">
                   {tag}
                 </Tag>
               ))}

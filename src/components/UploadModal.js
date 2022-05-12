@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect, Component } from "react";
-import styled from "styled-components";
+import React, { useState, useContext, useEffect } from "react";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
 import {
@@ -14,17 +13,53 @@ import {
   Flex,
   VStack,
   HStack,
-  Text,
   Textarea,
   Image,
   Input,
   useColorModeValue,
   Box,
+  Container,
+  Text,
+  Link,
+  FormControl,
+  FormLabel,
+  Code,
+  FormErrorMessage,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
+import { Select, CreatableSelect } from "chakra-react-select";
 
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-import { Tag, TagLabel, TagCloseButton } from "@chakra-ui/react";
+
+export const colourOptions = [
+  { value: "blue", label: "Blue", color: "#0052CC" },
+  { value: "purple", label: "Purple", color: "#5243AA" },
+  { value: "red", label: "Red", color: "#FF5630" },
+  { value: "orange", label: "Orange", color: "#FF8B00" },
+  { value: "yellow", label: "Yellow", color: "#FFC400" },
+  { value: "green", label: "Green", color: "#36B37E" },
+];
+
+export const flavourOptions = [
+  { value: "vanilla", label: "Vanilla", rating: "safe" },
+  { value: "chocolate", label: "Chocolate", rating: "good" },
+  { value: "strawberry", label: "Strawberry", rating: "wild" },
+  { value: "salted-caramel", label: "Salted Caramel", rating: "crazy" },
+];
+
+const groupedOptions = [
+  {
+    label: "Colours",
+    options: colourOptions,
+  },
+  {
+    label: "Flavours",
+    options: flavourOptions,
+  },
+];
 
 export default function UploadModal({
   sequence,
@@ -42,7 +77,9 @@ export default function UploadModal({
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const borderColor = useColorModeValue("gray.300", "gray.800");
+  const [selectedOption, setSelectedOption] = useState(null);
 
+  console.log(selectedOption);
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
       setAlltags(data);
@@ -98,7 +135,7 @@ export default function UploadModal({
       description: inputs.description,
       comments_count: 0,
       image_url: imageUrl,
-      tags: tags,
+      tags: selectedOption.map((tag) => tag.value),
       collected_by: [],
       liked_by: [],
       sheetmusic: handleSequenceData(sequence),
@@ -118,6 +155,8 @@ export default function UploadModal({
       });
     });
   }
+
+  console.log(tags);
 
   if (!user) return null;
   return (
@@ -185,39 +224,26 @@ export default function UploadModal({
                   />
                 </Box>
                 <Box w="100%">
-                  <Text color="gray.500" fontSize="sm">
-                    Add Tags to your work <br />
-                    (separate tags by comma, Space or Enter)
-                  </Text>
-                  <Flex spacing={2} my={4} wrap="wrap">
-                    {tags.map((tag) => (
-                      <Tag
-                        size="md"
-                        key={tag}
-                        borderRadius="full"
-                        colorScheme="purple"
-                        my={1}
-                        mr={1}
-                      >
-                        <TagLabel>{tag}</TagLabel>
-                        <TagCloseButton onClick={() => deleteTag(tag)} />
-                      </Tag>
-                    ))}
-                  </Flex>
-                  <Input
-                    w="100%"
-                    name="tags"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={(e) => handleTagInput(e)}
-                    placeholder="Tag your work..."
-                    list="options"
-                  />
-                  <datalist id="options">
-                    {alltags.map((tag, i) => (
-                      <option key={i}>{tag}</option>
-                    ))}
-                  </datalist>
+                  <FormControl>
+                    <Text color="gray.500" fontSize="sm" my={2}>
+                      Add Tags to your work
+                    </Text>
+                    <CreatableSelect
+                      py={1}
+                      isMulti
+                      colorScheme="purple"
+                      name="colors"
+                      options={alltags.map((tag) => ({
+                        value: tag,
+                        label: tag,
+                      }))}
+                      multiValue={{ borderRadius: "full" }}
+                      defaultValue={selectedOption}
+                      onChange={setSelectedOption}
+                      placeholder="Select some colors..."
+                      closeMenuOnSelect={false}
+                    />
+                  </FormControl>
                 </Box>
               </VStack>
             </Flex>
