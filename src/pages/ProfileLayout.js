@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
 import UsersModal from "../components/UsersModal";
@@ -17,17 +17,14 @@ import {
   useColorModeValue,
   Tabs,
   TabList,
-  TabPanels,
   Tab,
-  TabPanel,
-  Center,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
 export default function ProfileLayout() {
   const [profile, setProfile] = useState({});
   const [action, setAction] = useState({});
-
+  const [currentFocus, setCurrentFocus] = useState(0);
   const user = useContext(AuthContext);
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,11 +34,20 @@ export default function ProfileLayout() {
     onClose: onEditClose,
   } = useDisclosure();
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/profile") {
+      setCurrentFocus(0);
+      return;
+    }
+    setCurrentFocus(1);
+  }, [location.pathname]);
+
   useEffect(() => {
     const snapshot = Firebase.onSnapshotProfile(user.uid, (data) =>
       setProfile(data)
     );
-
     return () => {
       snapshot();
     };
@@ -177,7 +183,7 @@ export default function ProfileLayout() {
           </Grid>
         </Flex>
 
-        <Tabs colorScheme="purple" w="90%" mb={10}>
+        <Tabs colorScheme="purple" w="90%" mb={10} index={currentFocus}>
           <TabList justifyContent="center">
             <Tab>
               <Link to="">Work</Link>
@@ -187,7 +193,6 @@ export default function ProfileLayout() {
             </Tab>
           </TabList>
         </Tabs>
-
         <Outlet />
       </Flex>
     </>

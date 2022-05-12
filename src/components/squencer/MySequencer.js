@@ -1,7 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
 import {
-  Grid as GridContainer,
-  GridItem,
   Flex,
   Button,
   useDisclosure,
@@ -16,7 +14,6 @@ import {
   Heading,
   Image,
   VStack,
-  Square,
 } from "@chakra-ui/react";
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
