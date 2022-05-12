@@ -1,41 +1,36 @@
 import { useState, useEffect, useRef, useContext } from "react";
-import { useSearchParams, useLocation, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import {
   Button,
   Center,
   Box,
   Stack,
-  Input,
-  InputGroup,
-  InputLeftElement,
+  FormControl,
+  IconButton,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
+import { Select } from "chakra-react-select";
 import Gallery from "../components/Gallery";
 import { AuthContext } from "../components/auth/Auth";
 
 export default function Explore() {
   const user = useContext(AuthContext);
   const [exploreworks, setExploreworks] = useState([]);
-  const [input, setInput] = useState("");
   const [alltags, setAlltags] = useState([]);
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
   const pagingRef = useRef(null);
   let isFetching = false;
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   let queryTerm = searchParams.get("query");
 
   useEffect(() => {
-    (async () => {
-      const users = await Firebase.getAllUsers([]);
-
-      const tags = await Firebase.getAllTags();
-
-      const usersName = users.map((user) => user.author_name);
-      setAlltags([...usersName, ...tags]);
-    })();
+    Firebase.getAllTags().then((data) => {
+      setAlltags(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -77,36 +72,41 @@ export default function Explore() {
     <Box mt={20}>
       <Stack>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <Center>
-            <InputGroup w={80}>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<Search2Icon color="gray.500" />}
-              />
-              <Input
-                placeholder="Searching..."
+          <Center maxW={["280px", "280px", "300px", "420px"]} mx="auto">
+            <FormControl>
+              <Select
                 name="query"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                list="opts"
+                options={alltags.map((tag) => ({
+                  value: tag,
+                  label: tag,
+                }))}
+                placeholder="Search by tags..."
+                closeMenuOnSelect={true}
+                selectedOptionColor="purple"
+                defaultValue={selectedOption}
+                onChange={setSelectedOption}
               />
-            </InputGroup>
+            </FormControl>
             <Button
+              rightIcon={<Search2Icon />}
               type="submit"
               colorScheme="purple"
               variant="solid"
+              w="100px"
               ml={2}
-              // onClick={(e) => handleSubmit(e)}
+              px={8}
+              d={["none", "none", "inline-flex"]}
             >
               Search
             </Button>
+            <IconButton
+              aria-label="Search database"
+              colorScheme="purple"
+              icon={<Search2Icon />}
+              ml={2}
+              d={["initial", "initial", "none"]}
+            />
           </Center>
-
-          <datalist id="opts">
-            {alltags.map((tag, i) => (
-              <option key={i}>{tag}</option>
-            ))}
-          </datalist>
         </form>
       </Stack>
       <Stack mt={8}>

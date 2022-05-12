@@ -360,7 +360,6 @@ const Sequencer = ({ player }) => {
         align="center"
       >
         <Flex
-          // w="20vw"
           position="absolute"
           top="0"
           right="0"
@@ -454,7 +453,7 @@ const Sequencer = ({ player }) => {
             px={10}
             rounded="md"
             shadow="base"
-            // onMouseLeave={onControllerClose}
+            onMouseLeave={onControllerClose}
             bg={useColorModeValue("white", "gray.600")}
             d="flex"
             flexDirection="column"

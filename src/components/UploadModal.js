@@ -29,37 +29,10 @@ import {
   TagLabel,
   TagCloseButton,
 } from "@chakra-ui/react";
-import { Select, CreatableSelect } from "chakra-react-select";
+import { CreatableSelect } from "chakra-react-select";
 
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
-
-export const colourOptions = [
-  { value: "blue", label: "Blue", color: "#0052CC" },
-  { value: "purple", label: "Purple", color: "#5243AA" },
-  { value: "red", label: "Red", color: "#FF5630" },
-  { value: "orange", label: "Orange", color: "#FF8B00" },
-  { value: "yellow", label: "Yellow", color: "#FFC400" },
-  { value: "green", label: "Green", color: "#36B37E" },
-];
-
-export const flavourOptions = [
-  { value: "vanilla", label: "Vanilla", rating: "safe" },
-  { value: "chocolate", label: "Chocolate", rating: "good" },
-  { value: "strawberry", label: "Strawberry", rating: "wild" },
-  { value: "salted-caramel", label: "Salted Caramel", rating: "crazy" },
-];
-
-const groupedOptions = [
-  {
-    label: "Colours",
-    options: colourOptions,
-  },
-  {
-    label: "Flavours",
-    options: flavourOptions,
-  },
-];
 
 export default function UploadModal({
   sequence,
@@ -232,15 +205,14 @@ export default function UploadModal({
                       py={1}
                       isMulti
                       colorScheme="purple"
-                      name="colors"
+                      name="tags"
                       options={alltags.map((tag) => ({
                         value: tag,
                         label: tag,
                       }))}
-                      multiValue={{ borderRadius: "full" }}
                       defaultValue={selectedOption}
                       onChange={setSelectedOption}
-                      placeholder="Select some colors..."
+                      placeholder="Tag your work..."
                       closeMenuOnSelect={false}
                     />
                   </FormControl>
