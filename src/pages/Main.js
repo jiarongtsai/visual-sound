@@ -29,7 +29,7 @@ export default function Main() {
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(2px) " />
         <ModalContent textAlign="center" mt="30vh">
           <ModalHeader></ModalHeader>
           <ModalBody>

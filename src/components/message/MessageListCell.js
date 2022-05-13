@@ -89,7 +89,7 @@ export default function MessageBox({
           {messageInfo.author_place === messageInfo.latestMessage.sender &&
           !messageInfo.latestMessage.has_read &&
           currentChatroom !== messageInfo.mid ? (
-            <Notification />
+            <Notification right="0px" top="17.5px" activeColor="purple.500" />
           ) : (
             ""
           )}

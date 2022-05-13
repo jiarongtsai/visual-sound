@@ -55,6 +55,8 @@ import { TomTransition } from "../visual/TomTransition";
 import { TinkTransition } from "../visual/TinkTransition";
 import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
 
+import { Notification } from "../message/Notification";
+
 import BPMController from "./BPMController";
 import { IconStack } from "./IconStack";
 //sequence
@@ -159,6 +161,7 @@ const Sequencer = ({ player }) => {
   const [isUploaded, setIsUploaded] = useState(false);
 
   const [playing, setPlaying] = useState(false);
+  const [recording, setRecording] = useState(false);
   const [themeColor, setThemeColor] = useState("main");
 
   const [boomEffect, setBoomEffect] = useState(false);
@@ -202,7 +205,7 @@ const Sequencer = ({ player }) => {
     sequenceCopy[line][step] = { triggered, activated: !activated };
 
     setSequence(sequenceCopy);
-    if (!playing) {
+    if (!recording) {
       player.player(lineMap[line]).start();
       switch (lineMap[line]) {
         case "a":
@@ -283,6 +286,8 @@ const Sequencer = ({ player }) => {
     setSequence(sequenceCopy);
   };
 
+  const keyboardToggleStep = currentStep - 1 < 0 ? 15 : currentStep - 1;
+
   useKeyboardBindings({
     Spacebar: () => setPlaying((v) => !v),
     1: () => setThemeColor("main"),
@@ -291,83 +296,83 @@ const Sequencer = ({ player }) => {
     4: () => setThemeColor("neon"),
     5: () => setThemeColor("vintage"),
     a: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("a").start();
         setBoomEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("a"), currentStep);
+      toggleStep(lineMap.indexOf("a"), keyboardToggleStep);
     },
     s: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("s").start();
         setClapEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("s"), currentStep);
+      toggleStep(lineMap.indexOf("s"), keyboardToggleStep);
     },
     d: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("d").start();
         setHihatEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("d"), currentStep);
+      toggleStep(lineMap.indexOf("d"), keyboardToggleStep);
     },
     f: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("f").start();
         setKickEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("f"), currentStep);
+      toggleStep(lineMap.indexOf("f"), keyboardToggleStep);
     },
     g: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("g").start();
         setOpenhatEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("g"), currentStep);
+      toggleStep(lineMap.indexOf("g"), keyboardToggleStep);
     },
     h: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("h").start();
         setRideEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("h"), currentStep);
+      toggleStep(lineMap.indexOf("h"), keyboardToggleStep);
     },
     j: () => {
-      if (playing) {
+      if (recording) {
         player.player("j").start();
         setSnareEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("j"), currentStep);
+      toggleStep(lineMap.indexOf("j"), keyboardToggleStep);
     },
     k: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("k").start();
         setTomEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("k"), currentStep);
+      toggleStep(lineMap.indexOf("k"), keyboardToggleStep);
     },
     l: () => {
-      if (!playing) {
+      if (!recording) {
         player.player("l").start();
         setTinkEffect((v) => !v);
         return;
       }
-      toggleStep(lineMap.indexOf("l"), currentStep);
+      toggleStep(lineMap.indexOf("l"), keyboardToggleStep);
     },
   });
 
   useEffect(() => {
     const timeOutspeed = (15 / BPMValue) * 1000;
     const timer = setTimeout(() => {
-      if (playing) {
+      if (recording || playing) {
         setCurrentStep((currentStep + 1) % steps);
         nextStep(currentStep);
       }
@@ -375,7 +380,7 @@ const Sequencer = ({ player }) => {
     return () => {
       clearTimeout(timer);
     };
-  }, [currentStep, playing]);
+  }, [currentStep, recording, playing]);
 
   useEffect(() => {
     if (isUploaded) {
@@ -397,7 +402,20 @@ const Sequencer = ({ player }) => {
 
   function handleBacktoHead() {
     setCurrentStep(0);
-    if (!playing) nextStep(0);
+    if (!recording) nextStep(0);
+  }
+
+  function handlePlaying() {
+    setPlaying(!playing);
+    // setCurrentStep(0);
+    // nextStep(0);
+  }
+
+  function handleStopRecording() {
+    if (!recording) return;
+    setRecording(false);
+    setCurrentStep(0);
+    nextStep(0);
   }
 
   function handleCleanUp() {
@@ -410,8 +428,6 @@ const Sequencer = ({ player }) => {
     }
     setSequence(sequenceCopy);
   }
-
-  console.log(!isOpen, !isControllerOpen, !playing);
 
   return (
     <>
@@ -499,12 +515,13 @@ const Sequencer = ({ player }) => {
             <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
           </Wrapper>
         </ThemeProvider>
-        <ChainExample open={!isOpen || !isControllerOpen || !playing}>
+        <ChainExample
+          open={!isOpen || !isControllerOpen || !recording || !playing}
+        >
           <Button
-            h="50px"
+            h="45px"
             w="100vw"
-            // pt="8px"
-            pb="12px"
+            pb="10px"
             position="fixed"
             bottom="-10px"
             left="0"
@@ -591,18 +608,48 @@ const Sequencer = ({ player }) => {
                   <IconButton
                     aria-label="skip to start"
                     icon={<BsSkipStartFill />}
-                    onClick={handleBacktoHead}
+                    onClick={recording ? () => false : handleBacktoHead}
+                    cursor={recording ? "not-allowed" : "pointer"}
                   />
                   <IconButton
                     aria-label="play or pause"
                     icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                    onClick={() => setPlaying(!playing)}
+                    onClick={recording ? () => false : handlePlaying}
+                    cursor={recording ? "not-allowed" : "pointer"}
                   />
 
                   <IconButton
+                    position="relative"
+                    aria-label="play or pause"
+                    icon={
+                      recording ? (
+                        <Notification
+                          right="14px"
+                          top="14px"
+                          activeColor="red.500"
+                        />
+                      ) : (
+                        <BsFillRecordFill />
+                      )
+                    }
+                    onClick={
+                      recording || playing
+                        ? () => false
+                        : () => setRecording(true)
+                    }
+                    cursor={recording || playing ? "not-allowed" : "pointer"}
+                  />
+                  <IconButton
+                    aria-label="stop"
+                    icon={<BsFillStopFill />}
+                    onClick={handleStopRecording}
+                    cursor={recording ? "pointer" : "not-allowed"}
+                  />
+                  <IconButton
                     aria-label="clean up"
                     icon={<BsArrowCounterclockwise />}
-                    onClick={handleCleanUp}
+                    onClick={recording ? () => false : handleCleanUp}
+                    cursor={recording ? "not-allowed" : "pointer"}
                   />
                 </HStack>
               </Box>
@@ -616,8 +663,7 @@ const Sequencer = ({ player }) => {
                 <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
               </Box>
             </Flex>
-            {/* <IconButton aria-label="record" icon={<BsFillRecordFill />} />
-              <IconButton aria-label="stop" icon={<BsFillStopFill />} /> */}
+
             <Flex
               direction="column"
               alignItems="flex-end"

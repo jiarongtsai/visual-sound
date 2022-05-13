@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, keyframes } from "@chakra-ui/react";
-const activeColor = "purple.500";
 const ringScaleMin = 0.11;
 const ringScaleMax = 0.66;
 
@@ -35,7 +34,7 @@ const pulseDot = keyframes`
   }
 	`;
 
-export const Notification = () => {
+export const Notification = ({ right, top, activeColor }) => {
   return (
     <Box
       as="div"
@@ -43,7 +42,8 @@ export const Notification = () => {
       w="12px"
       mb="1.99em"
       position="absolute"
-      right="0"
+      right={right}
+      top={top}
       bgColor={activeColor}
       borderRadius="50%"
       _before={{
