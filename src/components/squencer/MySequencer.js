@@ -432,6 +432,7 @@ const Sequencer = ({ player }) => {
               }}
               leftIcon={<BsFillCameraFill />}
               size="sm"
+              opacity={0.8}
             >
               screenshot
             </Button>
@@ -444,6 +445,7 @@ const Sequencer = ({ player }) => {
               }}
               leftIcon={<BsBoxArrowUp />}
               size="sm"
+              opacity={0.8}
             >
               upload
             </Button>
