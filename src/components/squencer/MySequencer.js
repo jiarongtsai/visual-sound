@@ -13,8 +13,18 @@ import {
   Text,
   Heading,
   Image,
-  VStack,
 } from "@chakra-ui/react";
+
+import {
+  Pagination,
+  usePagination,
+  PaginationNext,
+  PaginationPage,
+  PaginationPrevious,
+  PaginationContainer,
+  PaginationPageGroup,
+} from "@ajna/pagination";
+
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
 import UploadModal from "../UploadModal";
@@ -41,20 +51,10 @@ import { RideTransition } from "../visual/RideTransition";
 import { SnareTransition } from "../visual/SnareTransition";
 import { TomTransition } from "../visual/TomTransition";
 import { TinkTransition } from "../visual/TinkTransition";
+import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
 
 import BPMController from "./BPMController";
-import {
-  IconClap,
-  IconHiHat,
-  IconOpenHat,
-  IconRideCymbal,
-  IconKick,
-  IconBoom,
-  IconSnare,
-  IconTom,
-  IconTink,
-} from "../visual/icon.js";
-
+import { IconStack } from "./IconStack";
 //sequence
 const steps = 16;
 const initialCellState = { triggered: false, activated: false };
@@ -69,9 +69,63 @@ const initialState = [
   Array(16).fill(initialCellState),
   Array(16).fill(initialCellState),
   Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
+  Array(16).fill(initialCellState),
 ];
 
+const Minimal = ({ currentPage, setCurrentPage, pagesCount, pages }) => {
+  return (
+    <Pagination
+      my={4}
+      pagesCount={pagesCount}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+    >
+      <PaginationContainer>
+        <PaginationPrevious>
+          <CgChevronLeft />
+        </PaginationPrevious>
+        <PaginationPageGroup mx={2}>
+          {pages.map((page) => (
+            <PaginationPage
+              w={10}
+              key={`pagination_page_${page}`}
+              page={page}
+              _current={{
+                bg: "purple.300",
+              }}
+            />
+          ))}
+        </PaginationPageGroup>
+        <PaginationNext>
+          <CgChevronRight />
+        </PaginationNext>
+      </PaginationContainer>
+    </Pagination>
+  );
+};
+
 const Sequencer = ({ player }) => {
+  const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
+    pagesCount: 3,
+    initialState: { currentPage: 1 },
+  });
   const {
     isOpen: isControllerOpen,
     onOpen: onControllerOpen,
@@ -120,6 +174,9 @@ const Sequencer = ({ player }) => {
   };
 
   const toggleStep = (line, step) => {
+    if (currentPage === 2) line = line + 9;
+    if (currentPage === 3) line = line + 18;
+
     const sequenceCopy = [...sequence];
     const { triggered, activated } = sequenceCopy[line][step];
     sequenceCopy[line][step] = { triggered, activated: !activated };
@@ -207,7 +264,7 @@ const Sequencer = ({ player }) => {
   };
 
   useKeyboardBindings({
-    " ": () => setPlaying((v) => !v),
+    Spacebar: () => setPlaying((v) => !v),
     1: () => setThemeColor("main"),
     2: () => setThemeColor("energe"),
     3: () => setThemeColor("macaroon"),
@@ -350,7 +407,7 @@ const Sequencer = ({ player }) => {
         direction={"column"}
         position="absolute"
         w="100vw"
-        h="95vh"
+        style={{ height: `calc(100vh - 64px)` }}
         top="64px"
         left="0"
         justify="center"
@@ -367,18 +424,6 @@ const Sequencer = ({ player }) => {
         >
           <HStack spacing={2}>
             <Button
-              onClick={onOpen}
-              colorScheme="gray"
-              bg={useColorModeValue("gray.100", "gray.600")}
-              _hover={{
-                bg: useColorModeValue("gray.200", "gray.700"),
-              }}
-              leftIcon={<BsBoxArrowUp />}
-              size="sm"
-            >
-              upload
-            </Button>
-            <Button
               onClick={getImage}
               colorScheme="gray"
               bg={useColorModeValue("gray.100", "gray.600")}
@@ -389,6 +434,18 @@ const Sequencer = ({ player }) => {
               size="sm"
             >
               screenshot
+            </Button>
+            <Button
+              onClick={onOpen}
+              colorScheme="gray"
+              bg={useColorModeValue("gray.100", "gray.600")}
+              _hover={{
+                bg: useColorModeValue("gray.200", "gray.700"),
+              }}
+              leftIcon={<BsBoxArrowUp />}
+              size="sm"
+            >
+              upload
             </Button>
           </HStack>
           {image && (
@@ -427,7 +484,8 @@ const Sequencer = ({ player }) => {
           onClick={onControllerOpen}
           onMouseEnter={onControllerOpen}
           style={{ zIndex: 199 }}
-          color="gray.800"
+          color={"gray.800"}
+          bg={"gray.100"}
           opacity="0.5"
         >
           Show Edit Panel
@@ -570,19 +628,21 @@ const Sequencer = ({ player }) => {
                 <Text fontSize="sm">4</Text>
               </HStack>
               <HStack w="100%">
-                <VStack spacing={1}>
-                  <IconBoom />
-                  <IconClap />
-                  <IconHiHat />
-                  <IconKick />
-                  <IconOpenHat />
-                  <IconRideCymbal />
-                  <IconSnare />
-                  <IconTom />
-                  <IconTink />
-                </VStack>
-                <Grid sequence={sequence} toggleStep={toggleStep} />
+                <IconStack currentPage={currentPage} />
+                <Grid
+                  sequence={sequence}
+                  toggleStep={toggleStep}
+                  currentPage={currentPage}
+                />
               </HStack>
+            </Flex>
+            <Flex p={4}>
+              <Minimal
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                pagesCount={pagesCount}
+                pages={pages}
+              />
             </Flex>
           </Box>
         </Slide>
