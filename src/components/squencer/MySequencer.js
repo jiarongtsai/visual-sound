@@ -25,6 +25,8 @@ import {
   PaginationPageGroup,
 } from "@ajna/pagination";
 
+import { useSpring, animated } from "react-spring";
+
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
 import UploadModal from "../UploadModal";
@@ -120,6 +122,24 @@ const Minimal = ({ currentPage, setCurrentPage, pagesCount, pages }) => {
     </Pagination>
   );
 };
+
+const ChainWrapper = styled(animated.div)`
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+`;
+
+function ChainExample({ children, open }) {
+  const styles = useSpring({
+    config: { mass: 1, friction: 50 },
+    loop: open,
+    to: [{ y: -8 }, { y: 0 }],
+    from: { y: 0 },
+  });
+  // ...
+  return <ChainWrapper style={styles}>{children}</ChainWrapper>;
+}
 
 const Sequencer = ({ player }) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
@@ -391,6 +411,8 @@ const Sequencer = ({ player }) => {
     setSequence(sequenceCopy);
   }
 
+  console.log(!isOpen, !isControllerOpen, !playing);
+
   return (
     <>
       <UploadModal
@@ -477,21 +499,26 @@ const Sequencer = ({ player }) => {
             <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
           </Wrapper>
         </ThemeProvider>
-        <Button
-          w="100vw"
-          position="fixed"
-          bottom="0"
-          left="0"
-          variant="ghost"
-          onClick={onControllerOpen}
-          onMouseEnter={onControllerOpen}
-          style={{ zIndex: 199 }}
-          color={"gray.800"}
-          bg={"gray.100"}
-          opacity="0.5"
-        >
-          Show Edit Panel
-        </Button>
+        <ChainExample open={!isOpen || !isControllerOpen || !playing}>
+          <Button
+            h="50px"
+            w="100vw"
+            // pt="8px"
+            pb="12px"
+            position="fixed"
+            bottom="-10px"
+            left="0"
+            variant="ghost"
+            onClick={onControllerOpen}
+            onMouseEnter={onControllerOpen}
+            style={{ zIndex: 199 }}
+            color={"gray.800"}
+            bg={"gray.100"}
+            opacity="0.7"
+          >
+            Start Recording
+          </Button>
+        </ChainExample>
 
         <Fade in={isControllerOpen}>
           <Box
