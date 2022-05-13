@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { IconButton, Image } from "@chakra-ui/react";
+import { BsPlayCircle, BsPauseCircle } from "react-icons/bs";
 import { ThemeProvider } from "styled-components";
 import { Wrapper } from "./visual/VisualElement";
 import { colorTheme } from "./visual/colorTheme";
@@ -30,6 +32,7 @@ const initialState = [
 
 export default function SequencePlayer({
   player,
+  imageUrl,
   sheetmusic,
   bpm,
   themeColor,
@@ -47,6 +50,7 @@ export default function SequencePlayer({
 
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isHover, setIsHover] = useState(true);
 
   function transformStoredSequence(storedData) {
     if (!storedData) return;
@@ -124,7 +128,32 @@ export default function SequencePlayer({
   return (
     <>
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
-        <Wrapper>
+        <Wrapper
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+          onClick={() => setPlaying(!playing)}
+        >
+          {isHover ? (
+            <IconButton
+              zIndex="999"
+              transform={"scale(3)"}
+              position="absolute"
+              size="lg"
+              w="100%"
+              h="100%"
+              colorScheme="blackAlpha"
+              aria-label="play or pause"
+              icon={playing ? <BsPauseCircle /> : <BsPlayCircle />}
+              onClick={() => setPlaying(!playing)}
+            />
+          ) : (
+            ""
+          )}
+          {!playing && imageUrl ? (
+            <Image w="100%" maxH="612px" objectFit="cover" src={imageUrl} />
+          ) : (
+            ""
+          )}
           <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
           <KickTransition effect={kickEffect} setEffect={setKickEffect} />
           <TomTransition effect={tomEffect} setEffect={setTomEffect} />
@@ -139,9 +168,6 @@ export default function SequencePlayer({
           <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
         </Wrapper>
       </ThemeProvider>
-      <button onClick={() => setPlaying(!playing)}>{`${
-        playing ? "pause" : "play"
-      }`}</button>
     </>
   );
 }

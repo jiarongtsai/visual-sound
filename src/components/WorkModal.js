@@ -118,6 +118,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                     return (
                       <SequencePlayer
                         player={soundPlayer}
+                        imageUrl={work.image_url}
                         sheetmusic={work.sheetmusic}
                         bpm={work.bpm}
                         themeColor={work.themeColor}

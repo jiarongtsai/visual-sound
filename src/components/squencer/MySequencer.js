@@ -134,7 +134,7 @@ const ChainWrapper = styled(animated.div)`
 
 function ChainExample({ children, open }) {
   const styles = useSpring({
-    config: { mass: 1, friction: 50 },
+    config: { mass: 1, friction: 50, delay: 3000 },
     loop: open,
     to: [{ y: -8 }, { y: 0 }],
     from: { y: 0 },
@@ -529,8 +529,10 @@ const Sequencer = ({ player }) => {
             onClick={onControllerOpen}
             onMouseEnter={onControllerOpen}
             style={{ zIndex: 199 }}
-            color={"gray.800"}
-            bg={"gray.100"}
+            bg={useColorModeValue("gray.100", "gray.600")}
+            _hover={{
+              bg: useColorModeValue("gray.200", "gray.700"),
+            }}
             opacity="0.7"
           >
             Start Recording

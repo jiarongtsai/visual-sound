@@ -101,6 +101,7 @@ export default function WorkView({ setFollowingWorks }) {
             {({ soundPlayer }) => {
               return (
                 <SequencePlayer
+                  imageUrl={work.image_url}
                   player={soundPlayer}
                   sheetmusic={work.sheetmusic}
                   bpm={work.bpm}

@@ -12,22 +12,12 @@ import {
   Button,
   Flex,
   VStack,
-  HStack,
   Textarea,
   Image,
-  Input,
   useColorModeValue,
   Box,
-  Container,
   Text,
-  Link,
   FormControl,
-  FormLabel,
-  Code,
-  FormErrorMessage,
-  Tag,
-  TagLabel,
-  TagCloseButton,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
 
@@ -48,7 +38,6 @@ export default function UploadModal({
   const [inputs, setInputs] = useState({});
   const [alltags, setAlltags] = useState([]);
   const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -60,25 +49,6 @@ export default function UploadModal({
 
   function handleInputs(e) {
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
-  }
-
-  function handleTagInput(e) {
-    const { key } = e;
-    const trimmedInput = tagInput.trim();
-
-    if (
-      (key === "," || key === "Enter" || key === " ") &&
-      trimmedInput.length &&
-      !tags.includes(trimmedInput)
-    ) {
-      e.preventDefault();
-      setTags([...tags, trimmedInput]);
-      setTagInput("");
-    }
-  }
-
-  function deleteTag(value) {
-    setTags(tags.filter((tag) => tag != value));
   }
 
   function handleSequenceData(currentSequence) {
@@ -119,8 +89,6 @@ export default function UploadModal({
       Firebase.updateTags(tags).then(() => {
         setInputs({});
         setTags([]);
-        setTagInput("");
-
         setIsUploaded(true);
         setImage(null);
         onClose();
