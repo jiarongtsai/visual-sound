@@ -132,9 +132,10 @@ const ChainWrapper = styled(animated.div)`
   left: 0;
 `;
 
-function ChainExample({ children, open }) {
+function ChainSpring({ children, open }) {
+  console.log(open);
   const styles = useSpring({
-    config: { mass: 1, friction: 50, delay: 3000 },
+    config: { friction: 50, delay: 3000 },
     loop: open,
     to: [{ y: -8 }, { y: 0 }],
     from: { y: 0 },
@@ -143,7 +144,23 @@ function ChainExample({ children, open }) {
   return <ChainWrapper style={styles}>{children}</ChainWrapper>;
 }
 
-const Sequencer = ({ player }) => {
+function ScaleSpring({ children, move }) {
+  const styles = useSpring({
+    config: { friction: 30, delay: 5000 },
+    loop: move,
+    to: [{ scale: 1.05 }, { scale: 1 }],
+    from: { scale: 1 },
+  });
+  // ...
+  return <animated.div style={styles}>{children}</animated.div>;
+}
+const Sequencer = ({
+  player,
+  playing,
+  setPlaying,
+  recording,
+  setRecording,
+}) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
     initialState: { currentPage: 1 },
@@ -159,9 +176,7 @@ const Sequencer = ({ player }) => {
   const getImage = () => takeScreenshot(ref.current);
 
   const [isUploaded, setIsUploaded] = useState(false);
-
-  const [playing, setPlaying] = useState(false);
-  const [recording, setRecording] = useState(false);
+  const [screenshotSpring, setScreenshotSpring] = useState(false);
   const [themeColor, setThemeColor] = useState("main");
 
   const [boomEffect, setBoomEffect] = useState(false);
@@ -400,6 +415,18 @@ const Sequencer = ({ player }) => {
     }
   }, [isUploaded]);
 
+  useEffect(() => {
+    if (!recording && !image) {
+      setScreenshotSpring(true);
+    }
+  }, [recording]);
+
+  useEffect(() => {
+    if (!isControllerOpen) {
+      setScreenshotSpring(false);
+    }
+  }, []);
+
   function handleBacktoHead() {
     setCurrentStep(0);
     if (!recording) nextStep(0);
@@ -407,8 +434,6 @@ const Sequencer = ({ player }) => {
 
   function handlePlaying() {
     setPlaying(!playing);
-    // setCurrentStep(0);
-    // nextStep(0);
   }
 
   function handleStopRecording() {
@@ -461,39 +486,43 @@ const Sequencer = ({ player }) => {
           alignItems="center"
         >
           <HStack spacing={2}>
-            <Button
-              onClick={getImage}
-              colorScheme="gray"
-              bg={useColorModeValue("gray.100", "gray.600")}
-              _hover={{
-                bg: useColorModeValue("gray.200", "gray.700"),
-              }}
-              leftIcon={<BsFillCameraFill />}
-              size="sm"
-              opacity={0.8}
-            >
-              screenshot
-            </Button>
-            <Button
-              onClick={onOpen}
-              colorScheme="gray"
-              bg={useColorModeValue("gray.100", "gray.600")}
-              _hover={{
-                bg: useColorModeValue("gray.200", "gray.700"),
-              }}
-              leftIcon={<BsBoxArrowUp />}
-              size="sm"
-              opacity={0.8}
-            >
-              upload
-            </Button>
+            <ScaleSpring move={screenshotSpring && !image}>
+              <Button
+                onClick={getImage}
+                colorScheme="gray"
+                bg={useColorModeValue("gray.100", "gray.600")}
+                _hover={{
+                  bg: useColorModeValue("gray.200", "gray.700"),
+                }}
+                leftIcon={<BsFillCameraFill />}
+                size="sm"
+                opacity={0.8}
+              >
+                screenshot
+              </Button>
+            </ScaleSpring>
+            <ScaleSpring move={Boolean(image)}>
+              <Button
+                onClick={onOpen}
+                colorScheme="gray"
+                bg={useColorModeValue("gray.100", "gray.600")}
+                _hover={{
+                  bg: useColorModeValue("gray.200", "gray.700"),
+                }}
+                leftIcon={<BsBoxArrowUp />}
+                size="sm"
+                opacity={0.8}
+              >
+                upload
+              </Button>
+            </ScaleSpring>
           </HStack>
           {image && (
             <Image
               w="200px"
               src={image}
               alt={"Screenshot"}
-              mt={2}
+              mt={4}
               shadow="base"
             />
           )}
@@ -515,8 +544,15 @@ const Sequencer = ({ player }) => {
             <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
           </Wrapper>
         </ThemeProvider>
-        <ChainExample
-          open={!isOpen || !isControllerOpen || !recording || !playing}
+        <ChainSpring
+          open={
+            !isOpen &&
+            !isControllerOpen &&
+            !recording &&
+            !playing &&
+            !Boolean(image) &&
+            !screenshotSpring
+          }
         >
           <Button
             h="45px"
@@ -534,10 +570,11 @@ const Sequencer = ({ player }) => {
               bg: useColorModeValue("gray.200", "gray.700"),
             }}
             opacity="0.7"
+            borderBottomRadius="0"
           >
             Start Recording
           </Button>
-        </ChainExample>
+        </ChainSpring>
 
         <Fade in={isControllerOpen}>
           <Box

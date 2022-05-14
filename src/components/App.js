@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "../components/auth/Auth";
-import { theme } from "../theme/theme";
+import theme from "../theme/theme";
 import RequireAuth from "../components/auth/RequireAuth";
 import Main from "../pages/Main";
 import ProfileLayout from "../pages/ProfileLayout";

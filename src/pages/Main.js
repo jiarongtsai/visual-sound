@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import MySequencer from "../components/squencer/MySequencer";
 import { PlayerProvider } from "../components/PlayerProvider";
 import {
@@ -10,10 +10,16 @@ import {
   ModalFooter,
   ModalBody,
   useDisclosure,
+  useToast,
+  Button,
 } from "@chakra-ui/react";
+import { BsFillCameraFill } from "react-icons/bs";
 
 export default function Main() {
+  const [playing, setPlaying] = useState(false);
+  const [recording, setRecording] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   useEffect(() => {
     onOpen();
     window.addEventListener("keydown", () => {
@@ -26,6 +32,34 @@ export default function Main() {
       });
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (!recording && !isOpen) {
+  //     toast({
+  //       position: "top-right",
+  //       isClosable: true,
+  //       duration: 3000,
+  //       render: () => (
+  //         <Button
+  //           p={3}
+  //           mt="128px"
+  //           colorScheme="purple"
+  //           isLoading
+  //           spinner={<BsFillCameraFill />}
+  //           loadingText="Take a screenshot before update!"
+  //         >
+  //           Take a screenshot before update!
+  //         </Button>
+  //       ),
+  //     });
+  //     // toast({
+  //     //   title: "toast",
+  //     //   position: "top-right",
+  //     //   variant: "top-accent",
+
+  //     // });
+  //   }
+  // }, [recording]);
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -40,7 +74,15 @@ export default function Main() {
         </ModalContent>
       </Modal>
       <PlayerProvider>
-        {({ soundPlayer }) => <MySequencer player={soundPlayer} />}
+        {({ soundPlayer }) => (
+          <MySequencer
+            player={soundPlayer}
+            playing={playing}
+            setPlaying={setPlaying}
+            recording={recording}
+            setRecording={setRecording}
+          />
+        )}
       </PlayerProvider>
     </>
   );
