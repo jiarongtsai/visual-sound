@@ -64,7 +64,7 @@ function CustomLink({ children, to, ...props }) {
 export default function Navbar() {
   const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
-  const { colorMode, toggleColorMode } = useColorMode("dark");
+  const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onToggle } = useDisclosure();
 
   function UserSignOut() {

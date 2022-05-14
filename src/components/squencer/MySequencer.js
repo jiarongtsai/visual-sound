@@ -492,6 +492,7 @@ const Sequencer = ({
                 hasArrow
                 label="Take a sreenshot of your work!"
                 placement="bottom-end"
+                bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
                   onClick={getImage}
@@ -513,6 +514,7 @@ const Sequencer = ({
                 hasArrow
                 label="Upload your work!"
                 placement="bottom-end"
+                bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
                   onClick={onOpen}
@@ -656,7 +658,11 @@ const Sequencer = ({
                 mt={[0, 0, 6, 0]}
               >
                 <HStack spacing={2} mt={4} justifyContent="center">
-                  <Tooltip hasArrow label="skip to start">
+                  <Tooltip
+                    hasArrow
+                    label="skip to start"
+                    bg={useColorModeValue("gray.500", "gray.300")}
+                  >
                     <IconButton
                       aria-label="skip to start"
                       icon={<BsSkipStartFill />}
@@ -664,7 +670,11 @@ const Sequencer = ({
                       cursor={recording ? "not-allowed" : "pointer"}
                     />
                   </Tooltip>
-                  <Tooltip hasArrow label="play or pause">
+                  <Tooltip
+                    hasArrow
+                    label="play or pause"
+                    bg={useColorModeValue("gray.500", "gray.300")}
+                  >
                     <IconButton
                       aria-label="play or pause"
                       icon={playing ? <BsPauseFill /> : <BsPlayFill />}
@@ -672,7 +682,11 @@ const Sequencer = ({
                       cursor={recording ? "not-allowed" : "pointer"}
                     />
                   </Tooltip>
-                  <Tooltip hasArrow label="record">
+                  <Tooltip
+                    hasArrow
+                    label="record"
+                    bg={useColorModeValue("gray.500", "gray.300")}
+                  >
                     <IconButton
                       position="relative"
                       aria-label="record"
@@ -695,7 +709,11 @@ const Sequencer = ({
                       cursor={recording || playing ? "not-allowed" : "pointer"}
                     />
                   </Tooltip>
-                  <Tooltip hasArrow label="stop recording">
+                  <Tooltip
+                    hasArrow
+                    label="stop recording"
+                    bg={useColorModeValue("gray.500", "gray.300")}
+                  >
                     <IconButton
                       aria-label="stop recording"
                       icon={<BsFillStopFill />}
@@ -703,7 +721,11 @@ const Sequencer = ({
                       cursor={recording ? "pointer" : "not-allowed"}
                     />
                   </Tooltip>
-                  <Tooltip hasArrow label="clean up">
+                  <Tooltip
+                    hasArrow
+                    label="clean up"
+                    bg={useColorModeValue("gray.500", "gray.300")}
+                  >
                     <IconButton
                       aria-label="clean up"
                       icon={<BsArrowCounterclockwise />}
