@@ -14,6 +14,7 @@ import {
   Heading,
   Image,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 
 import {
@@ -135,7 +136,6 @@ const ChainWrapper = styled(animated.div)`
 `;
 
 function ChainSpring({ children, open }) {
-  console.log(open);
   const styles = useSpring({
     config: { friction: 50, delay: 3000 },
     loop: open,
@@ -179,7 +179,7 @@ const Sequencer = ({
 
   const [isUploaded, setIsUploaded] = useState(false);
   const [screenshotSpring, setScreenshotSpring] = useState(false);
-  const [themeColor, setThemeColor] = useState("main");
+  const [themeColor, setThemeColor] = useState("purple");
 
   const [boomEffect, setBoomEffect] = useState(false);
   const [clapEffect, setClapEffect] = useState(false);
@@ -312,6 +312,8 @@ const Sequencer = ({
     3: () => setThemeColor("macaroon"),
     4: () => setThemeColor("neon"),
     5: () => setThemeColor("vintage"),
+    6: () => setThemeColor("purple"),
+
     a: () => {
       if (!recording) {
         player.player("a").start();
@@ -423,11 +425,35 @@ const Sequencer = ({
     }
   }, [recording]);
 
-  useEffect(() => {
-    if (!isControllerOpen) {
-      setScreenshotSpring(false);
-    }
-  }, []);
+  // const toast = useToast();
+  // useEffect(() => {
+  //   if (!isControllerOpen) {
+  //     setScreenshotSpring(false);
+  //   }
+
+  //   const timeOut = setTimeout(() => {
+  //     console.log("start to guide to another step");
+  //     toast({
+  //       position: "bottom",
+  //       isClosable: true,
+  //       duration: 3000,
+  //       render: () => (
+  //         <Button
+  //           p={3}
+  //           mb="128px"
+  //           colorScheme="purple"
+  //           isLoading
+  //           spinner={<BsFillCameraFill />}
+  //           loadingText="Take a screenshot before update!"
+  //         >
+  //           Take a screenshot before update!
+  //         </Button>
+  //       ),
+  //     });
+  //   }, 8000);
+
+  //   return () => timeOut();
+  // }, []);
 
   function handleBacktoHead() {
     setCurrentStep(0);
@@ -570,39 +596,80 @@ const Sequencer = ({
             !screenshotSpring
           }
         >
-          <Tooltip
-            hasArrow
-            label={recording ? "stop recording" : "record"}
-            bg={useColorModeValue("gray.500", "gray.300")}
+          <HStack
+            spacing={2}
+            mt={4}
+            justifyContent="center"
+            position="absolute"
+            bottom="35px"
+            left="50%"
+            transform="translateX(-50%)"
+            style={{ zIndex: 200 }}
           >
-            <IconButton
-              variant="outline"
-              rounded="full"
-              colorScheme="red"
-              position="absolute"
-              bottom="35px"
-              left="50%"
-              transform="translateX(-50%)"
-              aria-label="record or stop recording"
-              style={{ zIndex: 200 }}
-              borderWidth="2px"
-              bg={useColorModeValue("gray.100", "gray.600")}
-              opacity=".9"
-              _focus={{
-                borderColor: "red.500",
-                boxShadow: "0 0 0 1px red.500",
-              }}
-              icon={
-                recording ? (
-                  <Notification right="12px" top="12px" activeColor="red.500" />
-                ) : (
-                  <BsFillRecordFill />
-                )
-              }
-              onClick={playing ? () => false : () => setRecording(!recording)}
-              cursor={playing ? "not-allowed" : "pointer"}
-            />
-          </Tooltip>
+            <Tooltip
+              hasArrow
+              label={playing ? "pause" : "play"}
+              bg={useColorModeValue("gray.500", "gray.300")}
+            >
+              <IconButton
+                rounded="full"
+                aria-label="play or pause"
+                icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                onClick={recording ? () => false : handlePlaying}
+                cursor={recording ? "not-allowed" : "pointer"}
+              />
+            </Tooltip>
+            <Tooltip
+              hasArrow
+              label={"record"}
+              bg={useColorModeValue("gray.500", "gray.300")}
+            >
+              <IconButton
+                transform={"scale(1.1)"}
+                borderWidth="2px"
+                position="relative"
+                bottom={1}
+                rounded="full"
+                variant="outline"
+                colorScheme="red"
+                aria-label="record or stop recording"
+                bg={useColorModeValue("gray.100", "gray.600")}
+                opacity=".9"
+                _focus={{
+                  borderColor: "red.500",
+                  boxShadow: "0 0 0 1px red.500",
+                }}
+                icon={
+                  recording ? (
+                    <Notification
+                      right="12px"
+                      top="12px"
+                      activeColor="red.500"
+                    />
+                  ) : (
+                    <BsFillRecordFill />
+                  )
+                }
+                onClick={
+                  playing || recording ? () => false : () => setRecording(true)
+                }
+                cursor={playing || recording ? "not-allowed" : "pointer"}
+              />
+            </Tooltip>
+            <Tooltip
+              hasArrow
+              label="stop recording"
+              bg={useColorModeValue("gray.500", "gray.300")}
+            >
+              <IconButton
+                rounded="full"
+                aria-label="stop recording"
+                icon={<BsFillStopFill />}
+                onClick={handleStopRecording}
+                cursor={recording ? "pointer" : "not-allowed"}
+              />
+            </Tooltip>
+          </HStack>
           <Button
             h="70px"
             w="100vw"
@@ -700,6 +767,7 @@ const Sequencer = ({
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      rounded="full"
                       aria-label="skip to start"
                       icon={<BsSkipStartFill />}
                       onClick={recording ? () => false : handleBacktoHead}
@@ -712,6 +780,7 @@ const Sequencer = ({
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      rounded="full"
                       aria-label="play or pause"
                       icon={playing ? <BsPauseFill /> : <BsPlayFill />}
                       onClick={recording ? () => false : handlePlaying}
@@ -724,6 +793,8 @@ const Sequencer = ({
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      transform={"scale(1.1)"}
+                      borderWidth="2px"
                       rounded="full"
                       variant="outline"
                       colorScheme="red"
@@ -732,8 +803,8 @@ const Sequencer = ({
                       icon={
                         recording ? (
                           <Notification
-                            right="13px"
-                            top="13px"
+                            right="12px"
+                            top="12px"
                             activeColor="red.500"
                           />
                         ) : (
@@ -752,6 +823,7 @@ const Sequencer = ({
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      rounded="full"
                       aria-label="stop recording"
                       icon={<BsFillStopFill />}
                       onClick={handleStopRecording}
@@ -764,6 +836,7 @@ const Sequencer = ({
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      rounded="full"
                       aria-label="clean up"
                       icon={<BsArrowCounterclockwise />}
                       onClick={recording ? () => false : handleCleanUp}

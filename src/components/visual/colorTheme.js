@@ -34,6 +34,13 @@ const colorTheme = {
     dark: "#FFFFFF",
     special: "#F8B400",
   },
+  purple: {
+    background: "#805ad5",
+    light: "#7209b7",
+    medium: "#5aabe0",
+    dark: "#3a0ca3",
+    special: "#FF3590",
+  },
 };
 
 export { colorTheme };
