@@ -51,7 +51,7 @@ export default function MessageList({
 
         <VStack
           alignItems={"flex-start"}
-          h={["78vh", "60vh"]}
+          h={["78vh", "65vh"]}
           overflowY={"scroll"}
           divider={
             <StackDivider

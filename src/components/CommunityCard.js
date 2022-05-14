@@ -29,13 +29,14 @@ export default function CommunityCard({
   const [comment, setComment] = useState(false);
   const [show, setShow] = useState(false);
   const [previewVisual, setPreviewVisual] = useState(false);
+  const contentColor = useColorModeValue("gray.500", "gray.400");
 
   return (
-    <Center my={4}>
+    <Center my={5}>
       <Box
         maxW={"640px"}
         w={"full"}
-        bg={useColorModeValue("white", "gray.900")}
+        bg={useColorModeValue("white", "gray.700")}
         rounded={"md"}
         shadow="base"
         p={4}
@@ -56,7 +57,7 @@ export default function CommunityCard({
           mx={-4}
           borderTop="1px"
           borderBottom="1px"
-          borderColor={useColorModeValue("gray.200", "gray.700")}
+          borderColor={useColorModeValue("gray.200", "gray.600")}
         >
           <Link
             to={`/work/${work.id}`}
@@ -123,7 +124,7 @@ export default function CommunityCard({
           <Text fontWeight={600}>{work.author_name}</Text>
 
           <Collapse startingHeight={20} in={show}>
-            <Text color={"gray.500"}>{work.description}</Text>
+            <Text color={contentColor}>{work.description}</Text>
           </Collapse>
           {work.description.length > 100 ? (
             <Text
@@ -146,7 +147,7 @@ export default function CommunityCard({
                 <Text as={"a"} mr={2} fontWeight={600}>
                   {comment.author_name}
                 </Text>
-                <Text as={"span"} color={"gray.500"}>
+                <Text color={contentColor} as={"span"}>
                   {comment.content}
                 </Text>
               </Box>

@@ -94,15 +94,15 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
 
       <VStack
         align="center"
-        h={"58vh"}
+        h={"62vh"}
         overflowY={"scroll"}
         borderTop="1px"
         borderColor={borderColor}
         pt={3}
       >
-        {/* time calculate  MessageView cell */}
+        {/* fixme: time calculate  MessageView cell */}
         {chats.map((chat, i) => (
-          <>
+          <Flex key={i} direction="column" w="100%" alignItems="center">
             <Text color="gray.500" fontSize="sm">
               {chat.created_time.toDate().toString().slice(4, 21)}
             </Text>
@@ -115,13 +115,13 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
             ) : (
               <MessageViewReceiver content={chat.content} />
             )}
-          </>
+          </Flex>
         ))}
         <div ref={endRef}></div>
       </VStack>
       {/* simillar component as comment */}
       <Flex align="center" justify="center" p={4}>
-        <InputGroup size="lg" position="relative">
+        <InputGroup size="md" position="relative">
           <Input
             rounded="full"
             placeholder="Typing....."

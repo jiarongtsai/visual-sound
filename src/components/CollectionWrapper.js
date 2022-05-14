@@ -6,7 +6,6 @@ function CollectionWrapper({
   currentTerm,
   setCurrentTerm,
 }) {
-  console.log([currentTerm === collectionName]);
   return (
     <Flex
       flexShrink="0"

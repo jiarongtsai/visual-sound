@@ -28,7 +28,7 @@ export default function Community({ followingWorks, setFollowingWorks }) {
     );
 
   return (
-    <Container mt={16}>
+    <Container>
       {followingWorks.map((work, i) => (
         <CommunityCard
           i={i}

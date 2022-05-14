@@ -69,7 +69,7 @@ export default function Explore() {
     setIsShown([]);
   }
   return (
-    <Box mt={20}>
+    <Box mt={12}>
       <Stack>
         <form onSubmit={(e) => handleSubmit(e)}>
           <Center maxW={["280px", "280px", "300px", "420px"]} mx="auto">
@@ -109,7 +109,7 @@ export default function Explore() {
           </Center>
         </form>
       </Stack>
-      <Stack mt={8}>
+      <Stack mt={12}>
         <Gallery
           works={exploreworks}
           isShown={isShown}

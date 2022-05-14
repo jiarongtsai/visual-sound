@@ -230,8 +230,9 @@ export default function Navbar() {
       </Box>
 
       <Box
-        style={{ minHeight: `calc(100% - 64px)` }}
+        minHeight="100vh"
         p={4}
+        pt="64px"
         bg={useColorModeValue("gray.100", "gray.800")}
       >
         <Outlet />

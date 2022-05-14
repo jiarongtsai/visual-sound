@@ -42,7 +42,7 @@ export const UserWithTime = ({ id, name, thumbnail, time }) => {
         <Avatar src={thumbnail} alt={name} />
         <Stack direction={"column"} spacing={0} fontSize={"sm"}>
           <Text fontWeight={600}>{name}</Text>
-          <Text color={"gray.500"}>{time}</Text>
+          <Text color={useColorModeValue("gray.500", "gray.400")}>{time}</Text>
         </Stack>
       </Stack>
     </Link>
@@ -74,7 +74,7 @@ export const MessageUserSmall = ({ name, thumbnail }) => {
         src={thumbnail}
         alt={`Avatar of ${name}`}
       />
-      <Text color="gray.500" fontWeight="400">
+      <Text color={useColorModeValue("gray.500", "gray.400")} fontWeight="400">
         {name}
       </Text>
     </HStack>

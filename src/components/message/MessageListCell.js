@@ -73,7 +73,7 @@ export default function MessageBox({
             </Text>
             <Text
               fontSize="sm"
-              color="gray.500"
+              color={useColorModeValue("gray.500", "gray.400")}
               fontWeight="400"
               overflow="hidden"
               textOverflow="ellipsis"

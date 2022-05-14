@@ -96,7 +96,7 @@ export default function Message() {
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
 
       <Flex
-        mt={24}
+        mt={12}
         mx="auto"
         w="90%"
         h="100%"
