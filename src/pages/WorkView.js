@@ -7,6 +7,7 @@ import Collect from "../components/interaction/Collect";
 import Like from "../components/interaction/Like";
 import Comment from "../components/interaction/Comment";
 import { UserSmall } from "../components/UserVariants";
+import moment from "moment";
 import {
   Flex,
   Spacer,
@@ -83,7 +84,7 @@ export default function WorkView({ setFollowingWorks }) {
   return (
     <>
       <Flex
-        mt={24}
+        mt={12}
         mx="auto"
         w="90%"
         h="100%"
@@ -130,10 +131,9 @@ export default function WorkView({ setFollowingWorks }) {
               ))}
             </HStack>
             <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
-              {`Created at ${work.created_time
-                ?.toDate()
-                .toDateString()
-                .slice(4, 25)}`}
+              {`Created at ${moment
+                .unix(work.created_time?.seconds)
+                .calendar()}`}
             </Text>
 
             {comments.map((comment) => {

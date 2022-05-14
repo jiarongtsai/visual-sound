@@ -8,6 +8,7 @@ import Collect from "./interaction/Collect";
 import Like from "./interaction/Like";
 import Comment from "./interaction/Comment";
 import { UserWithTime, UserSmall } from "./UserVariants";
+import moment from "moment";
 import {
   Modal,
   ModalOverlay,
@@ -103,7 +104,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
               id={work.author_id}
               name={work.author_name}
               thumbnail={work.author_thumbnail}
-              time={work.created_time?.toDate().toDateString()}
+              timestamp={work.created_time?.seconds}
             />
           </ModalHeader>
           <ModalCloseButton />
@@ -151,10 +152,9 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                     ))}
                   </HStack>
                   <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
-                    {`Created at ${work.created_time
-                      ?.toDate()
-                      .toDateString()
-                      .slice(4, 25)}`}
+                    {`Created at ${moment
+                      .unix(work.created_time?.seconds)
+                      .calendar()}`}
                   </Text>
 
                   {comments.map((comment) => {

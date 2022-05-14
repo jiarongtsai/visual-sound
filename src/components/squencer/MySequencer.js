@@ -490,7 +490,7 @@ const Sequencer = ({
             <ScaleSpring move={screenshotSpring && !image}>
               <Tooltip
                 hasArrow
-                label="Take a sreenshot of your work!"
+                label="Take a sreenshot of your work"
                 placement="bottom-end"
                 bg={useColorModeValue("gray.500", "gray.300")}
               >
@@ -512,7 +512,7 @@ const Sequencer = ({
             <ScaleSpring move={Boolean(image)}>
               <Tooltip
                 hasArrow
-                label="Upload your work!"
+                label="Upload your work"
                 placement="bottom-end"
                 bg={useColorModeValue("gray.500", "gray.300")}
               >

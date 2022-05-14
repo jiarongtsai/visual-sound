@@ -8,6 +8,22 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import moment from "moment";
+
+function getReadableTime(timestamp) {
+  let calcTime;
+  const cur = Math.floor(Date.now() / 1000);
+  const base = (cur - timestamp) / 86400;
+
+  if (base < 1) {
+    calcTime = moment.unix(timestamp).fromNow();
+    return calcTime;
+  }
+
+  calcTime = moment.unix(timestamp).calendar();
+
+  return calcTime;
+}
 
 export const UserWithName = ({ id, name, thumbnail }) => {
   const textColor = useColorModeValue("gray.700", "white");
@@ -35,14 +51,16 @@ export const UserWithName = ({ id, name, thumbnail }) => {
   );
 };
 
-export const UserWithTime = ({ id, name, thumbnail, time }) => {
+export const UserWithTime = ({ id, name, thumbnail, timestamp }) => {
   return (
     <Link to={`/user/${id}`}>
       <Stack pb={2} direction={"row"} spacing={4} align={"center"}>
         <Avatar src={thumbnail} alt={name} />
         <Stack direction={"column"} spacing={0} fontSize={"sm"}>
           <Text fontWeight={600}>{name}</Text>
-          <Text color={useColorModeValue("gray.500", "gray.400")}>{time}</Text>
+          <Text color={useColorModeValue("gray.500", "gray.400")}>
+            {getReadableTime(timestamp)}
+          </Text>
         </Stack>
       </Stack>
     </Link>

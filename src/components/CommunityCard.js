@@ -48,7 +48,7 @@ export default function CommunityCard({
           id={work.author_id}
           name={work.author_name}
           thumbnail={work.author_thumbnail}
-          time={work.created_time.toDate().toDateString()}
+          timestamp={work.created_time.seconds}
         />
 
         <Box

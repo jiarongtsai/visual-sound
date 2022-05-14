@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import {
@@ -14,6 +15,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Tooltip,
 } from "@chakra-ui/react";
 import { BsCursorFill, BsPlusSquare } from "react-icons/bs";
 import { MessageViewReceiver, MessageViewSender } from "./MessageViewCell";
@@ -67,6 +69,21 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
     sendMessage();
   }
 
+  function getReadableTime(timestamp) {
+    let calcTime;
+    const cur = Math.floor(Date.now() / 1000);
+    const base = (cur - timestamp) / 86400;
+
+    if (base < 1) {
+      calcTime = moment.unix(timestamp).fromNow();
+      return calcTime;
+    }
+
+    calcTime = moment.unix(timestamp).calendar();
+
+    return calcTime;
+  }
+
   if (!mid)
     return (
       <Center h="75vh" flexDirection="column">
@@ -101,22 +118,30 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
         pt={3}
       >
         {/* fixme: time calculate  MessageView cell */}
-        {chats.map((chat, i) => (
-          <Flex key={i} direction="column" w="100%" alignItems="center">
-            <Text color="gray.500" fontSize="sm">
-              {chat.created_time.toDate().toString().slice(4, 21)}
-            </Text>
-            {chat.sender === currentChatInfo.author_place ? (
-              <MessageViewSender
-                content={chat.content}
-                name={`${currentChatInfo.author_name}`}
-                thumbnail={`${currentChatInfo.author_thumbnail}`}
-              />
-            ) : (
-              <MessageViewReceiver content={chat.content} />
-            )}
-          </Flex>
-        ))}
+        {chats.map((chat, i) => {
+          return (
+            <Flex key={i} direction="column" w="100%" alignItems="center">
+              <Tooltip
+                label={moment
+                  .unix(chat.created_time.seconds)
+                  .format("MMMM Do YYYY, h:mm:ss a")}
+              >
+                <Text color="gray.500" fontSize="sm" cursor="default">
+                  {getReadableTime(chat.created_time.seconds)}
+                </Text>
+              </Tooltip>
+              {chat.sender === currentChatInfo.author_place ? (
+                <MessageViewSender
+                  content={chat.content}
+                  name={`${currentChatInfo.author_name}`}
+                  thumbnail={`${currentChatInfo.author_thumbnail}`}
+                />
+              ) : (
+                <MessageViewReceiver content={chat.content} />
+              )}
+            </Flex>
+          );
+        })}
         <div ref={endRef}></div>
       </VStack>
       {/* simillar component as comment */}
