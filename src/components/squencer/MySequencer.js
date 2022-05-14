@@ -95,6 +95,7 @@ const initialState = [
 ];
 
 const Minimal = ({ currentPage, setCurrentPage, pagesCount, pages }) => {
+  const currentBackground = useColorModeValue("gray.300", "gray.500");
   return (
     <Pagination
       my={4}
@@ -113,7 +114,7 @@ const Minimal = ({ currentPage, setCurrentPage, pagesCount, pages }) => {
               key={`pagination_page_${page}`}
               page={page}
               _current={{
-                bg: "purple.300",
+                bg: currentBackground,
               }}
             />
           ))}
@@ -189,7 +190,7 @@ const Sequencer = ({
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
-  const [BPMValue, setBPMValue] = useState(120);
+  const [BPMValue, setBPMValue] = useState(100);
 
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
@@ -569,25 +570,59 @@ const Sequencer = ({
             !screenshotSpring
           }
         >
+          <Tooltip
+            hasArrow
+            label={recording ? "stop recording" : "record"}
+            bg={useColorModeValue("gray.500", "gray.300")}
+          >
+            <IconButton
+              variant="outline"
+              rounded="full"
+              colorScheme="red"
+              position="absolute"
+              bottom="35px"
+              left="50%"
+              transform="translateX(-50%)"
+              aria-label="record or stop recording"
+              style={{ zIndex: 200 }}
+              borderWidth="2px"
+              bg={useColorModeValue("gray.100", "gray.600")}
+              opacity=".9"
+              _focus={{
+                borderColor: "red.500",
+                boxShadow: "0 0 0 1px red.500",
+              }}
+              icon={
+                recording ? (
+                  <Notification right="12px" top="12px" activeColor="red.500" />
+                ) : (
+                  <BsFillRecordFill />
+                )
+              }
+              onClick={playing ? () => false : () => setRecording(!recording)}
+              cursor={playing ? "not-allowed" : "pointer"}
+            />
+          </Tooltip>
           <Button
-            h="45px"
+            h="70px"
             w="100vw"
-            pb="10px"
+            pt={4}
             position="fixed"
             bottom="-10px"
             left="0"
             variant="ghost"
             onClick={onControllerOpen}
-            onMouseEnter={onControllerOpen}
+            // onMouseEnter={onControllerOpen}
             style={{ zIndex: 199 }}
             bg={useColorModeValue("gray.100", "gray.600")}
             _hover={{
               bg: useColorModeValue("gray.200", "gray.700"),
             }}
-            opacity="0.7"
+            opacity="0.8"
+            borderTopRadius="100%"
             borderBottomRadius="0"
           >
-            Start Recording
+            Show Edit Panel
           </Button>
         </ChainSpring>
 
@@ -600,6 +635,7 @@ const Sequencer = ({
             top="0"
             left="0"
             pointerEvents="none"
+            onClick={onClose}
           />
         </Fade>
         <Slide direction="bottom" in={isControllerOpen} style={{ zIndex: 299 }}>
@@ -608,7 +644,7 @@ const Sequencer = ({
             px={10}
             rounded="md"
             shadow="base"
-            onMouseLeave={onControllerClose}
+            // onMouseLeave={onControllerClose}
             bg={useColorModeValue("white", "gray.600")}
             d="flex"
             flexDirection="column"
@@ -616,7 +652,7 @@ const Sequencer = ({
             alignItems="center"
           >
             <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
-            <Heading size="md">Editing Panel</Heading>
+            <Heading size="md">Edit Panel</Heading>
 
             <Flex
               direction={["column", "column", "row", "row"]}
@@ -672,7 +708,7 @@ const Sequencer = ({
                   </Tooltip>
                   <Tooltip
                     hasArrow
-                    label="play or pause"
+                    label={playing ? "pause" : "play"}
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
@@ -684,17 +720,20 @@ const Sequencer = ({
                   </Tooltip>
                   <Tooltip
                     hasArrow
-                    label="record"
+                    label={recording ? "stop recording" : "record"}
                     bg={useColorModeValue("gray.500", "gray.300")}
                   >
                     <IconButton
+                      rounded="full"
+                      variant="outline"
+                      colorScheme="red"
                       position="relative"
-                      aria-label="record"
+                      aria-label="record or stop recording"
                       icon={
                         recording ? (
                           <Notification
-                            right="14px"
-                            top="14px"
+                            right="13px"
+                            top="13px"
                             activeColor="red.500"
                           />
                         ) : (
@@ -702,11 +741,9 @@ const Sequencer = ({
                         )
                       }
                       onClick={
-                        recording || playing
-                          ? () => false
-                          : () => setRecording(true)
+                        playing ? () => false : () => setRecording(!recording)
                       }
-                      cursor={recording || playing ? "not-allowed" : "pointer"}
+                      cursor={playing ? "not-allowed" : "pointer"}
                     />
                   </Tooltip>
                   <Tooltip

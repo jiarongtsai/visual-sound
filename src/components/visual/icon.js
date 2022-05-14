@@ -22,11 +22,15 @@ export {
 };
 
 const IconTink = () => {
+  const activeColor = useColorModeValue("gray.300", "gray.100");
   return (
     <Square
       size="36px"
       rounded="md"
       bg={useColorModeValue("gray.100", "gray.400")}
+      _active={{
+        background: activeColor,
+      }}
     >
       <Tink width="25px" aria-label="clap" opacity="0.7" />
     </Square>

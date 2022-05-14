@@ -149,8 +149,9 @@ export default function SequencePlayer({
           ) : (
             ""
           )}
+          {/* fixme */}
           {!playing && imageUrl ? (
-            <Image w="100%" maxH="612px" objectFit="cover" src={imageUrl} />
+            <Image w="100%" maxH="564px" objectFit="cover" src={imageUrl} />
           ) : (
             ""
           )}
