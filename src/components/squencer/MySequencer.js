@@ -13,6 +13,7 @@ import {
   Text,
   Heading,
   Image,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
@@ -487,34 +488,46 @@ const Sequencer = ({
         >
           <HStack spacing={2}>
             <ScaleSpring move={screenshotSpring && !image}>
-              <Button
-                onClick={getImage}
-                colorScheme="gray"
-                bg={useColorModeValue("gray.100", "gray.600")}
-                _hover={{
-                  bg: useColorModeValue("gray.200", "gray.700"),
-                }}
-                leftIcon={<BsFillCameraFill />}
-                size="sm"
-                opacity={0.8}
+              <Tooltip
+                hasArrow
+                label="Take a sreenshot of your work!"
+                placement="bottom-end"
               >
-                screenshot
-              </Button>
+                <Button
+                  onClick={getImage}
+                  colorScheme="gray"
+                  bg={useColorModeValue("gray.100", "gray.600")}
+                  _hover={{
+                    bg: useColorModeValue("gray.200", "gray.700"),
+                  }}
+                  leftIcon={<BsFillCameraFill />}
+                  size="sm"
+                  opacity={0.8}
+                >
+                  screenshot
+                </Button>
+              </Tooltip>
             </ScaleSpring>
             <ScaleSpring move={Boolean(image)}>
-              <Button
-                onClick={onOpen}
-                colorScheme="gray"
-                bg={useColorModeValue("gray.100", "gray.600")}
-                _hover={{
-                  bg: useColorModeValue("gray.200", "gray.700"),
-                }}
-                leftIcon={<BsBoxArrowUp />}
-                size="sm"
-                opacity={0.8}
+              <Tooltip
+                hasArrow
+                label="Upload your work!"
+                placement="bottom-end"
               >
-                upload
-              </Button>
+                <Button
+                  onClick={onOpen}
+                  colorScheme="gray"
+                  bg={useColorModeValue("gray.100", "gray.600")}
+                  _hover={{
+                    bg: useColorModeValue("gray.200", "gray.700"),
+                  }}
+                  leftIcon={<BsBoxArrowUp />}
+                  size="sm"
+                  opacity={0.8}
+                >
+                  upload
+                </Button>
+              </Tooltip>
             </ScaleSpring>
           </HStack>
           {image && (
@@ -642,54 +655,62 @@ const Sequencer = ({
                 flexBasis={["60%", "60%", "60%", "30%"]}
                 mt={[0, 0, 6, 0]}
               >
-                {/* <Text>Player</Text> */}
                 <HStack spacing={2} mt={4} justifyContent="center">
-                  <IconButton
-                    aria-label="skip to start"
-                    icon={<BsSkipStartFill />}
-                    onClick={recording ? () => false : handleBacktoHead}
-                    cursor={recording ? "not-allowed" : "pointer"}
-                  />
-                  <IconButton
-                    aria-label="play or pause"
-                    icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                    onClick={recording ? () => false : handlePlaying}
-                    cursor={recording ? "not-allowed" : "pointer"}
-                  />
-
-                  <IconButton
-                    position="relative"
-                    aria-label="play or pause"
-                    icon={
-                      recording ? (
-                        <Notification
-                          right="14px"
-                          top="14px"
-                          activeColor="red.500"
-                        />
-                      ) : (
-                        <BsFillRecordFill />
-                      )
-                    }
-                    onClick={
-                      recording || playing
-                        ? () => false
-                        : () => setRecording(true)
-                    }
-                    cursor={recording || playing ? "not-allowed" : "pointer"}
-                  />
-                  <IconButton
-                    aria-label="stop"
-                    icon={<BsFillStopFill />}
-                    onClick={handleStopRecording}
-                    cursor={recording ? "pointer" : "not-allowed"}
-                  />
-                  <IconButton
-                    aria-label="clean up"
-                    icon={<BsArrowCounterclockwise />}
-                    onClick={recording ? () => false : handleCleanUp}
-                    cursor={recording ? "not-allowed" : "pointer"}
-                  />
+                  <Tooltip hasArrow label="skip to start">
+                    <IconButton
+                      aria-label="skip to start"
+                      icon={<BsSkipStartFill />}
+                      onClick={recording ? () => false : handleBacktoHead}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
+                  </Tooltip>
+                  <Tooltip hasArrow label="play or pause">
+                    <IconButton
+                      aria-label="play or pause"
+                      icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                      onClick={recording ? () => false : handlePlaying}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
+                  </Tooltip>
+                  <Tooltip hasArrow label="record">
+                    <IconButton
+                      position="relative"
+                      aria-label="record"
+                      icon={
+                        recording ? (
+                          <Notification
+                            right="14px"
+                            top="14px"
+                            activeColor="red.500"
+                          />
+                        ) : (
+                          <BsFillRecordFill />
+                        )
+                      }
+                      onClick={
+                        recording || playing
+                          ? () => false
+                          : () => setRecording(true)
+                      }
+                      cursor={recording || playing ? "not-allowed" : "pointer"}
+                    />
+                  </Tooltip>
+                  <Tooltip hasArrow label="stop recording">
+                    <IconButton
+                      aria-label="stop recording"
+                      icon={<BsFillStopFill />}
+                      onClick={handleStopRecording}
+                      cursor={recording ? "pointer" : "not-allowed"}
+                    />
+                  </Tooltip>
+                  <Tooltip hasArrow label="clean up">
+                    <IconButton
+                      aria-label="clean up"
+                      icon={<BsArrowCounterclockwise />}
+                      onClick={recording ? () => false : handleCleanUp}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
+                  </Tooltip>
                 </HStack>
               </Box>
               <Box
