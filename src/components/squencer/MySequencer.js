@@ -551,6 +551,7 @@ const Sequencer = ({
                 bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
+                  id="tour-screenshot"
                   onClick={getImage}
                   colorScheme="gray"
                   bg={useColorModeValue("gray.100", "gray.600")}
@@ -573,6 +574,7 @@ const Sequencer = ({
                 bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
+                  id="tour-upload"
                   onClick={onOpen}
                   colorScheme="gray"
                   bg={useColorModeValue("gray.100", "gray.600")}
@@ -594,7 +596,7 @@ const Sequencer = ({
               src={image}
               alt={"Screenshot"}
               mt={4}
-              shadow="base"
+              boxShadow="rgba(0, 0, 0, 0.24) 0px 3px 9px"
             />
           )}
         </Flex>
@@ -625,103 +627,108 @@ const Sequencer = ({
             !screenshotSpring
           }
         >
-          <HStack
-            spacing={2}
-            mt={4}
-            justifyContent="center"
-            position="absolute"
-            bottom="35px"
-            left="50%"
-            transform="translateX(-50%)"
-            style={{ zIndex: 200 }}
-          >
-            <Tooltip
-              hasArrow
-              label={playing ? "pause" : "play"}
-              bg={useColorModeValue("gray.500", "gray.300")}
+          <Box id="tour-edit-panel" w="100vw" h="100px">
+            <HStack
+              spacing={2}
+              mt={4}
+              justifyContent="center"
+              position="absolute"
+              bottom="35px"
+              left="50%"
+              transform="translateX(-50%)"
+              style={{ zIndex: 200 }}
+              id="tour-player"
             >
-              <IconButton
-                rounded="full"
-                aria-label="play or pause"
-                bg={useColorModeValue("gray.100", "gray.600")}
-                icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                onClick={recording ? () => false : handlePlaying}
-                cursor={recording ? "not-allowed" : "pointer"}
-              />
-            </Tooltip>
-            <Tooltip
-              hasArrow
-              label={"record"}
-              bg={useColorModeValue("gray.500", "gray.300")}
+              <Tooltip
+                hasArrow
+                label={playing ? "pause" : "play"}
+                bg={useColorModeValue("gray.500", "gray.300")}
+              >
+                <IconButton
+                  rounded="full"
+                  aria-label="play or pause"
+                  bg={useColorModeValue("gray.100", "gray.600")}
+                  icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                  onClick={recording ? () => false : handlePlaying}
+                  cursor={recording ? "not-allowed" : "pointer"}
+                />
+              </Tooltip>
+              <Tooltip
+                hasArrow
+                label={"record"}
+                bg={useColorModeValue("gray.500", "gray.300")}
+              >
+                <IconButton
+                  transform={"scale(1.1)"}
+                  borderWidth="2px"
+                  position="relative"
+                  bottom={1}
+                  rounded="full"
+                  variant="outline"
+                  colorScheme="red"
+                  aria-label="record or stop recording"
+                  bg={useColorModeValue("gray.100", "gray.600")}
+                  opacity=".9"
+                  _focus={{
+                    borderColor: "red.500",
+                    boxShadow: "0 0 0 1px red.500",
+                  }}
+                  icon={
+                    recording ? (
+                      <Notification
+                        right="12px"
+                        top="12px"
+                        activeColor="red.500"
+                      />
+                    ) : (
+                      <BsFillRecordFill />
+                    )
+                  }
+                  onClick={
+                    playing || recording
+                      ? () => false
+                      : () => setRecording(true)
+                  }
+                  cursor={playing || recording ? "not-allowed" : "pointer"}
+                />
+              </Tooltip>
+              <Tooltip
+                hasArrow
+                label="stop recording"
+                bg={useColorModeValue("gray.500", "gray.300")}
+              >
+                <IconButton
+                  rounded="full"
+                  aria-label="stop recording"
+                  icon={<BsFillStopFill />}
+                  bg={useColorModeValue("gray.100", "gray.600")}
+                  onClick={handleStopRecording}
+                  cursor={recording ? "pointer" : "not-allowed"}
+                />
+              </Tooltip>
+            </HStack>
+            <Button
+              h="70px"
+              w="100vw"
+              pt={4}
+              position="fixed"
+              bottom="-10px"
+              left="0"
+              variant="ghost"
+              onClick={onControllerOpen}
+              // onMouseEnter={onControllerOpen}
+              style={{ zIndex: 199 }}
+              bg={useColorModeValue("gray.100", "gray.600")}
+              _hover={{
+                bg: useColorModeValue("gray.200", "gray.700"),
+              }}
+              opacity="0.8"
+              borderTopRadius="100%"
+              borderBottomRadius="0"
             >
-              <IconButton
-                transform={"scale(1.1)"}
-                borderWidth="2px"
-                position="relative"
-                bottom={1}
-                rounded="full"
-                variant="outline"
-                colorScheme="red"
-                aria-label="record or stop recording"
-                bg={useColorModeValue("gray.100", "gray.600")}
-                opacity=".9"
-                _focus={{
-                  borderColor: "red.500",
-                  boxShadow: "0 0 0 1px red.500",
-                }}
-                icon={
-                  recording ? (
-                    <Notification
-                      right="12px"
-                      top="12px"
-                      activeColor="red.500"
-                    />
-                  ) : (
-                    <BsFillRecordFill />
-                  )
-                }
-                onClick={
-                  playing || recording ? () => false : () => setRecording(true)
-                }
-                cursor={playing || recording ? "not-allowed" : "pointer"}
-              />
-            </Tooltip>
-            <Tooltip
-              hasArrow
-              label="stop recording"
-              bg={useColorModeValue("gray.500", "gray.300")}
-            >
-              <IconButton
-                rounded="full"
-                aria-label="stop recording"
-                icon={<BsFillStopFill />}
-                bg={useColorModeValue("gray.100", "gray.600")}
-                onClick={handleStopRecording}
-                cursor={recording ? "pointer" : "not-allowed"}
-              />
-            </Tooltip>
-          </HStack>
-          <Button
-            h="70px"
-            w="100vw"
-            pt={4}
-            position="fixed"
-            bottom="-10px"
-            left="0"
-            variant="ghost"
-            onClick={onControllerOpen}
-            // onMouseEnter={onControllerOpen}
-            style={{ zIndex: 199 }}
-            bg={useColorModeValue("gray.100", "gray.600")}
-            _hover={{
-              bg: useColorModeValue("gray.200", "gray.700"),
-            }}
-            opacity="0.8"
-            borderTopRadius="100%"
-            borderBottomRadius="0"
-          >
-            Show Edit Panel
-          </Button>
+              Show Edit Panel
+            </Button>
+          </Box>
         </ChainSpring>
 
         <Fade in={isControllerOpen}>
