@@ -44,6 +44,7 @@ import {
   BsArrowCounterclockwise,
   BsFillCameraFill,
   BsBoxArrowUp,
+  BsMusicNote,
 } from "react-icons/bs";
 
 import { BoomTransition } from "../visual/BoomTransition";
@@ -190,10 +191,12 @@ const Sequencer = ({
   const [snareEffect, setSnareEffect] = useState(false);
   const [tomEffect, setTomEffect] = useState(false);
   const [tinkEffect, setTinkEffect] = useState(false);
-  const [BPMValue, setBPMValue] = useState(100);
+  const [BPMValue, setBPMValue] = useState(120);
 
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
+
+  const [currentHit, setCurrentHit] = useState("500px");
 
   //visual
   const useKeyboardBindings = (map) => {
@@ -226,30 +229,39 @@ const Sequencer = ({
       player.player(lineMap[line]).start();
       switch (lineMap[line]) {
         case "a":
+          setCurrentHit(2 + "px");
           setBoomEffect((v) => !v);
           break;
         case "s":
+          setCurrentHit(2 + 40 * 1 + "px");
           setClapEffect((v) => !v);
           break;
         case "d":
+          setCurrentHit(2 + 40 * 2 + "px");
           setHihatEffect((v) => !v);
           break;
         case "f":
+          setCurrentHit(2 + 40 * 3 + "px");
           setKickEffect((v) => !v);
           break;
         case "g":
+          setCurrentHit(2 + 40 * 4 + "px");
           setOpenhatEffect((v) => !v);
           break;
         case "h":
+          setCurrentHit(2 + 40 * 5 + "px");
           setRideEffect((v) => !v);
           break;
         case "j":
+          setCurrentHit(2 + 40 * 6 + "px");
           setSnareEffect((v) => !v);
           break;
         case "k":
+          setCurrentHit(2 + 40 * 7 + "px");
           setTomEffect((v) => !v);
           break;
         case "l":
+          setCurrentHit(2 + 40 * 8 + "px");
           setTinkEffect((v) => !v);
           break;
         default:
@@ -305,6 +317,14 @@ const Sequencer = ({
 
   const keyboardToggleStep = currentStep - 1 < 0 ? 15 : currentStep - 1;
 
+  useEffect(() => {
+    if (currentHit !== "500px") {
+      const timeOut = setTimeout(() => {
+        setCurrentHit("500px");
+      }, 100);
+    }
+  }, [currentHit]);
+
   useKeyboardBindings({
     Spacebar: () => setPlaying((v) => !v),
     1: () => setThemeColor("main"),
@@ -315,6 +335,7 @@ const Sequencer = ({
     6: () => setThemeColor("purple"),
 
     a: () => {
+      setCurrentHit(2 + "px");
       if (!recording) {
         player.player("a").start();
         setBoomEffect((v) => !v);
@@ -323,6 +344,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("a"), keyboardToggleStep);
     },
     s: () => {
+      setCurrentHit(2 + 40 * 1 + "px");
       if (!recording) {
         player.player("s").start();
         setClapEffect((v) => !v);
@@ -331,6 +353,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("s"), keyboardToggleStep);
     },
     d: () => {
+      setCurrentHit(2 + 40 * 2 + "px");
       if (!recording) {
         player.player("d").start();
         setHihatEffect((v) => !v);
@@ -339,6 +362,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("d"), keyboardToggleStep);
     },
     f: () => {
+      setCurrentHit(2 + 40 * 3 + "px");
       if (!recording) {
         player.player("f").start();
         setKickEffect((v) => !v);
@@ -347,6 +371,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("f"), keyboardToggleStep);
     },
     g: () => {
+      setCurrentHit(2 + 40 * 4 + "px");
       if (!recording) {
         player.player("g").start();
         setOpenhatEffect((v) => !v);
@@ -355,6 +380,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("g"), keyboardToggleStep);
     },
     h: () => {
+      setCurrentHit(2 + 40 * 5 + "px");
       if (!recording) {
         player.player("h").start();
         setRideEffect((v) => !v);
@@ -363,7 +389,8 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("h"), keyboardToggleStep);
     },
     j: () => {
-      if (recording) {
+      setCurrentHit(2 + 40 * 6 + "px");
+      if (!recording) {
         player.player("j").start();
         setSnareEffect((v) => !v);
         return;
@@ -371,6 +398,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("j"), keyboardToggleStep);
     },
     k: () => {
+      setCurrentHit(2 + 40 * 7 + "px");
       if (!recording) {
         player.player("k").start();
         setTomEffect((v) => !v);
@@ -379,6 +407,7 @@ const Sequencer = ({
       toggleStep(lineMap.indexOf("k"), keyboardToggleStep);
     },
     l: () => {
+      setCurrentHit(2 + 40 * 8 + "px");
       if (!recording) {
         player.player("l").start();
         setTinkEffect((v) => !v);
@@ -571,7 +600,7 @@ const Sequencer = ({
         </Flex>
 
         <ThemeProvider theme={colorTheme[themeColor]}>
-          <Wrapper ref={ref}>
+          <Wrapper ref={ref} onClick={onControllerClose}>
             <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
             <KickTransition effect={kickEffect} setEffect={setKickEffect} />
             <TomTransition effect={tomEffect} setEffect={setTomEffect} />
@@ -614,6 +643,7 @@ const Sequencer = ({
               <IconButton
                 rounded="full"
                 aria-label="play or pause"
+                bg={useColorModeValue("gray.100", "gray.600")}
                 icon={playing ? <BsPauseFill /> : <BsPlayFill />}
                 onClick={recording ? () => false : handlePlaying}
                 cursor={recording ? "not-allowed" : "pointer"}
@@ -665,6 +695,7 @@ const Sequencer = ({
                 rounded="full"
                 aria-label="stop recording"
                 icon={<BsFillStopFill />}
+                bg={useColorModeValue("gray.100", "gray.600")}
                 onClick={handleStopRecording}
                 cursor={recording ? "pointer" : "not-allowed"}
               />
@@ -702,7 +733,6 @@ const Sequencer = ({
             top="0"
             left="0"
             pointerEvents="none"
-            onClick={onClose}
           />
         </Fade>
         <Slide direction="bottom" in={isControllerOpen} style={{ zIndex: 299 }}>
@@ -868,7 +898,20 @@ const Sequencer = ({
                 style={{ width: `calc(100% - 44px)` }}
                 justifyContent="space-around"
                 alignItems="baseline"
+                position="relative"
               >
+                <Button
+                  size="xs"
+                  position="absolute"
+                  bottom="1px"
+                  left="-40px"
+                  leftIcon={<BsMusicNote />}
+                  px={1}
+                  iconSpacing="0.1"
+                  variant="ghost"
+                >
+                  4/4
+                </Button>
                 <Text fontWeight="600" fontSize="lg">
                   1
                 </Text>
@@ -894,7 +937,16 @@ const Sequencer = ({
                 <Text fontSize="sm">3</Text>
                 <Text fontSize="sm">4</Text>
               </HStack>
-              <HStack w="100%">
+              <HStack w="100%" position="relative">
+                <Box
+                  display={currentHit === "500px" ? "none" : "initial"}
+                  top={currentHit}
+                  opacity=".4"
+                  position="absolute"
+                  w="100%"
+                  h="36px"
+                  bg={useColorModeValue("white", "gray.600")}
+                ></Box>
                 <IconStack currentPage={currentPage} />
                 <Grid
                   sequence={sequence}

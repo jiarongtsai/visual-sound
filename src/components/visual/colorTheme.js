@@ -36,10 +36,10 @@ const colorTheme = {
   },
   purple: {
     background: "#805ad5",
-    light: "#7209b7",
+    light: "#FF3590",
     medium: "#5aabe0",
     dark: "#3a0ca3",
-    special: "#FF3590",
+    special: "#7209b7",
   },
 };
 
