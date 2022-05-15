@@ -11,38 +11,42 @@ import {
   ModalBody,
   useDisclosure,
   useToast,
-  Button,
+  Image,
   Code,
+  Heading,
+  Button,
+  Box,
 } from "@chakra-ui/react";
 import { BsFillCameraFill } from "react-icons/bs";
+import onboardingVisual from "../asset/illustration/visualsound.png";
 
 import JoyRide from "react-joyride";
-import { is } from "@react-spring/shared";
 
 export default function Main() {
-  const TOUR_STEPS = [
-    {
-      target: "#tour-player",
-      title: "Record Music",
-      content: "Record music by clicking Record button",
-    },
-    {
-      target: "#tour-edit-panel",
-      title: "Edit your Record",
-      content: "Edit your record and change colors with editing panel",
-    },
-    {
-      target: "#tour-screenshot",
-      title: "Screenshot a cover",
-      content:
-        "Before Uploading, remember to take a screenshot as the cover of your record",
-    },
-    {
-      target: "#tour-upload",
-      title: "Upload and Share",
-      content: "Add description to your record, and share with the community",
-    },
-  ];
+  // const TOUR_STEPS = [
+  //   {
+  //     target: "#tour-player",
+  //     title: "Record the Music",
+  //     content: "Record music by clicking Record button",
+  //   },
+  //   {
+  //     target: "#tour-edit-panel",
+  //     title: "Edit your Recording",
+  //     content: "Edit your recording and change colors with editing panel",
+  //   },
+  //   {
+  //     target: "#tour-screenshot",
+  //     title: "Choose a Cover",
+  //     content:
+  //       "Before Uploading, remember to take a screenshot as the cover of your recording",
+  //   },
+  //   {
+  //     target: "#tour-upload",
+  //     title: "Share with Public",
+  //     content:
+  //       "Add description to your recording, and share with the Visual Sound community",
+  //   },
+  // ];
 
   const [runTour, setRunTour] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -64,49 +68,39 @@ export default function Main() {
     };
   }, []);
 
-  console.log(isOpen);
-
   useEffect(() => {
     if (isMounted.current) {
       if (!isOpen) {
+        toast({
+          position: "top",
+          isClosable: true,
+          duration: 4000,
+          render: () => (
+            <Box w="100vw">
+              <Button
+                mt="40vh"
+                mx="auto"
+                colorScheme="purple"
+                transform="translateX(55%)"
+              >
+                Press A to Z, and turn up speakers
+              </Button>
+            </Box>
+          ),
+        });
         setTimeout(() => {
           setRunTour(true);
         }, 10000);
+        isMounted.current = false;
       }
     } else {
       isMounted.current = true;
     }
   }, [isOpen]);
-  // useEffect(() => {
-  //   if (!recording && !isOpen) {
-  //     toast({
-  //       position: "top-right",
-  //       isClosable: true,
-  //       duration: 3000,
-  //       render: () => (
-  //         <Button
-  //           p={3}
-  //           mt="128px"
-  //           colorScheme="purple"
-  //           isLoading
-  //           spinner={<BsFillCameraFill />}
-  //           loadingText="Take a screenshot before update!"
-  //         >
-  //           Take a screenshot before update!
-  //         </Button>
-  //       ),
-  //     });
-  //     // toast({
-  //     //   title: "toast",
-  //     //   position: "top-right",
-  //     //   variant: "top-accent",
 
-  //     // });
-  //   }
-  // }, [recording]);
   return (
     <>
-      <JoyRide
+      {/* <JoyRide
         run={runTour}
         steps={TOUR_STEPS}
         continuous={true}
@@ -131,14 +125,23 @@ export default function Main() {
           last: "End tour",
           skip: "Skip",
         }}
-      />
+      /> */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(2px) " />
-        <ModalContent textAlign="center" mt="30vh">
+        <ModalContent textAlign="center" mt="10vh">
           <ModalHeader></ModalHeader>
           <ModalBody>
-            {/* add beautiful illustration */}
-            <Text>Press any key, A to Z, and turn up speakers</Text>
+            <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+              Welcom to Visual Sound
+            </Heading>
+            <Text mt={2}>
+              Press any key, <Code>A</Code> to <Code>Z</Code>, and turn up
+              speakers
+            </Text>
+            <Image src={onboardingVisual} w="100%" mx="auto" mt={4} mb={8} />
+            <Button colorScheme="purple" onClick={onClose}>
+              Start
+            </Button>
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
