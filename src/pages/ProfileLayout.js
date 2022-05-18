@@ -54,7 +54,7 @@ export default function ProfileLayout() {
   }, []);
 
   const unfollow = async (userID) => {
-    await Firebase.unfollowUser(user.uid, userID, profile.following);
+    await Firebase.unfollowUser(user.uid, userID);
     setAction((pre) => ({
       ...pre,
       userList: pre.userList.filter((user) => user.author_id !== userID),
@@ -107,7 +107,7 @@ export default function ProfileLayout() {
         profile={profile}
         setProfile={setProfile}
       />
-      <Flex mt={24} direction="column" align="center">
+      <Flex mt={20} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}
           justify="center"

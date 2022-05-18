@@ -771,7 +771,7 @@ const Sequencer = ({
               mb={8}
               mx="auto"
             >
-              <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "5%"]}>
+              <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "2%"]}>
                 <Text>Color Theme</Text>
                 <HStack spacing={2} mt={2}>
                   {Object.entries(colorTheme).map(([key, value], i) => {

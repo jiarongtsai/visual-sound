@@ -266,11 +266,24 @@ const Firebase = {
 
     return [...authorResult, ...TagsResult];
   },
+  async getRecommendFollower(id) {
+    const list = await this.getFollowingList(id);
+    list.push(id);
+    const recommendUser = await this.getAllUsers(list);
+
+    return recommendUser.slice(0, 6);
+  },
   async getFollowingList(id) {
     const docRef = doc(this.db(), "users", id);
     const docSnap = await getDoc(docRef);
 
     return docSnap.data()?.following;
+  },
+  async getFollowersList(id) {
+    const docRef = doc(this.db(), "users", id);
+    const docSnap = await getDoc(docRef);
+
+    return docSnap.data()?.followers;
   },
   async getFollowingWorks(id) {
     const followingList = await this.getFollowingList(id);
@@ -617,29 +630,27 @@ const Firebase = {
     );
     return onSnapshot(queryCondition, callback);
   },
-  async followUser(uid, userID, userList) {
-    const uList = await this.getFollowingList(uid);
-
-    if (uList.includes(userID)) return;
-
-    await updateDoc(doc(this.db(), `users/${uid}`), {
-      following: [...uList, userID],
+  async followUser(senderID, receiverID) {
+    const senderFollowingList = await this.getFollowingList(senderID);
+    if (senderFollowingList.includes(receiverID)) return;
+    //fixme maybe 是不存在的情境
+    const receiverFollowersList = await this.getFollowersList(receiverID);
+    await updateDoc(doc(this.db(), `users/${senderID}`), {
+      following: [...senderFollowingList, receiverID],
     });
-    await updateDoc(doc(this.db(), `users/${userID}`), {
-      followers: [...userList, uid],
+    await updateDoc(doc(this.db(), `users/${receiverID}`), {
+      followers: [...receiverFollowersList, senderID],
     });
   },
-  async unfollowUser(uid, userID, userList) {
-    const uList = await this.getFollowingList(uid);
-    const newList = uList.filter((id) => id !== userID);
+  async unfollowUser(senderID, receiverID) {
+    const senderFollowingList = await this.getFollowingList(senderID);
+    const receiverFollowersList = await this.getFollowersList(receiverID);
 
-    await updateDoc(doc(this.db(), `users/${uid}`), {
-      following: newList,
+    await updateDoc(doc(this.db(), `users/${senderID}`), {
+      following: senderFollowingList.filter((id) => id !== receiverID),
     });
-
-    const newUserList = userList.filter((id) => id !== uid);
-    await updateDoc(doc(this.db(), `users/${userID}`), {
-      followers: newUserList,
+    await updateDoc(doc(this.db(), `users/${receiverID}`), {
+      followers: receiverFollowersList.filter((id) => id !== senderID),
     });
   },
   async getChatroom(id1, id2) {

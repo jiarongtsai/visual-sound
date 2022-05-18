@@ -20,7 +20,7 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
-
+import { useNavigate } from "react-router-dom";
 import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
@@ -35,11 +35,12 @@ export default function UploadModal({
   onClose,
 }) {
   const [user, loading, error] = useContext(AuthContext);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({ description: "try to make a sound" });
   const [alltags, setAlltags] = useState([]);
   const [tags, setTags] = useState([]);
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
@@ -85,15 +86,15 @@ export default function UploadModal({
       themeColor: themeColor,
     };
 
-    Firebase.addNewWork(workRef, data).then(() => {
-      Firebase.updateTags(tags).then(() => {
-        setInputs({});
-        setTags([]);
-        setIsUploaded(true);
-        setImage(null);
-        onClose();
-      });
-    });
+    await Firebase.addNewWork(workRef, data);
+    await Firebase.updateTags(tags);
+
+    setInputs({});
+    setTags([]);
+    setIsUploaded(true);
+    setImage(null);
+    onClose();
+    navigate(`/explore`);
   }
 
   if (!user) return null;
@@ -121,6 +122,7 @@ export default function UploadModal({
                       sheetmusic={handleSequenceData(sequence)}
                       bpm={bpm}
                       themeColor={themeColor}
+                      imageUrl={image}
                     />
                   );
                 }}
@@ -135,19 +137,7 @@ export default function UploadModal({
                 spacing={4}
               >
                 <Text>Edit Details</Text>
-                <Box>
-                  <Text color="gray.500" fontSize="sm">
-                    Screenshot
-                  </Text>
-                  {image && (
-                    <Image
-                      src={image}
-                      w="100%"
-                      maxH="300px"
-                      objectFit="cover"
-                    />
-                  )}
-                </Box>
+
                 <Box w="100%">
                   <Text color="gray.500" fontSize="sm">
                     Description
@@ -163,7 +153,7 @@ export default function UploadModal({
                 </Box>
                 <Box w="100%">
                   <FormControl>
-                    <Text color="gray.500" fontSize="sm" my={2}>
+                    <Text color="gray.500" fontSize="sm" mb={2}>
                       Add Tags to your work
                     </Text>
                     <CreatableSelect

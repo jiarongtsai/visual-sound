@@ -116,10 +116,10 @@ export default function User() {
 
   function handleFollow() {
     if (!profile.followers?.includes(user?.uid)) {
-      Firebase.followUser(user.uid, uid, profile.followers);
+      Firebase.followUser(user.uid, uid);
       return;
     }
-    Firebase.unfollowUser(user.uid, uid, profile.followers);
+    Firebase.unfollowUser(user.uid, uid);
   }
 
   function handleChat() {
@@ -128,11 +128,12 @@ export default function User() {
     });
   }
 
+  //link bug
   return (
     <>
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
 
-      <Flex mt={24} direction="column" align="center">
+      <Flex mt={20} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}
           justify="center"

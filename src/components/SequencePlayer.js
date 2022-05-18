@@ -129,6 +129,7 @@ export default function SequencePlayer({
     <>
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
         <Wrapper
+          // disable hover effect when playing
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
           onClick={() => setPlaying(!playing)}
