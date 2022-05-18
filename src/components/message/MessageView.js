@@ -156,7 +156,6 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
           />
           <InputRightElement>
             <IconButton
-              // bg="transparent"
               variant="ghost"
               rounded="full"
               position="absolute"
@@ -168,9 +167,6 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
           </InputRightElement>
         </InputGroup>
       </Flex>
-      {/* <input  /> */}
-      {/* <button onClick={sendMessage}>send</button>
-      </div> */}
     </Flex>
   );
 }

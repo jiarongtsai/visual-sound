@@ -32,7 +32,6 @@ export default function User() {
   let isFetching = false;
 
   useEffect(() => {
-    //authcontext 的延遲問題如何解決
     if (user?.uid === uid) {
       navigate(`/profile`);
     }

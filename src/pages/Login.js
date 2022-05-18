@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Spinner,
   Box,
   FormControl,
   FormLabel,
@@ -13,7 +12,6 @@ import {
   Text,
   useColorModeValue,
   Link,
-  Flex,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";

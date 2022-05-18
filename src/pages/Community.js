@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import {
   Container,
   Flex,
-  Box,
   Text,
   Spacer,
   Button,
@@ -11,11 +10,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Firebase } from "../utils/firebase";
-import { UserSmall, UserWithName } from "../components/UserVariants";
+import { UserWithName } from "../components/UserVariants";
 import { AuthContext } from "../components/auth/Auth";
 import CommunityCard from "../components/CommunityCard";
 import Loader from "../components/Loader";
-import { async } from "@firebase/util";
 
 export default function Community({ followingWorks, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);

@@ -22,7 +22,7 @@ export const MessageViewSender = ({ name, thumbnail, content }) => {
   );
 };
 
-export const MessageViewReceiver = ({ content, time }) => {
+export const MessageViewReceiver = ({ content }) => {
   return (
     <Flex alignSelf="flex-end" px={6}>
       <Text

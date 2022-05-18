@@ -15,7 +15,7 @@ import { VStack } from "@chakra-ui/react";
 export const IconStack = ({ currentPage }) => {
   return (
     <VStack spacing={1}>
-      {currentPage === 1 ? (
+      {currentPage === 1 && (
         <>
           <IconBoom />
           <IconClap />
@@ -27,10 +27,8 @@ export const IconStack = ({ currentPage }) => {
           <IconTom />
           <IconTink />
         </>
-      ) : (
-        ""
       )}
-      {currentPage === 2 ? (
+      {currentPage === 2 && (
         <>
           <IconRideCymbal />
           <IconSnare />
@@ -42,10 +40,8 @@ export const IconStack = ({ currentPage }) => {
           <IconKick />
           <IconOpenHat />
         </>
-      ) : (
-        ""
       )}
-      {currentPage === 3 ? (
+      {currentPage === 3 && (
         <>
           <IconTink />
           <IconHiHat />
@@ -58,8 +54,6 @@ export const IconStack = ({ currentPage }) => {
           <IconSnare />
           <IconTom />
         </>
-      ) : (
-        ""
       )}
     </VStack>
   );
