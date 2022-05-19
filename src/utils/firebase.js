@@ -468,7 +468,7 @@ const Firebase = {
       collected_by: updatedCollectedByList,
     });
     await updateDoc(doc(this.db(), "users", uid), {
-      collction_map: updatedCollectionMap,
+      collection_map: updatedCollectionMap,
     });
   },
   async addComment(uid, id, content, count) {

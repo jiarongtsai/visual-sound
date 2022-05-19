@@ -1,3 +1,4 @@
+import { Square, useColorModeValue } from "@chakra-ui/react";
 import { ReactComponent as Boom } from "../../asset/react_icon/icon_boom.svg";
 import { ReactComponent as Clap } from "../../asset/react_icon/icon_clap.svg";
 import { ReactComponent as HiHat } from "../../asset/react_icon/icon_hiHat.svg";
@@ -7,7 +8,6 @@ import { ReactComponent as Kick } from "../../asset/react_icon/icon_kick.svg";
 import { ReactComponent as Snare } from "../../asset/react_icon/icon_snare.svg";
 import { ReactComponent as Tom } from "../../asset/react_icon/icon_tom.svg";
 import { ReactComponent as Tink } from "../../asset/react_icon/icon_tink.svg";
-import { Square, useColorModeValue } from "@chakra-ui/react";
 
 export {
   IconClap,
@@ -21,108 +21,85 @@ export {
   IconTink,
 };
 
-const IconTink = () => {
+const IconWrapper = ({ children }) => {
+  const bgColor = useColorModeValue("gray.100", "gray.400");
   const activeColor = useColorModeValue("gray.300", "gray.100");
   return (
     <Square
       size="36px"
       rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
+      bg={bgColor}
       _active={{
         background: activeColor,
       }}
     >
-      <Tink width="25px" aria-label="clap" opacity="0.7" />
+      {children}
     </Square>
+  );
+};
+
+const IconTink = () => {
+  return (
+    <IconWrapper>
+      <Tink width="25px" aria-label="tink" opacity="0.7" />
+    </IconWrapper>
   );
 };
 const IconRideCymbal = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <RideCymbal width="27px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <RideCymbal width="27px" aria-label="rideCymbal" opacity="0.7" />
+    </IconWrapper>
   );
 };
 
 const IconClap = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
+    <IconWrapper>
       <Clap width="25px" aria-label="clap" opacity="0.6" />
-    </Square>
+    </IconWrapper>
   );
 };
 
 const IconKick = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <Kick width="25px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <Kick width="25px" aria-label="kick" opacity="0.7" />
+    </IconWrapper>
   );
 };
 const IconSnare = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <Snare width="25px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <Snare width="25px" aria-label="snare" opacity="0.7" />
+    </IconWrapper>
   );
 };
 const IconTom = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
+    <IconWrapper>
       <Tom width="31px" aria-label="clap" opacity="0.8" />
-    </Square>
+    </IconWrapper>
   );
 };
 const IconOpenHat = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <OpenHat width="25px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <OpenHat width="25px" aria-label="openHat" opacity="0.7" />
+    </IconWrapper>
   );
 };
 const IconHiHat = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <HiHat width="25px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <HiHat width="25px" aria-label="hiHat" opacity="0.7" />
+    </IconWrapper>
   );
 };
 const IconBoom = () => {
   return (
-    <Square
-      size="36px"
-      rounded="md"
-      bg={useColorModeValue("gray.100", "gray.400")}
-    >
-      <Boom width="25px" aria-label="clap" opacity="0.7" />
-    </Square>
+    <IconWrapper>
+      <Boom width="25px" aria-label="boom" opacity="0.7" />
+    </IconWrapper>
   );
 };

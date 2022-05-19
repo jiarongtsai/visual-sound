@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import Collect from "../components/interaction/Collect";
 import Like from "../components/interaction/Like";
@@ -97,19 +96,12 @@ export default function WorkView({ setFollowingWorks }) {
         justify="space-between"
       >
         <Flex direction="column" w={["100%", "100%", "60%"]}>
-          <PlayerProvider>
-            {({ soundPlayer }) => {
-              return (
-                <SequencePlayer
-                  imageUrl={work.image_url}
-                  player={soundPlayer}
-                  sheetmusic={work.sheetmusic}
-                  bpm={work.bpm}
-                  themeColor={work.themeColor}
-                />
-              );
-            }}
-          </PlayerProvider>
+          <SequencePlayer
+            imageUrl={work.image_url}
+            sheetmusic={work.sheetmusic}
+            bpm={work.bpm}
+            themeColor={work.themeColor}
+          />
         </Flex>
         <Flex direction="column" w={["100%", "100%", "35%"]}>
           <VStack align="flex-start" h="43vh" overflowY={"scroll"} p={1}>

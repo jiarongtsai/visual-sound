@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
-import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 import { AuthContext } from "../components/auth/Auth";
 import Collect from "./interaction/Collect";
@@ -114,19 +113,12 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
               justify="space-between"
             >
               <Flex direction="column" w={["100%", "100%", "68%"]}>
-                <PlayerProvider>
-                  {({ soundPlayer }) => {
-                    return (
-                      <SequencePlayer
-                        player={soundPlayer}
-                        imageUrl={work.image_url}
-                        sheetmusic={work.sheetmusic}
-                        bpm={work.bpm}
-                        themeColor={work.themeColor}
-                      />
-                    );
-                  }}
-                </PlayerProvider>
+                <SequencePlayer
+                  imageUrl={work.image_url}
+                  sheetmusic={work.sheetmusic}
+                  bpm={work.bpm}
+                  themeColor={work.themeColor}
+                />
               </Flex>
               <Flex direction="column" w={["100%", "100%", "30%"]}>
                 <VStack align="flex-start" h="55vh" overflowY={"scroll"} p={1}>

@@ -11,8 +11,8 @@ import snare from "../asset/sounds/snare.wav";
 import tink from "../asset/sounds/tink.wav";
 import tom from "../asset/sounds/tom.wav";
 
-const PlayerProvider = ({ children }) => {
-  const [soundPlayer, setSoundPlayer] = useState(null);
+export default () => {
+  const [player, setPlayer] = useState(null);
   useEffect(() => {
     const soundPlayer = new Tone.Players(
       {
@@ -27,8 +27,8 @@ const PlayerProvider = ({ children }) => {
         l: tink,
       },
       () => {
-        console.log("sound loaded");
-        setSoundPlayer(soundPlayer);
+        console.log("player loaded");
+        setPlayer(soundPlayer);
       }
     ).toDestination();
     return () => {
@@ -36,7 +36,5 @@ const PlayerProvider = ({ children }) => {
       soundPlayer.disconnect();
     };
   }, []);
-  return children({ soundPlayer });
+  return player;
 };
-
-export { PlayerProvider };

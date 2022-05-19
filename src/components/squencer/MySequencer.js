@@ -17,17 +17,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import {
-  Pagination,
-  usePagination,
-  PaginationNext,
-  PaginationPage,
-  PaginationPrevious,
-  PaginationContainer,
-  PaginationPageGroup,
-} from "@ajna/pagination";
-
 import { useSpring, animated } from "react-spring";
+import { usePagination } from "@ajna/pagination";
+import usePlayer from "../usePlayer";
 
 import styled, { ThemeProvider } from "styled-components";
 import { useScreenshot } from "../customHook/useScreenshot";
@@ -56,15 +48,15 @@ import { RideTransition } from "../visual/RideTransition";
 import { SnareTransition } from "../visual/SnareTransition";
 import { TomTransition } from "../visual/TomTransition";
 import { TinkTransition } from "../visual/TinkTransition";
-import { CgChevronLeft, CgChevronRight } from "react-icons/cg";
 
 import { Notification } from "../message/Notification";
 
 import BPMController from "./BPMController";
+import Pagination from "./Pagination";
 import { IconStack } from "./IconStack";
 //sequence
 const steps = 16;
-const initialCellState = { triggered: false, activated: false };
+const initialCellState = { triggaered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
 const initialState = [
   Array(16).fill(initialCellState),
@@ -96,39 +88,6 @@ const initialState = [
   Array(16).fill(initialCellState),
 ];
 
-const Minimal = ({ currentPage, setCurrentPage, pagesCount, pages }) => {
-  const currentBackground = useColorModeValue("gray.300", "gray.500");
-  return (
-    <Pagination
-      my={4}
-      pagesCount={pagesCount}
-      currentPage={currentPage}
-      onPageChange={setCurrentPage}
-    >
-      <PaginationContainer>
-        <PaginationPrevious>
-          <CgChevronLeft />
-        </PaginationPrevious>
-        <PaginationPageGroup mx={2}>
-          {pages.map((page) => (
-            <PaginationPage
-              w={10}
-              key={`pagination_page_${page}`}
-              page={page}
-              _current={{
-                bg: currentBackground,
-              }}
-            />
-          ))}
-        </PaginationPageGroup>
-        <PaginationNext>
-          <CgChevronRight />
-        </PaginationNext>
-      </PaginationContainer>
-    </Pagination>
-  );
-};
-
 const ChainWrapper = styled(animated.div)`
   width: 100vw;
   position: fixed;
@@ -157,17 +116,12 @@ function ScaleSpring({ children, move }) {
   // ...
   return <animated.div style={styles}>{children}</animated.div>;
 }
-const Sequencer = ({
-  player,
-  playing,
-  setPlaying,
-  recording,
-  setRecording,
-}) => {
+const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
     initialState: { currentPage: 1 },
   });
+
   const {
     isOpen: isControllerOpen,
     onOpen: onControllerOpen,
@@ -177,6 +131,7 @@ const Sequencer = ({
   const ref = createRef(null);
   const [image, setImage, takeScreenshot] = useScreenshot();
   const getImage = () => takeScreenshot(ref.current);
+  const player = usePlayer();
 
   const [isUploaded, setIsUploaded] = useState(false);
   const [screenshotSpring, setScreenshotSpring] = useState(false);
@@ -453,36 +408,6 @@ const Sequencer = ({
       setScreenshotSpring(true);
     }
   }, [recording]);
-
-  // const toast = useToast();
-  // useEffect(() => {
-  //   if (!isControllerOpen) {
-  //     setScreenshotSpring(false);
-  //   }
-
-  //   const timeOut = setTimeout(() => {
-  //     console.log("start to guide to another step");
-  //     toast({
-  //       position: "bottom",
-  //       isClosable: true,
-  //       duration: 3000,
-  //       render: () => (
-  //         <Button
-  //           p={3}
-  //           mb="128px"
-  //           colorScheme="purple"
-  //           isLoading
-  //           spinner={<BsFillCameraFill />}
-  //           loadingText="Take a screenshot before update!"
-  //         >
-  //           Take a screenshot before update!
-  //         </Button>
-  //       ),
-  //     });
-  //   }, 8000);
-
-  //   return () => timeOut();
-  // }, []);
 
   function handleBacktoHead() {
     setCurrentStep(0);
@@ -963,7 +888,7 @@ const Sequencer = ({
               </HStack>
             </Flex>
             <Flex p={4}>
-              <Minimal
+              <Pagination
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 pagesCount={pagesCount}

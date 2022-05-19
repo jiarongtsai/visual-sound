@@ -21,7 +21,6 @@ import {
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
 import { useNavigate } from "react-router-dom";
-import { PlayerProvider } from "../components/PlayerProvider";
 import SequencePlayer from "../components/SequencePlayer";
 
 export default function UploadModal({
@@ -114,19 +113,13 @@ export default function UploadModal({
           <Flex direction={["column", "row"]} justify="space-between">
             <Flex direction="column" w={["100%", "100%", "68%"]}>
               <Text>Preview</Text>
-              <PlayerProvider>
-                {({ soundPlayer }) => {
-                  return (
-                    <SequencePlayer
-                      player={soundPlayer}
-                      sheetmusic={handleSequenceData(sequence)}
-                      bpm={bpm}
-                      themeColor={themeColor}
-                      imageUrl={image}
-                    />
-                  );
-                }}
-              </PlayerProvider>
+
+              <SequencePlayer
+                sheetmusic={handleSequenceData(sequence)}
+                bpm={bpm}
+                themeColor={themeColor}
+                imageUrl={image}
+              />
             </Flex>
             <Flex direction="column" w={["100%", "100%", "30%"]}>
               <VStack

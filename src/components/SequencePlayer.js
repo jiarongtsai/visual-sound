@@ -13,7 +13,7 @@ import { RideTransition } from "./visual/RideTransition";
 import { SnareTransition } from "./visual/SnareTransition";
 import { TomTransition } from "./visual/TomTransition";
 import { TinkTransition } from "./visual/TinkTransition";
-
+import usePlayer from "./usePlayer";
 //sequence
 const steps = 16;
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
@@ -31,7 +31,6 @@ const initialState = [
 ];
 
 export default function SequencePlayer({
-  player,
   imageUrl,
   sheetmusic,
   bpm,
@@ -51,6 +50,7 @@ export default function SequencePlayer({
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
   const [isHover, setIsHover] = useState(true);
+  const player = usePlayer();
 
   function transformStoredSequence(storedData) {
     if (!storedData) return;

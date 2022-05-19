@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import MySequencer from "../components/squencer/MySequencer";
-import { PlayerProvider } from "../components/PlayerProvider";
 import {
   Text,
   Modal,
@@ -17,36 +16,35 @@ import {
   Button,
   Box,
 } from "@chakra-ui/react";
-import { BsFillCameraFill } from "react-icons/bs";
 import onboardingVisual from "../asset/illustration/visualsound.png";
 
 import JoyRide from "react-joyride";
 
 export default function Main() {
-  // const TOUR_STEPS = [
-  //   {
-  //     target: "#tour-player",
-  //     title: "Record the Music",
-  //     content: "Record music by clicking Record button",
-  //   },
-  //   {
-  //     target: "#tour-edit-panel",
-  //     title: "Edit your Recording",
-  //     content: "Edit your recording and change colors with editing panel",
-  //   },
-  //   {
-  //     target: "#tour-screenshot",
-  //     title: "Choose a Cover",
-  //     content:
-  //       "Before Uploading, remember to take a screenshot as the cover of your recording",
-  //   },
-  //   {
-  //     target: "#tour-upload",
-  //     title: "Share with Public",
-  //     content:
-  //       "Add description to your recording, and share with the Visual Sound community",
-  //   },
-  // ];
+  const TOUR_STEPS = [
+    {
+      target: "#tour-player",
+      title: "Record the Music",
+      content: "Record music by clicking Record button",
+    },
+    {
+      target: "#tour-edit-panel",
+      title: "Edit your Recording",
+      content: "Edit your recording and change colors with editing panel",
+    },
+    {
+      target: "#tour-screenshot",
+      title: "Choose a Cover",
+      content:
+        "Before Uploading, remember to take a screenshot as the cover of your recording",
+    },
+    {
+      target: "#tour-upload",
+      title: "Share with Public",
+      content:
+        "Add description to your recording, and share with the Visual Sound community",
+    },
+  ];
 
   const [runTour, setRunTour] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -100,7 +98,7 @@ export default function Main() {
 
   return (
     <>
-      {/* <JoyRide
+      <JoyRide
         run={runTour}
         steps={TOUR_STEPS}
         continuous={true}
@@ -125,7 +123,7 @@ export default function Main() {
           last: "End tour",
           skip: "Skip",
         }}
-      /> */}
+      />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(2px) " />
         <ModalContent textAlign="center" mt="10vh">
@@ -146,17 +144,13 @@ export default function Main() {
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
-      <PlayerProvider>
-        {({ soundPlayer }) => (
-          <MySequencer
-            player={soundPlayer}
-            playing={playing}
-            setPlaying={setPlaying}
-            recording={recording}
-            setRecording={setRecording}
-          />
-        )}
-      </PlayerProvider>
+
+      <MySequencer
+        playing={playing}
+        setPlaying={setPlaying}
+        recording={recording}
+        setRecording={setRecording}
+      />
     </>
   );
 }
