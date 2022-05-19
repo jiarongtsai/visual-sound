@@ -17,16 +17,6 @@ import {
   DrawerContent,
 } from "@chakra-ui/react";
 
-import { useSpring, animated } from "react-spring";
-import { usePagination } from "@ajna/pagination";
-import usePlayer from "../usePlayer";
-
-import styled, { ThemeProvider } from "styled-components";
-import { useScreenshot } from "../customHook/useScreenshot";
-import UploadModal from "../UploadModal";
-import { Wrapper } from "../visual/VisualElement";
-import { colorTheme } from "../visual/colorTheme";
-import Grid from "./grid";
 import {
   BsPlayFill,
   BsPauseFill,
@@ -38,7 +28,16 @@ import {
   BsBoxArrowUp,
   BsMusicNote,
 } from "react-icons/bs";
+import { usePagination } from "@ajna/pagination";
+import { ThemeProvider } from "styled-components";
 
+import usePlayer from "../usePlayer";
+import { useScreenshot } from "../customHook/useScreenshot";
+
+import UploadModal from "../UploadModal";
+
+import { colorTheme } from "../visual/colorTheme";
+import { MotionWrapper } from "../visual/MotionWrapper";
 import { BoomTransition } from "../visual/BoomTransition";
 import { ClapTransition } from "../visual/ClapTransition";
 import { HihatTransition } from "../visual/HihatTransition";
@@ -57,6 +56,7 @@ import Pagination from "./Pagination";
 import { IconStack } from "./IconStack";
 import ChainSpring from "./ChainSpring";
 import ScaleSpring from "./ScaleSpring";
+import Grid from "./grid";
 //sequence
 const steps = 16;
 const instruments = Array(27).fill(null);
@@ -474,7 +474,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         </Flex>
 
         <ThemeProvider theme={colorTheme[themeColor]}>
-          <Wrapper ref={ref} onClick={onControllerClose}>
+          <MotionWrapper ref={ref} onClick={onControllerClose}>
             <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
             <KickTransition effect={kickEffect} setEffect={setKickEffect} />
             <TomTransition effect={tomEffect} setEffect={setTomEffect} />
@@ -487,7 +487,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
             <RideTransition effect={rideEffect} setEffect={setRideEffect} />
             <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
             <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
-          </Wrapper>
+          </MotionWrapper>
         </ThemeProvider>
         <ChainSpring
           open={

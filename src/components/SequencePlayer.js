@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IconButton, Image } from "@chakra-ui/react";
 import { BsPlayCircle, BsPauseCircle } from "react-icons/bs";
 import { ThemeProvider } from "styled-components";
-import { Wrapper } from "./visual/VisualElement";
+import { MotionWrapper } from "./visual/MotionWrapper";
 import { colorTheme } from "./visual/colorTheme";
 import { BoomTransition } from "./visual/BoomTransition";
 import { ClapTransition } from "./visual/ClapTransition";
@@ -128,7 +128,7 @@ export default function SequencePlayer({
   return (
     <>
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
-        <Wrapper
+        <MotionWrapper
           // disable hover effect when playing
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
@@ -168,7 +168,7 @@ export default function SequencePlayer({
           <RideTransition effect={rideEffect} setEffect={setRideEffect} />
           <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
           <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
-        </Wrapper>
+        </MotionWrapper>
       </ThemeProvider>
     </>
   );

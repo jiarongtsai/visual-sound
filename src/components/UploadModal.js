@@ -13,7 +13,6 @@ import {
   Flex,
   VStack,
   Textarea,
-  Image,
   useColorModeValue,
   Box,
   Text,

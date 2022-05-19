@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled, { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import { colorTheme } from "./visual/colorTheme";
+import { MotionWrapper } from "./visual/MotionWrapper";
 import { BoomTransition } from "./visual/BoomTransition";
 import { ClapTransition } from "./visual/ClapTransition";
 import { HihatTransition } from "./visual/HihatTransition";
@@ -10,17 +11,6 @@ import { RideTransition } from "./visual/RideTransition";
 import { SnareTransition } from "./visual/SnareTransition";
 import { TomTransition } from "./visual/TomTransition";
 import { TinkTransition } from "./visual/TinkTransition";
-
-const Wrapper = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  margin: 0 auto;
-  background: ${(props) => props.theme.background};
-`;
 
 //sequence
 const steps = 16;
@@ -127,7 +117,7 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
   return (
     <>
       <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
-        <Wrapper>
+        <MotionWrapper>
           <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
           <KickTransition effect={kickEffect} setEffect={setKickEffect} />
           <TomTransition effect={tomEffect} setEffect={setTomEffect} />
@@ -140,7 +130,7 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
           <RideTransition effect={rideEffect} setEffect={setRideEffect} />
           <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
           <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
-        </Wrapper>
+        </MotionWrapper>
       </ThemeProvider>
     </>
   );
