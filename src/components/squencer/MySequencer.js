@@ -5,16 +5,16 @@ import {
   useDisclosure,
   useColorModeValue,
   CloseButton,
-  Slide,
   Box,
-  Fade,
   IconButton,
   HStack,
   Text,
   Heading,
   Image,
   Tooltip,
-  useToast,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
 } from "@chakra-ui/react";
 
 import { useSpring, animated } from "react-spring";
@@ -50,72 +50,23 @@ import { TomTransition } from "../visual/TomTransition";
 import { TinkTransition } from "../visual/TinkTransition";
 
 import { Notification } from "../message/Notification";
+import { IconButtonTooltip } from "./IconButtonTooltips";
 
 import BPMController from "./BPMController";
 import Pagination from "./Pagination";
 import { IconStack } from "./IconStack";
+import ChainSpring from "./ChainSpring";
+import ScaleSpring from "./ScaleSpring";
 //sequence
 const steps = 16;
+const instruments = Array(27).fill(null);
 const initialCellState = { triggaered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
-const initialState = [
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-];
 
-const ChainWrapper = styled(animated.div)`
-  width: 100vw;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-`;
+const initialState = instruments.map((_) =>
+  Array(steps).fill(initialCellState)
+);
 
-function ChainSpring({ children, open }) {
-  const styles = useSpring({
-    config: { friction: 50, delay: 3000 },
-    loop: open,
-    to: [{ y: -8 }, { y: 0 }],
-    from: { y: 0 },
-  });
-  // ...
-  return <ChainWrapper style={styles}>{children}</ChainWrapper>;
-}
-
-function ScaleSpring({ children, move }) {
-  const styles = useSpring({
-    config: { friction: 30, delay: 5000 },
-    loop: move,
-    to: [{ scale: 1.05 }, { scale: 1 }],
-    from: { scale: 1 },
-  });
-  // ...
-  return <animated.div style={styles}>{children}</animated.div>;
-}
 const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
@@ -469,11 +420,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         >
           <HStack spacing={2}>
             <ScaleSpring move={screenshotSpring && !image}>
-              <Tooltip
-                hasArrow
+              <IconButtonTooltip
                 label="Take a sreenshot of your work"
                 placement="bottom-end"
-                bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
                   id="tour-screenshot"
@@ -489,14 +438,12 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 >
                   screenshot
                 </Button>
-              </Tooltip>
+              </IconButtonTooltip>
             </ScaleSpring>
             <ScaleSpring move={Boolean(image)}>
-              <Tooltip
-                hasArrow
+              <IconButtonTooltip
                 label="Upload your work"
                 placement="bottom-end"
-                bg={useColorModeValue("gray.500", "gray.300")}
               >
                 <Button
                   id="tour-upload"
@@ -512,7 +459,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 >
                   upload
                 </Button>
-              </Tooltip>
+              </IconButtonTooltip>
             </ScaleSpring>
           </HStack>
           {image && (
@@ -564,11 +511,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
               style={{ zIndex: 200 }}
               id="tour-player"
             >
-              <Tooltip
-                hasArrow
-                label={playing ? "pause" : "play"}
-                bg={useColorModeValue("gray.500", "gray.300")}
-              >
+              <IconButtonTooltip label={playing ? "pause" : "play"}>
                 <IconButton
                   rounded="full"
                   aria-label="play or pause"
@@ -577,12 +520,8 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   onClick={recording ? () => false : handlePlaying}
                   cursor={recording ? "not-allowed" : "pointer"}
                 />
-              </Tooltip>
-              <Tooltip
-                hasArrow
-                label={"record"}
-                bg={useColorModeValue("gray.500", "gray.300")}
-              >
+              </IconButtonTooltip>
+              <IconButtonTooltip label={"record"}>
                 <IconButton
                   transform={"scale(1.1)"}
                   borderWidth="2px"
@@ -616,12 +555,8 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   }
                   cursor={playing || recording ? "not-allowed" : "pointer"}
                 />
-              </Tooltip>
-              <Tooltip
-                hasArrow
-                label="stop recording"
-                bg={useColorModeValue("gray.500", "gray.300")}
-              >
+              </IconButtonTooltip>
+              <IconButtonTooltip label="stop recording">
                 <IconButton
                   rounded="full"
                   aria-label="stop recording"
@@ -630,7 +565,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   onClick={handleStopRecording}
                   cursor={recording ? "pointer" : "not-allowed"}
                 />
-              </Tooltip>
+              </IconButtonTooltip>
             </HStack>
             <Button
               h="70px"
@@ -641,7 +576,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
               left="0"
               variant="ghost"
               onClick={onControllerOpen}
-              // onMouseEnter={onControllerOpen}
               style={{ zIndex: 199 }}
               bg={useColorModeValue("gray.100", "gray.600")}
               _hover={{
@@ -655,248 +589,227 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
             </Button>
           </Box>
         </ChainSpring>
-
-        <Fade in={isControllerOpen}>
-          <Box
-            w="100vw"
-            h="100vh"
-            bg="blackAlpha.600"
-            position="fixed"
-            top="0"
-            left="0"
-            pointerEvents="none"
-          />
-        </Fade>
-        <Slide direction="bottom" in={isControllerOpen} style={{ zIndex: 299 }}>
-          <Box
-            py={5}
-            px={10}
-            rounded="md"
-            shadow="base"
-            // onMouseLeave={onControllerClose}
-            bg={useColorModeValue("white", "gray.600")}
-            d="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
-            <Heading size="md">Edit Panel</Heading>
-
-            <Flex
-              direction={["column", "column", "row", "row"]}
-              justifyContent={[
-                "space-between",
-                "space-between",
-                "space-around",
-              ]}
-              flexWrap="wrap"
-              w="70%"
-              mt={4}
-              mb={8}
-              mx="auto"
+        <Drawer
+          placement="bottom"
+          onClose={onControllerClose}
+          isOpen={isControllerOpen}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <Box
+              py={5}
+              px={10}
+              rounded="md"
+              shadow="base"
+              bg={useColorModeValue("white", "gray.600")}
+              d="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
             >
-              <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "2%"]}>
-                <Text>Color Theme</Text>
-                <HStack spacing={2} mt={2}>
-                  {Object.entries(colorTheme).map(([key, value], i) => {
-                    return (
-                      <Button
-                        opacity={0.9}
-                        key={key}
-                        bg={value.background}
-                        color={value.light}
-                        onClick={() => setThemeColor(key)}
-                        size="sm"
-                        fontSize="md"
-                      >
-                        {i + 1}
-                      </Button>
-                    );
-                  })}
-                </HStack>
-              </Box>
-              <Box
-                mx="auto"
-                order={["9", "9", "9", "0"]}
-                flexBasis={["60%", "60%", "60%", "30%"]}
-                mt={[0, 0, 6, 0]}
-              >
-                <HStack spacing={2} mt={4} justifyContent="center">
-                  <Tooltip
-                    hasArrow
-                    label="skip to start"
-                    bg={useColorModeValue("gray.500", "gray.300")}
-                  >
-                    <IconButton
-                      rounded="full"
-                      aria-label="skip to start"
-                      icon={<BsSkipStartFill />}
-                      onClick={recording ? () => false : handleBacktoHead}
-                      cursor={recording ? "not-allowed" : "pointer"}
-                    />
-                  </Tooltip>
-                  <Tooltip
-                    hasArrow
-                    label={playing ? "pause" : "play"}
-                    bg={useColorModeValue("gray.500", "gray.300")}
-                  >
-                    <IconButton
-                      rounded="full"
-                      aria-label="play or pause"
-                      icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                      onClick={recording ? () => false : handlePlaying}
-                      cursor={recording ? "not-allowed" : "pointer"}
-                    />
-                  </Tooltip>
-                  <Tooltip
-                    hasArrow
-                    label={recording ? "stop recording" : "record"}
-                    bg={useColorModeValue("gray.500", "gray.300")}
-                  >
-                    <IconButton
-                      transform={"scale(1.1)"}
-                      borderWidth="2px"
-                      rounded="full"
-                      variant="outline"
-                      colorScheme="red"
-                      position="relative"
-                      aria-label="record or stop recording"
-                      icon={
-                        recording ? (
-                          <Notification
-                            right="12px"
-                            top="12px"
-                            activeColor="red.500"
-                          />
-                        ) : (
-                          <BsFillRecordFill />
-                        )
-                      }
-                      onClick={
-                        playing ? () => false : () => setRecording(!recording)
-                      }
-                      cursor={playing ? "not-allowed" : "pointer"}
-                    />
-                  </Tooltip>
-                  <Tooltip
-                    hasArrow
-                    label="stop recording"
-                    bg={useColorModeValue("gray.500", "gray.300")}
-                  >
-                    <IconButton
-                      rounded="full"
-                      aria-label="stop recording"
-                      icon={<BsFillStopFill />}
-                      onClick={handleStopRecording}
-                      cursor={recording ? "pointer" : "not-allowed"}
-                    />
-                  </Tooltip>
-                  <Tooltip
-                    hasArrow
-                    label="clean up"
-                    bg={useColorModeValue("gray.500", "gray.300")}
-                  >
-                    <IconButton
-                      rounded="full"
-                      aria-label="clean up"
-                      icon={<BsArrowCounterclockwise />}
-                      onClick={recording ? () => false : handleCleanUp}
-                      cursor={recording ? "not-allowed" : "pointer"}
-                    />
-                  </Tooltip>
-                </HStack>
-              </Box>
-              <Box
-                my={[8, 8, 0]}
-                mx="auto"
-                flexBasis="30%"
-                pl={[0, 0, "10%", "5%", "10%"]}
-              >
-                <Text>Bpm</Text>
-                <BPMController BPMValue={BPMValue} setBPMValue={setBPMValue} />
-              </Box>
-            </Flex>
+              <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
+              <Heading size="md">Edit Panel</Heading>
 
-            <Flex
-              direction="column"
-              alignItems="flex-end"
-              w={["100%", "90%", "65%"]}
-              mx="auto"
-              minW="300px"
-              overflowX="scroll"
-            >
-              <HStack
-                style={{ width: `calc(100% - 44px)` }}
-                justifyContent="space-around"
-                alignItems="baseline"
-                position="relative"
+              <Flex
+                direction={["column", "column", "row", "row"]}
+                justifyContent={[
+                  "space-between",
+                  "space-between",
+                  "space-around",
+                ]}
+                flexWrap="wrap"
+                w="70%"
+                mt={4}
+                mb={8}
+                mx="auto"
               >
-                <Button
-                  size="xs"
-                  position="absolute"
-                  bottom="1px"
-                  left="-40px"
-                  leftIcon={<BsMusicNote />}
-                  px={1}
-                  iconSpacing="0.1"
-                  variant="ghost"
-                >
-                  4/4
-                </Button>
-                <Text fontWeight="600" fontSize="lg">
-                  1
-                </Text>
-                <Text fontSize="sm">2</Text>
-                <Text fontSize="sm">3</Text>
-                <Text fontSize="sm">4</Text>
-                <Text fontWeight="600" fontSize="lg">
-                  2
-                </Text>
-                <Text fontSize="sm">2</Text>
-                <Text fontSize="sm">3</Text>
-                <Text fontSize="sm">4</Text>
-                <Text fontWeight="600" fontSize="lg">
-                  3
-                </Text>
-                <Text fontSize="sm">2</Text>
-                <Text fontSize="sm">3</Text>
-                <Text fontSize="sm">4</Text>
-                <Text fontWeight="600" fontSize="lg">
-                  4
-                </Text>
-                <Text fontSize="sm">2</Text>
-                <Text fontSize="sm">3</Text>
-                <Text fontSize="sm">4</Text>
-              </HStack>
-              <HStack w="100%" position="relative">
+                <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "2%"]}>
+                  <Text>Color Theme</Text>
+                  <HStack spacing={2} mt={2}>
+                    {Object.entries(colorTheme).map(([key, value], i) => {
+                      return (
+                        <Button
+                          opacity={0.9}
+                          key={key}
+                          bg={value.background}
+                          color={value.light}
+                          onClick={() => setThemeColor(key)}
+                          size="sm"
+                          fontSize="md"
+                        >
+                          {i + 1}
+                        </Button>
+                      );
+                    })}
+                  </HStack>
+                </Box>
                 <Box
-                  display={currentHit === "500px" ? "none" : "initial"}
-                  top={currentHit}
-                  opacity=".4"
-                  position="absolute"
-                  w="100%"
-                  h="36px"
-                  bg={useColorModeValue("white", "gray.600")}
-                ></Box>
-                <IconStack currentPage={currentPage} />
-                <Grid
-                  sequence={sequence}
-                  toggleStep={toggleStep}
+                  mx="auto"
+                  order={["9", "9", "9", "0"]}
+                  flexBasis={["60%", "60%", "60%", "30%"]}
+                  mt={[0, 0, 6, 0]}
+                >
+                  <HStack spacing={2} mt={4} justifyContent="center">
+                    <IconButtonTooltip label="skip to start">
+                      <IconButton
+                        rounded="full"
+                        aria-label="skip to start"
+                        icon={<BsSkipStartFill />}
+                        onClick={recording ? () => false : handleBacktoHead}
+                        cursor={recording ? "not-allowed" : "pointer"}
+                      />
+                    </IconButtonTooltip>
+                    <IconButtonTooltip label={playing ? "pause" : "play"}>
+                      <IconButton
+                        rounded="full"
+                        aria-label="play or pause"
+                        icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                        onClick={recording ? () => false : handlePlaying}
+                        cursor={recording ? "not-allowed" : "pointer"}
+                      />
+                    </IconButtonTooltip>
+                    <IconButtonTooltip
+                      label={recording ? "stop recording" : "record"}
+                    >
+                      <IconButton
+                        transform={"scale(1.1)"}
+                        borderWidth="2px"
+                        rounded="full"
+                        variant="outline"
+                        colorScheme="red"
+                        position="relative"
+                        aria-label="record or stop recording"
+                        icon={
+                          recording ? (
+                            <Notification
+                              right="12px"
+                              top="12px"
+                              activeColor="red.500"
+                            />
+                          ) : (
+                            <BsFillRecordFill />
+                          )
+                        }
+                        onClick={
+                          playing ? () => false : () => setRecording(!recording)
+                        }
+                        cursor={playing ? "not-allowed" : "pointer"}
+                      />
+                    </IconButtonTooltip>
+                    <IconButtonTooltip label="stop recording">
+                      <IconButton
+                        rounded="full"
+                        aria-label="stop recording"
+                        icon={<BsFillStopFill />}
+                        onClick={handleStopRecording}
+                        cursor={recording ? "pointer" : "not-allowed"}
+                      />
+                    </IconButtonTooltip>
+                    <Tooltip label="clean up">
+                      <IconButton
+                        rounded="full"
+                        aria-label="clean up"
+                        icon={<BsArrowCounterclockwise />}
+                        onClick={recording ? () => false : handleCleanUp}
+                        cursor={recording ? "not-allowed" : "pointer"}
+                      />
+                    </Tooltip>
+                  </HStack>
+                </Box>
+                <Box
+                  my={[8, 8, 0]}
+                  mx="auto"
+                  flexBasis="30%"
+                  pl={[0, 0, "10%", "5%", "10%"]}
+                >
+                  <Text>Bpm</Text>
+                  <BPMController
+                    BPMValue={BPMValue}
+                    setBPMValue={setBPMValue}
+                  />
+                </Box>
+              </Flex>
+
+              <Flex
+                direction="column"
+                alignItems="flex-end"
+                w={["100%", "90%", "65%"]}
+                mx="auto"
+                minW="300px"
+                overflowX="scroll"
+              >
+                <HStack
+                  style={{ width: `calc(100% - 44px)` }}
+                  justifyContent="space-around"
+                  alignItems="baseline"
+                  position="relative"
+                >
+                  <Button
+                    size="xs"
+                    position="absolute"
+                    bottom="1px"
+                    left="-40px"
+                    leftIcon={<BsMusicNote />}
+                    px={1}
+                    iconSpacing="0.1"
+                    variant="ghost"
+                  >
+                    4/4
+                  </Button>
+                  <Text fontWeight="600" fontSize="lg">
+                    1
+                  </Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600" fontSize="lg">
+                    2
+                  </Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600" fontSize="lg">
+                    3
+                  </Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                  <Text fontWeight="600" fontSize="lg">
+                    4
+                  </Text>
+                  <Text fontSize="sm">2</Text>
+                  <Text fontSize="sm">3</Text>
+                  <Text fontSize="sm">4</Text>
+                </HStack>
+                <HStack w="100%" position="relative">
+                  <Box
+                    display={currentHit === "500px" ? "none" : "initial"}
+                    top={currentHit}
+                    opacity=".4"
+                    position="absolute"
+                    w="100%"
+                    h="36px"
+                    bg={useColorModeValue("white", "gray.600")}
+                  ></Box>
+                  <IconStack currentPage={currentPage} />
+                  <Grid
+                    sequence={sequence}
+                    toggleStep={toggleStep}
+                    currentPage={currentPage}
+                  />
+                </HStack>
+              </Flex>
+              <Flex p={4}>
+                <Pagination
                   currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  pagesCount={pagesCount}
+                  pages={pages}
                 />
-              </HStack>
-            </Flex>
-            <Flex p={4}>
-              <Pagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                pagesCount={pagesCount}
-                pages={pages}
-              />
-            </Flex>
-          </Box>
-        </Slide>
+              </Flex>
+            </Box>
+          </DrawerContent>
+        </Drawer>
       </Flex>
     </>
   );
