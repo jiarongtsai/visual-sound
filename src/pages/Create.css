@@ -1,0 +1,416 @@
+
+
+/*
+  Theme: keybroad/piano
+*/
+.simple-keyboard.default {
+    background-color: rgba(155, 155, 155, 0.5);
+  }
+  
+  .simple-keyboard.default .hg-button {
+    /* height: 50px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(155, 155, 155, 0.5);
+    color: rgba(155, 155, 155, 0.5);
+  }
+  
+  .simple-keyboard.default + .simple-keyboard-preview {
+    background: rgba(155, 155, 155, 0.5);
+  }
+
+  .simple-keyboard.default .hg-button[data-skbtnuid="default-r3b11"]{
+    padding-left: 20px;
+  }
+  .simple-keyboard.default .hg-button[data-skbtn = "1"] {
+    
+    color: white;
+}
+.simple-keyboard.default .hg-button[data-skbtn = "2"] {
+    
+  color: white;
+}
+.simple-keyboard.default .hg-button[data-skbtn = "3"] {
+    
+  color: white;
+}
+.simple-keyboard.default .hg-button[data-skbtn = "4"] {
+    
+  color: white;
+}
+  
+  /************************* keybroad *******************************/
+
+  .simple-keyboard.keybroad .hg-button[data-skbtn = "z"] {
+      background: white;
+      color: white;
+  }
+
+  .simple-keyboard.keybroad .hg-button[data-skbtn = "x"] {
+    background: white;
+    color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "c"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "v"] {
+background: white;
+color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "b"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "n"] {
+background: white;
+color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "m"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = ","] {
+background: white;
+color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "r"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "t"] {
+background: white;
+color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "y"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "u"] {
+background: white;
+color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "i"] {
+  background: white;
+  color: white;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "o"] {
+background: white;
+color: white;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "p"] {
+  background: white;
+  color: white;
+  }
+
+
+  .simple-keyboard.keybroad .hg-button[data-skbtn = "s"]{
+      background: black;
+      color: black;
+  }
+  .simple-keyboard.keybroad .hg-button[data-skbtn = "d"]{
+    background: black;
+    color: black;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "g"]{
+  background: black;
+  color: black;
+}
+
+.simple-keyboard.keybroad .hg-button[data-skbtn = "h"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "j"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "5"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "6"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "8"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "9"]{
+  background: black;
+  color: black;
+}
+.simple-keyboard.keybroad .hg-button[data-skbtn = "0"]{
+  background: black;
+  color: black;
+}
+
+
+  /************************* drumkit *******************************/
+
+  
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "b"]{
+    background: rgba(255,255,255,.3); 
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_kick.svg"); 
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "n"]{
+    background: rgba(255,255,255,.3); 
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_kick.svg");  
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "v"]{
+    background: rgba(255,255,255,.3); 
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_kick.svg");  
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "f"]{
+    background: rgba(255,255,255,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_snare_01.svg");
+ 
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "g"]{
+    background: rgba(255,255,255,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_snare_01.svg");
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "q"]{
+    background: rgba(255,255,255,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_clap.svg");
+
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "w"]{
+    background: rgba(255,255,255,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_clap.svg");
+
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "t"]{
+    background: rgba(0,0,0,.3);  
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_rideCymbal.svg");
+
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "y"]{
+    background: rgba(0,0,0,.3);
+        opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_rideCymbal.svg");
+  
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "u"]{
+    background: rgba(0,0,0,.3);
+   
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_rideCymbal.svg");
+  
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "i"]{
+    background: rgba(0,0,0,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_crashCymbal.svg");
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "o"]{
+    background: rgba(0,0,0,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_crashCymbal.svg");
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "p"]{
+    background: rgba(0,0,0,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_crashCymbal.svg");
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtnuid^="default-"]{
+    
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "r"]{
+    background: rgba(0,0,0,.3);
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_snare_03.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 65%;
+    color: transparent;
+  }
+
+ 
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "m"]{
+    background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_01.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = ","]{
+    background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_01.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "k"]{
+    background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_02.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 45%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "l"]{
+    background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_02.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 45%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "j"]{
+    background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_03.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 45%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "h"]{
+   background: rgba(255,255,255,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_tom_03.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 45%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "d"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_pedalHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "a"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_closeHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 65%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "s"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_closeHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 65%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "z"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_openHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    color: transparent;
+  }
+
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "x"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_openHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    color: transparent;
+  }
+  .simple-keyboard.drumKit .hg-button[data-skbtn = "c"]{
+    background: rgba(0,0,0,.3);
+    
+    opacity: .8;
+    background-image: url("../asset/drumkit_icon/drumkit_openHat.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    color: transparent;
+  }
+
+
+
+
+.simple-keyboard.default .hg-button:active {
+  background: #805ad5;
+  color: #805ad5;
+  opacity: .6;
+}
+
+.simple-keyboard.default .hg-button-active {
+  background: #805ad5;
+  color: #805ad5;
+  opacity: .6;
+}
+
+
+
+
+  /* .simple-keyboard.keybroad .hg-button[data-skbtn = "j"] {
+    background: pink;
+    color: red;
+  } */
+  /* Attribute exists */
