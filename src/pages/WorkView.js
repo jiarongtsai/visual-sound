@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import { PlayerProvider } from "../components/PlayerProvider";
@@ -18,11 +18,9 @@ import {
   Tag,
   HStack,
 } from "@chakra-ui/react";
-import { AuthContext } from "../components/auth/Auth";
 import Gallery from "../components/Gallery";
 
 export default function WorkView({ setFollowingWorks }) {
-  const [user, loading, error] = useContext(AuthContext);
   const { id } = useParams();
   const [work, setWork] = useState({});
   const [relatedWorks, setRelatedWorks] = useState([]);
@@ -46,6 +44,7 @@ export default function WorkView({ setFollowingWorks }) {
     if (Object.keys(work).length === 0) return;
     Firebase.getRelatedWorks(work.author_id, work.tags).then((data) => {
       setRelatedWorks(data);
+      setIsShown(Array(data.length).fill(false));
     });
   }, [work]);
 

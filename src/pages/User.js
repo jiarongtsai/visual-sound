@@ -1,8 +1,5 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Firebase } from "../utils/firebase";
-import { AuthContext } from "../components/auth/Auth";
-import Gallery from "../components/Gallery";
 import {
   Flex,
   Grid,
@@ -15,21 +12,20 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
+import IntersectionGallery from "../components/customHook/IntersectionGallery";
 import UsersModal from "../components/UsersModal";
+import Loader from "../components/Loader";
 
 export default function User() {
+  const { uid } = useParams();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [action, setAction] = useState({});
-
-  const [user, loading, error] = useContext(AuthContext);
-  const { uid } = useParams();
   const [profile, setProfile] = useState({});
-  const [userWorks, setUserWorks] = useState([]);
-  const navigate = useNavigate();
-  const [isShown, setIsShown] = useState([]);
-  const endofPageRef = useRef();
-  const pagingRef = useRef(null);
-  let isFetching = false;
+  const [user, loading, error] = useContext(AuthContext);
+  const bgColor = useColorModeValue("gray.200", "gray.800");
 
   useEffect(() => {
     if (user?.uid === uid) {
@@ -46,30 +42,6 @@ export default function User() {
       snapshot();
     };
   }, [user]);
-
-  useEffect(() => {
-    const pagingObserver = new IntersectionObserver((entries) => {
-      if (entries[0].intersectionRatio <= 0) return;
-      if (isFetching) return;
-      if (typeof pagingRef.current === "undefined") return;
-      isFetching = true;
-      Firebase.getWorks(pagingRef.current, null, uid).then(
-        ({ fetchWorks, lastVisibleWork }) => {
-          setUserWorks((pre) => [...pre, ...fetchWorks]);
-          setIsShown((pre) => [
-            ...pre,
-            ...Array(fetchWorks.length).fill(false),
-          ]);
-          pagingRef.current = lastVisibleWork;
-          isFetching = false;
-        }
-      );
-    });
-    pagingObserver.observe(endofPageRef.current);
-    return () => {
-      endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
-    };
-  }, []);
 
   //fix me : navigate to userpage doesn't work
   // const chat = (userID) => {
@@ -121,13 +93,13 @@ export default function User() {
     Firebase.unfollowUser(user.uid, uid);
   }
 
-  function handleChat() {
+  function handleOpenCharoomt() {
     Firebase.getChatroom(user.uid, uid).then((mid) => {
       navigate(`/message/${mid}`);
     });
   }
+  if (loading) return <Loader />;
 
-  //link bug
   return (
     <>
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
@@ -164,7 +136,11 @@ export default function User() {
             </GridItem>
             <GridItem colSpan={[3, 3, 1]}>
               <Flex>
-                <Button colorScheme="purple" onClick={handleChat} mr={2}>
+                <Button
+                  colorScheme="purple"
+                  onClick={handleOpenCharoomt}
+                  mr={2}
+                >
                   Message
                 </Button>
                 <Button
@@ -172,7 +148,7 @@ export default function User() {
                   variant={"outline"}
                   _hover={{
                     textDecoration: "none",
-                    bg: useColorModeValue("gray.200", "gray.800"),
+                    bg: { bgColor },
                   }}
                   onClick={handleFollow}
                 >
@@ -216,8 +192,7 @@ export default function User() {
             </GridItem>
           </Grid>
         </Flex>
-        <Gallery works={userWorks} isShown={isShown} setIsShown={setIsShown} />
-        <div ref={endofPageRef}></div>
+        <IntersectionGallery term={null} currentUserID={uid} />
       </Flex>
     </>
   );

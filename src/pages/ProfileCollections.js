@@ -1,17 +1,18 @@
 import { useState, useEffect, useContext } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { AuthContext } from "../components/auth/Auth";
-import { Firebase } from "../utils/firebase";
-import { GridWrapper } from "../components/element/GridWrapper";
-import { Img } from "../components/element/Img";
-import CollectionWrapper from "../components/CollectionWrapper";
 import { Flex } from "@chakra-ui/react";
+import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
+import CollectionWrapper from "../components/CollectionWrapper";
+import Gallery from "../components/Gallery";
+import Loader from "../components/Loader";
 
 export default function ProfileCollections() {
   const [user, loading, error] = useContext(AuthContext);
   const [collectedWorks, setCollectedWorks] = useState([]);
   const [currentTerm, setCurrentTerm] = useState("all");
-  const location = useLocation();
+
+  const [isShown, setIsShown] = useState([]);
+
   useEffect(() => {
     (async () => {
       const allCollections = await Firebase.getUserCollection(user.uid);
@@ -46,6 +47,8 @@ export default function ProfileCollections() {
     return result;
   }
 
+  if (loading) return <Loader />;
+
   if (collectedWorks.length === 1)
     return <div>Go 'Explore' to collect more works</div>;
 
@@ -66,20 +69,13 @@ export default function ProfileCollections() {
           )
         )}
       </Flex>
-
-      <GridWrapper>
-        {collectedWorks
-          .filter(({ term }) => term === currentTerm)[0]
-          ?.list.map((work) => (
-            <Link
-              key={work.id}
-              to={`/work/${work.id}`}
-              state={{ backgroundLocation: location }}
-            >
-              <Img src={work.image_url} />
-            </Link>
-          ))}
-      </GridWrapper>
+      <Gallery
+        works={
+          collectedWorks.filter(({ term }) => term === currentTerm)[0]?.list
+        }
+        isShown={isShown}
+        setIsShown={setIsShown}
+      />
     </>
   );
 }
