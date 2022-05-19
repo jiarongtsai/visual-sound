@@ -6,6 +6,7 @@ import { AuthContext } from "../components/auth/Auth";
 import MessageList from "../components/message/MessageList";
 import MessageView from "../components/message/MessageView";
 import UsersModal from "../components/UsersModal";
+import Loader from "../components/Loader";
 
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
@@ -15,6 +16,8 @@ export default function Message() {
   const navigate = useNavigate();
   const [action, setAction] = useState({});
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const bgColor = useColorModeValue("gray.50", "gray.700");
+  const borderColor = useColorModeValue("gray.200", "gray.500");
 
   useEffect(() => {
     mid &&
@@ -28,41 +31,8 @@ export default function Message() {
 
     const onSnapshotChatrooms = Firebase.onSnapshotChatrooms(
       user.uid,
-      async (snapshot) => {
-        const senders = [];
-
-        snapshot.docs.map((item) => {
-          item.data().participants.forEach((id, i) => {
-            if (id !== user.uid)
-              senders.push({
-                id: id,
-                place: i,
-                mid: item.id,
-                latestMessage: item.data().latestMessage,
-              });
-          });
-        });
-
-        const result = await Promise.all(
-          senders.map(async (sender) => {
-            const senderInfo = await Firebase.getUserBasicInfo(sender.id);
-
-            return {
-              mid: sender.mid,
-              author_id: sender.id,
-              author_place: sender.place,
-              latestMessage: sender.latestMessage,
-              ...senderInfo,
-            };
-          })
-        );
-        const ResultSortedByTime = result.sort((a, b) => {
-          return (
-            b.latestMessage.created_time.seconds -
-            a.latestMessage.created_time.seconds
-          );
-        });
-        setMessageList(ResultSortedByTime);
+      (chatroomData) => {
+        setMessageList(chatroomData);
       }
     );
 
@@ -78,9 +48,9 @@ export default function Message() {
   };
 
   async function openNewChatList() {
-    const currentChatList = messageList.map((message) => message.author_id);
-    currentChatList.push(user.uid);
-    const newChatList = await Firebase.getAllUsers(currentChatList);
+    const excludeChatList = messageList.map((message) => message.author_id);
+    excludeChatList.push(user.uid);
+    const newChatList = await Firebase.getAllUsers(excludeChatList);
 
     setAction({
       name: "Send Message to...",
@@ -90,6 +60,8 @@ export default function Message() {
     });
     onOpen();
   }
+
+  if (loading) return <Loader />;
 
   return (
     <>
@@ -103,15 +75,15 @@ export default function Message() {
         rounded="md"
         maxW="1080px"
         border="1px"
-        borderColor={useColorModeValue("gray.200", "gray.500")}
-        bg={useColorModeValue("gray.50", "gray.700")}
+        borderColor={borderColor}
+        bg={bgColor}
       >
         <Box
           w={["20%", 160, "30%"]}
           minW="80px"
           maxW="300px"
           borderRight="1px"
-          borderColor={useColorModeValue("gray.200", "gray.500")}
+          borderColor={borderColor}
         >
           <MessageList
             messageList={messageList}

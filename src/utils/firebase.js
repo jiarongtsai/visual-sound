@@ -547,7 +547,34 @@ const Firebase = {
       where("participants", "array-contains", uid)
     );
 
-    return onSnapshot(queryCondition, callback);
+    return onSnapshot(queryCondition, async (snapshot) => {
+      const promises = [];
+
+      snapshot.docs.forEach((chatroom) => {
+        chatroom.data().participants.forEach((id, i) => {
+          const promise = Firebase.getUserBasicInfo(id).then((senderInfo) => {
+            return {
+              ...senderInfo,
+              author_place: i,
+              mid: chatroom.id,
+              latestMessage: chatroom.data().latestMessage,
+            };
+          });
+
+          if (id !== uid) promises.push(promise);
+        });
+      });
+      const allchatrooms = await Promise.all(promises);
+
+      const sortedByTime = allchatrooms.sort((a, b) => {
+        return (
+          b.latestMessage.created_time.seconds -
+          a.latestMessage.created_time.seconds
+        );
+      });
+
+      callback(sortedByTime);
+    });
   },
   onSnapshotChats(mid, callback) {
     const queryCondition = query(
