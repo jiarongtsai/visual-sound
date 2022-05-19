@@ -3,10 +3,13 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 
-const SnareElement = styled(animated.div)`
+const SnareElement = styled(animated.div).attrs((props) => ({
+  style: {
+    top: props.random.x,
+    left: props.random.y,
+  },
+}))`
   position: absolute;
-  top: ${(props) => props.random.x};
-  left: ${(props) => props.random.y};
   width: 10vw;
   height: 10vw;
   border-radius: 50%;

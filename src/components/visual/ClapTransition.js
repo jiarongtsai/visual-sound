@@ -2,10 +2,13 @@ import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 
-const ClapElementRandom = styled(animated.div)`
+const ClapElementRandom = styled(animated.div).attrs((props) => ({
+  style: {
+    left: props.position,
+  },
+}))`
   position: absolute;
   top: 0;
-  left: ${(props) => props.position};
   width: 4px;
   height: 100%;
   background: ${(props) => props.theme.special};

@@ -9,14 +9,16 @@ const rideVariant = [
   { positionx: "75%" },
 ];
 
-const RideElement = styled(animated.div)`
+const RideElement = styled(animated.div).attrs((props) => ({
+  style: {
+    left: props.positiony,
+  },
+}))`
   position: absolute;
   top: ${(props) => props.positionx};
-  left: ${(props) => props.positiony};
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   border-bottom: 50px solid ${(props) => props.theme.medium};
-  ${"" /* border-top: 25px solid ${(props) => props.theme.special}; */}
 `;
 
 export function RideTransition({ effect, setEffect }) {
