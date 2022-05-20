@@ -11,20 +11,20 @@ const BoomElement = styled(animated.div)`
   background: ${(props) => props.theme.dark};
 `;
 
-export function BoomTransition({ effect, setEffect }) {
-  const boomTransition = useTransition(effect, {
+export function BoomTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const boomTransition = useTransition(effect[alphabeta], {
     config: { tension: 150 },
     from: { y: 1000, opacity: 0 },
     enter: { y: 0, opacity: 1 },
     leave: { y: -1000, opacity: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {boomTransition((style, item) =>
-        item ? <BoomElement style={style} /> : <></>
-      )}
+      {boomTransition((style, item) => item && <BoomElement style={style} />)}
     </>
   );
 }

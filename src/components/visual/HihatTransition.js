@@ -15,20 +15,22 @@ const HihatElement = styled(animated.div)`
   background: ${(props) => props.theme.light};
 `;
 
-export function HihatTransition({ effect, setEffect }) {
-  const hihatTransition = useTransition(effect, {
+export function HihatTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const hihatTransition = useTransition(effect[alphabeta], {
     config: { tension: 500, friction: 18 },
     from: { x: -300, y: 0, opacity: 0 },
     enter: { x: 0, y: 0, opacity: 0.8 },
     leave: { x: 300, y: 0, opacity: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
-  return hihatTransition((style, item) =>
-    item
-      ? hihatArray.map((hihat, i) => (
-          <HihatElement key={hihat} style={style} top={hihat} />
-        ))
-      : ""
+  return hihatTransition(
+    (style, item) =>
+      item &&
+      hihatArray.map((hihat, i) => (
+        <HihatElement key={hihat} style={style} top={hihat} />
+      ))
   );
 }

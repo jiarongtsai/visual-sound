@@ -20,8 +20,10 @@ const TinkElementAnother = styled(animated.div)`
   background: ${(props) => props.theme.medium};
 `;
 
-export function TinkTransition({ effect, setEffect }) {
-  const tinkTransition = useTransition(effect, {
+export function TinkTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const tinkTransition = useTransition(effect[alphabeta], {
     config: { tension: 150 },
     from: {
       y: 0,
@@ -31,10 +33,10 @@ export function TinkTransition({ effect, setEffect }) {
     },
     enter: { y: 0, opacity: 1, scale: 2 },
     leave: { y: 0, opacity: 0, scale: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
-  const tinkTransitionLeft = useTransition(effect, {
+  const tinkTransitionLeft = useTransition(effect[alphabeta], {
     config: { tension: 150 },
     from: {
       x: -200,
@@ -44,30 +46,28 @@ export function TinkTransition({ effect, setEffect }) {
     },
     enter: { y: 0, opacity: 1, scale: 2 },
     leave: { y: 0, opacity: 0, scale: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {tinkTransition((style, item) =>
-        item ? (
-          <>
-            <TinkElement style={style} />
-            <TinkElementAnother style={style} />
-          </>
-        ) : (
-          ""
-        )
+      {tinkTransition(
+        (style, item) =>
+          item && (
+            <>
+              <TinkElement style={style} />
+              <TinkElementAnother style={style} />
+            </>
+          )
       )}
-      {tinkTransitionLeft((style, item) =>
-        item ? (
-          <>
-            <TinkElement style={style} />
-            <TinkElementAnother style={style} />
-          </>
-        ) : (
-          ""
-        )
+      {tinkTransitionLeft(
+        (style, item) =>
+          item && (
+            <>
+              <TinkElement style={style} />
+              <TinkElementAnother style={style} />
+            </>
+          )
       )}
     </>
   );

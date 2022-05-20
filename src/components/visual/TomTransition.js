@@ -13,7 +13,9 @@ const TomElement = styled(animated.div)`
   background: ${(props) => props.theme.dark};
 `;
 
-export function TomTransition({ effect, setEffect }) {
+export function TomTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
   const [random, setrandom] = useState(0);
 
   useEffect(() => {
@@ -21,17 +23,17 @@ export function TomTransition({ effect, setEffect }) {
     setrandom(Math.ceil(Math.random() * 50) + 20 + "%");
   }, [effect]);
 
-  const tomTransition = useTransition(effect, {
+  const tomTransition = useTransition(effect[alphabeta], {
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 0.9, scale: 1.5 },
     leave: { opacity: 0, scale: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {tomTransition((style, item) =>
-        item ? <TomElement style={style} random={random} /> : <></>
+      {tomTransition(
+        (style, item) => item && <TomElement style={style} random={random} />
       )}
     </>
   );

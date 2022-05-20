@@ -14,7 +14,9 @@ const OpenhatElement = styled(animated.div)`
   border-radius: 50%;
 `;
 
-export function OpenhatTransition({ effect, setEffect }) {
+export function OpenhatTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
   const [openhatVariant, setOpenhatVariant] = useState([]);
 
   useEffect(() => {
@@ -28,28 +30,28 @@ export function OpenhatTransition({ effect, setEffect }) {
     ]);
   }, [effect]);
 
-  const openhatTransition = useTransition(effect, {
+  const openhatTransition = useTransition(effect[alphabeta], {
     config: { tension: 100, velocity: 0.1 },
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 1, scale: 1 },
     leave: { opacity: 0, scale: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
-  const openhatTransitionDelay = useTransition(effect, {
+  const openhatTransitionDelay = useTransition(effect[alphabeta], {
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 1, scale: 2.5 },
     leave: { opacity: 0, scale: 0 },
     delay: 100,
 
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
-  const openhatTransitionDoubleDelay = useTransition(effect, {
+  const openhatTransitionDoubleDelay = useTransition(effect[alphabeta], {
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 1, scale: 5 },
     leave: { opacity: 0, scale: 0 },
     delay: 300,
 
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (

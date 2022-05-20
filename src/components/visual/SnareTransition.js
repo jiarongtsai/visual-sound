@@ -16,7 +16,9 @@ const SnareElement = styled(animated.div).attrs((props) => ({
   background: ${(props) => props.theme.special};
 `;
 
-export function SnareTransition({ effect, setEffect }) {
+export function SnareTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
   const [random, setrandom] = useState([]);
 
   useEffect(() => {
@@ -69,24 +71,22 @@ export function SnareTransition({ effect, setEffect }) {
     ]);
   }, [effect]);
 
-  const snareTransition = useTransition(effect, {
+  const snareTransition = useTransition(effect[alphabeta], {
     config: { velocity: 0.01 },
     from: { opacity: 0, scale: 0.1 },
     enter: { opacity: 1, scale: 0.1 },
     leave: { opacity: 0, scale: 0.1 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {snareTransition((style, item) =>
-        item ? (
+      {snareTransition(
+        (style, item) =>
+          item &&
           random.map((particle, i) => (
             <SnareElement key={i} style={style} random={particle} />
           ))
-        ) : (
-          <></>
-        )
       )}
     </>
   );

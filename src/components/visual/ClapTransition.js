@@ -14,8 +14,10 @@ const ClapElementRandom = styled(animated.div).attrs((props) => ({
   background: ${(props) => props.theme.special};
 `;
 
-export function ClapTransition({ effect, setEffect }) {
-  const clapTransition = useTransition(effect, {
+export function ClapTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const clapTransition = useTransition(effect[alphabeta], {
     config: { mass: 1, tension: 500, friction: 18 },
     from: {
       x: -1000,
@@ -38,20 +40,19 @@ export function ClapTransition({ effect, setEffect }) {
       transform: "rotate(1turn)",
       freq: "0.0, 0.0",
     },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {clapTransition((style, item) =>
-        item ? (
-          <ClapElementRandom
-            style={style}
-            position={Math.ceil(Math.random() * 100) + "%"}
-          />
-        ) : (
-          ""
-        )
+      {clapTransition(
+        (style, item) =>
+          item && (
+            <ClapElementRandom
+              style={style}
+              position={Math.ceil(Math.random() * 100) + "%"}
+            />
+          )
       )}
     </>
   );

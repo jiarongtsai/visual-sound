@@ -20,30 +20,30 @@ const KickElementReverse = styled(animated.div)`
   background: ${(props) => props.theme.medium};
 `;
 
-export function KickTransition({ effect, setEffect }) {
-  const kickTransition = useTransition(effect, {
+export function KickTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const kickTransition = useTransition(effect[alphabeta], {
     config: { tension: 150 },
     from: { y: 1000, opacity: 0 },
     enter: { y: 0, opacity: 1 },
     leave: { y: -1000, opacity: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
-  const kickTransitionReverse = useTransition(effect, {
+  const kickTransitionReverse = useTransition(effect[alphabeta], {
     config: { tension: 150 },
     from: { y: -1000, opacity: 0 },
     enter: { y: 0, opacity: 1 },
     leave: { y: 1000, opacity: 0 },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {kickTransition((style, item) =>
-        item ? <KickElement style={style} /> : <></>
-      )}
-      {kickTransitionReverse((style, item) =>
-        item ? <KickElementReverse style={style} /> : <></>
+      {kickTransition((style, item) => item && <KickElement style={style} />)}
+      {kickTransitionReverse(
+        (style, item) => item && <KickElementReverse style={style} />
       )}
     </>
   );

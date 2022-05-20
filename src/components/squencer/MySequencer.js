@@ -67,6 +67,14 @@ const initialState = instruments.map((_) =>
   Array(steps).fill(initialCellState)
 );
 
+const initialVisualEffectState = initialVisualEffect(lineMap);
+
+function initialVisualEffect(arr) {
+  const obj = {};
+  arr.forEach((key) => (obj[key] = false));
+  return obj;
+}
+
 const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
@@ -79,48 +87,22 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     onClose: onControllerClose,
   } = useDisclosure();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const ref = createRef(null);
   const [image, setImage, takeScreenshot] = useScreenshot();
   const getImage = () => takeScreenshot(ref.current);
+
   const player = usePlayer();
 
   const [isUploaded, setIsUploaded] = useState(false);
   const [screenshotSpring, setScreenshotSpring] = useState(false);
   const [themeColor, setThemeColor] = useState("purple");
 
-  const [boomEffect, setBoomEffect] = useState(false);
-  const [clapEffect, setClapEffect] = useState(false);
-  const [hihatEffect, setHihatEffect] = useState(false);
-  const [kickEffect, setKickEffect] = useState(false);
-  const [openhatEffect, setOpenhatEffect] = useState(false);
-  const [rideEffect, setRideEffect] = useState(false);
-  const [snareEffect, setSnareEffect] = useState(false);
-  const [tomEffect, setTomEffect] = useState(false);
-  const [tinkEffect, setTinkEffect] = useState(false);
+  const [visualEffect, setVisualEffect] = useState(initialVisualEffectState);
   const [BPMValue, setBPMValue] = useState(120);
 
   const [sequence, setSequence] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
-
-  const [currentHit, setCurrentHit] = useState("500px");
-
-  //visual
-  const useKeyboardBindings = (map) => {
-    useEffect(() => {
-      const handlePress = (event) => {
-        const handler = map[event.key];
-        if (typeof handler === "function" && !isOpen) {
-          handler();
-        }
-      };
-
-      window.addEventListener("keydown", handlePress);
-
-      return () => {
-        window.removeEventListener("keydown", handlePress);
-      };
-    }, [map]);
-  };
 
   const toggleStep = (line, step) => {
     if (currentPage === 2) line = line + 9;
@@ -132,47 +114,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
     setSequence(sequenceCopy);
     if (!recording) {
-      player.player(lineMap[line]).start();
-      switch (lineMap[line]) {
-        case "a":
-          setCurrentHit(2 + "px");
-          setBoomEffect((v) => !v);
-          break;
-        case "s":
-          setCurrentHit(2 + 40 * 1 + "px");
-          setClapEffect((v) => !v);
-          break;
-        case "d":
-          setCurrentHit(2 + 40 * 2 + "px");
-          setHihatEffect((v) => !v);
-          break;
-        case "f":
-          setCurrentHit(2 + 40 * 3 + "px");
-          setKickEffect((v) => !v);
-          break;
-        case "g":
-          setCurrentHit(2 + 40 * 4 + "px");
-          setOpenhatEffect((v) => !v);
-          break;
-        case "h":
-          setCurrentHit(2 + 40 * 5 + "px");
-          setRideEffect((v) => !v);
-          break;
-        case "j":
-          setCurrentHit(2 + 40 * 6 + "px");
-          setSnareEffect((v) => !v);
-          break;
-        case "k":
-          setCurrentHit(2 + 40 * 7 + "px");
-          setTomEffect((v) => !v);
-          break;
-        case "l":
-          setCurrentHit(2 + 40 * 8 + "px");
-          setTinkEffect((v) => !v);
-          break;
-        default:
-          return;
-      }
+      const alphabeta = lineMap[line];
+      setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
+      player.player(alphabeta).start();
     }
   };
 
@@ -183,145 +127,60 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         const { triggered, activated } = sequenceCopy[i][j];
         sequenceCopy[i][j] = { activated, triggered: j === time };
         if (triggered && activated) {
-          player.player(lineMap[i]).start();
-          switch (lineMap[i]) {
-            case "a":
-              setBoomEffect((v) => !v);
-              break;
-            case "s":
-              setClapEffect((v) => !v);
-              break;
-            case "d":
-              setHihatEffect((v) => !v);
-              break;
-            case "f":
-              setKickEffect((v) => !v);
-              break;
-            case "g":
-              setOpenhatEffect((v) => !v);
-              break;
-            case "h":
-              setRideEffect((v) => !v);
-              break;
-            case "j":
-              setSnareEffect((v) => !v);
-              break;
-            case "k":
-              setTomEffect((v) => !v);
-              break;
-            case "l":
-              setTinkEffect((v) => !v);
-              break;
-            default:
-              return;
-          }
+          const alphabeta = lineMap[i];
+          player.player(alphabeta).start();
+          setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
         }
       }
     }
     setSequence(sequenceCopy);
   };
 
-  const keyboardToggleStep = currentStep - 1 < 0 ? 15 : currentStep - 1;
+  const useKeyboardBindings = (map) => {
+    useEffect(() => {
+      const handlePress = (event) => {
+        const handler = map[event.key];
+        if (typeof handler === "function" && !isOpen) {
+          handler();
+        }
+      };
+      window.addEventListener("keydown", handlePress);
 
-  useEffect(() => {
-    if (currentHit !== "500px") {
-      const timeOut = setTimeout(() => {
-        setCurrentHit("500px");
-      }, 100);
-    }
-  }, [currentHit]);
+      return () => {
+        window.removeEventListener("keydown", handlePress);
+      };
+    }, [map]);
+  };
 
-  useKeyboardBindings({
-    Spacebar: () => setPlaying((v) => !v),
+  function ObjectFunctionMap(arr) {
+    const keyboardToggleStep = currentStep - 1 < 0 ? 15 : currentStep - 1;
+    const obj = {};
+    arr.forEach((key, index) => {
+      obj[key] = () => {
+        if (!recording) {
+          player.player(key).start();
+          setVisualEffect((pre) => ({ ...pre, [key]: true }));
+          return;
+        }
+        toggleStep(lineMap[index], keyboardToggleStep);
+      };
+    });
+    return obj;
+  }
+
+  const keyboardColorObject = {
+    Spacebar: () => setPlaying(!playing),
     1: () => setThemeColor("main"),
     2: () => setThemeColor("energe"),
     3: () => setThemeColor("macaroon"),
     4: () => setThemeColor("neon"),
     5: () => setThemeColor("vintage"),
     6: () => setThemeColor("purple"),
+  };
 
-    a: () => {
-      setCurrentHit(2 + "px");
-      if (!recording) {
-        player.player("a").start();
-        setBoomEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("a"), keyboardToggleStep);
-    },
-    s: () => {
-      setCurrentHit(2 + 40 * 1 + "px");
-      if (!recording) {
-        player.player("s").start();
-        setClapEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("s"), keyboardToggleStep);
-    },
-    d: () => {
-      setCurrentHit(2 + 40 * 2 + "px");
-      if (!recording) {
-        player.player("d").start();
-        setHihatEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("d"), keyboardToggleStep);
-    },
-    f: () => {
-      setCurrentHit(2 + 40 * 3 + "px");
-      if (!recording) {
-        player.player("f").start();
-        setKickEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("f"), keyboardToggleStep);
-    },
-    g: () => {
-      setCurrentHit(2 + 40 * 4 + "px");
-      if (!recording) {
-        player.player("g").start();
-        setOpenhatEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("g"), keyboardToggleStep);
-    },
-    h: () => {
-      setCurrentHit(2 + 40 * 5 + "px");
-      if (!recording) {
-        player.player("h").start();
-        setRideEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("h"), keyboardToggleStep);
-    },
-    j: () => {
-      setCurrentHit(2 + 40 * 6 + "px");
-      if (!recording) {
-        player.player("j").start();
-        setSnareEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("j"), keyboardToggleStep);
-    },
-    k: () => {
-      setCurrentHit(2 + 40 * 7 + "px");
-      if (!recording) {
-        player.player("k").start();
-        setTomEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("k"), keyboardToggleStep);
-    },
-    l: () => {
-      setCurrentHit(2 + 40 * 8 + "px");
-      if (!recording) {
-        player.player("l").start();
-        setTinkEffect((v) => !v);
-        return;
-      }
-      toggleStep(lineMap.indexOf("l"), keyboardToggleStep);
-    },
-  });
+  const keybroadKeyObject = ObjectFunctionMap(lineMap);
+
+  useKeyboardBindings({ ...keyboardColorObject, ...keybroadKeyObject });
 
   useEffect(() => {
     const timeOutspeed = (15 / BPMValue) * 1000;
@@ -341,15 +200,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
       handleCleanUp();
       setBPMValue(120);
       setCurrentStep(0);
-      setBoomEffect(false);
-      setClapEffect(false);
-      setHihatEffect(false);
-      setKickEffect(false);
-      setOpenhatEffect(false);
-      setRideEffect(false);
-      setSnareEffect(false);
-      setTomEffect(false);
-      setTinkEffect(false);
+      setVisualEffect(initialVisualEffectState);
       setIsUploaded(false);
     }
   }, [isUploaded]);
@@ -475,18 +326,51 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
         <ThemeProvider theme={colorTheme[themeColor]}>
           <MotionWrapper ref={ref} onClick={onControllerClose}>
-            <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
-            <KickTransition effect={kickEffect} setEffect={setKickEffect} />
-            <TomTransition effect={tomEffect} setEffect={setTomEffect} />
-            <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
-            <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
-            <OpenhatTransition
-              effect={openhatEffect}
-              setEffect={setOpenhatEffect}
+            <BoomTransition
+              alphabeta="a"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
             />
-            <RideTransition effect={rideEffect} setEffect={setRideEffect} />
-            <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
-            <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
+            <KickTransition
+              alphabeta="f"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <TomTransition
+              alphabeta="k"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <ClapTransition
+              alphabeta="s"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <HihatTransition
+              alphabeta="d"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <OpenhatTransition
+              alphabeta="g"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <RideTransition
+              alphabeta="h"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <SnareTransition
+              alphabeta="j"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
+            <TinkTransition
+              alphabeta="k"
+              effect={visualEffect}
+              setEffect={setVisualEffect}
+            />
           </MotionWrapper>
         </ThemeProvider>
         <ChainSpring
@@ -782,15 +666,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   <Text fontSize="sm">4</Text>
                 </HStack>
                 <HStack w="100%" position="relative">
-                  <Box
-                    display={currentHit === "500px" ? "none" : "initial"}
-                    top={currentHit}
-                    opacity=".4"
-                    position="absolute"
-                    w="100%"
-                    h="36px"
-                    bg={useColorModeValue("white", "gray.600")}
-                  ></Box>
                   <IconStack currentPage={currentPage} />
                   <Grid
                     sequence={sequence}

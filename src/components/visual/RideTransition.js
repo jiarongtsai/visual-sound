@@ -21,28 +21,30 @@ const RideElement = styled(animated.div).attrs((props) => ({
   border-bottom: 50px solid ${(props) => props.theme.medium};
 `;
 
-export function RideTransition({ effect, setEffect }) {
-  const rideTransition = useTransition(effect, {
+export function RideTransition({ alphabeta, effect, setEffect }) {
+  const effectCopy = { ...effect };
+  effectCopy[alphabeta] = false;
+  const rideTransition = useTransition(effect[alphabeta], {
     config: { velocity: 0.1 },
     from: { x: -1000, opacity: 0, transform: "rotate(1turn)" },
     enter: { x: 0, opacity: 0.8, transform: "rotate(5.5turn)" },
     leave: { x: 1000, opacity: 0, transform: "rotate(9.5turn)" },
-    onRest: () => setEffect(false),
+    onRest: () => setEffect(effectCopy),
   });
 
   return (
     <>
-      {rideTransition((style, item) =>
-        item
-          ? rideVariant.map((ride) => (
-              <RideElement
-                key={ride.positionx}
-                style={style}
-                positionx={ride.positionx}
-                positiony={Math.ceil(Math.random() * 100) + "%"}
-              />
-            ))
-          : ""
+      {rideTransition(
+        (style, item) =>
+          item &&
+          rideVariant.map((ride) => (
+            <RideElement
+              key={ride.positionx}
+              style={style}
+              positionx={ride.positionx}
+              positiony={Math.ceil(Math.random() * 100) + "%"}
+            />
+          ))
       )}
     </>
   );
