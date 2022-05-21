@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Firebase } from "../utils/firebase";
-import { AuthContext } from "../components/auth/Auth";
+import { useNavigate } from "react-router-dom";
 import {
   Modal,
   ModalOverlay,
@@ -19,8 +18,9 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
-import { useNavigate } from "react-router-dom";
-import SequencePlayer from "../components/SequencePlayer";
+import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
+import SequencerPlayOnly from "../components/sequencer/SequencerPlayOnly";
 import Loader from "./Loader";
 
 export default function UploadModal({
@@ -97,8 +97,7 @@ export default function UploadModal({
           <Flex direction={["column", "row"]} justify="space-between">
             <Flex direction="column" w={["100%", "100%", "68%"]}>
               <Text>Preview</Text>
-
-              <SequencePlayer
+              <SequencerPlayOnly
                 sheetmusic={JSON.stringify(sequence)}
                 bpm={bpm}
                 themeColor={themeColor}

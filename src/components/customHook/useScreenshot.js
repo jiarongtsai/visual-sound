@@ -38,7 +38,6 @@ const useScreenshot = ({ type, quality } = {}) => {
 
   return [
     image,
-    setImage,
     takeScreenShot,
     {
       error,

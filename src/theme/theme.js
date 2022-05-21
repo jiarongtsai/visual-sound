@@ -32,10 +32,10 @@ const theme = extendTheme({
     initialColorMode: "light",
     useSystemColorMode: false,
   },
-  // fonts: {
-  //   heading: "Exo 2, sans-serif",
-  //   body: "Exo 2, sans-serif",
-  // },
+  fonts: {
+    heading: "Mukta, sans-serif",
+    body: "Mukta, sans-serif",
+  },
   styles: {
     global: {
       // Create a CSS variable with the focus ring color desired.

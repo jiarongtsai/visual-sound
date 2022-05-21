@@ -21,13 +21,14 @@ import {
   Fade,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link, useLocation, useMatch, useResolvedPath } from "react-router-dom";
+import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { getAuth, signOut } from "firebase/auth";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth/Auth";
 
 const Links = [
+  { value: "", label: "Create" },
   { value: "community", label: "Community" },
   { value: "explore", label: "Explore" },
   { value: "message", label: "Message" },
