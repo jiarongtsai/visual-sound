@@ -11,7 +11,6 @@ import {
   Text,
   Heading,
   Image,
-  Tooltip,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -38,18 +37,11 @@ import UploadModal from "../UploadModal";
 
 import { colorTheme } from "../visual/colorTheme";
 import { MotionWrapper } from "../visual/MotionWrapper";
-import { BoomTransition } from "../visual/BoomTransition";
-import { ClapTransition } from "../visual/ClapTransition";
-import { HihatTransition } from "../visual/HihatTransition";
-import { KickTransition } from "../visual/KickTransition";
-import { OpenhatTransition } from "../visual/OpenhatTransition";
-import { RideTransition } from "../visual/RideTransition";
-import { SnareTransition } from "../visual/SnareTransition";
-import { TomTransition } from "../visual/TomTransition";
-import { TinkTransition } from "../visual/TinkTransition";
+import { MotionElement } from "../visual/MotionElement";
 
 import { Notification } from "../message/Notification";
 import { IconButtonTooltip } from "./IconButtonTooltips";
+import { MusicButton } from "./MusicButoon";
 
 import BPMController from "./BPMController";
 import Pagination from "./Pagination";
@@ -84,6 +76,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     onOpen: onControllerOpen,
     onClose: onControllerClose,
   } = useDisclosure();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const ref = createRef(null);
@@ -223,11 +216,8 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   }
 
   function handleCleanUp() {
-    console.log("work");
     setNewSequence(instruments.map((_) => Array(steps).fill(false)));
   }
-
-  console.log(newSequence);
 
   return (
     <>
@@ -316,50 +306,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
         <ThemeProvider theme={colorTheme[themeColor]}>
           <MotionWrapper ref={ref} onClick={onControllerClose}>
-            <BoomTransition
-              alphabeta="a"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <KickTransition
-              alphabeta="f"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <TomTransition
-              alphabeta="k"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <ClapTransition
-              alphabeta="s"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <HihatTransition
-              alphabeta="d"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <OpenhatTransition
-              alphabeta="g"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <RideTransition
-              alphabeta="h"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <SnareTransition
-              alphabeta="j"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
-            />
-            <TinkTransition
-              alphabeta="k"
-              effect={visualEffect}
-              setEffect={setVisualEffect}
+            <MotionElement
+              visualEffect={visualEffect}
+              setVisualEffect={setVisualEffect}
             />
           </MotionWrapper>
         </ThemeProvider>
@@ -385,17 +334,16 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
               style={{ zIndex: 200 }}
               id="tour-player"
             >
-              <IconButtonTooltip label={playing ? "pause" : "play"}>
-                <IconButton
-                  rounded="full"
-                  aria-label="play or pause"
-                  bg={useColorModeValue("gray.100", "gray.600")}
-                  icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                  onClick={recording ? () => false : handlePlaying}
-                  cursor={recording ? "not-allowed" : "pointer"}
-                />
-              </IconButtonTooltip>
-              <IconButtonTooltip label={"record"}>
+              <MusicButton
+                label={playing ? "pause" : "play"}
+                icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                onClick={recording ? () => false : handlePlaying}
+                cursor={recording ? "not-allowed" : "pointer"}
+                bg={useColorModeValue("gray.100", "gray.600")}
+              />
+              <IconButtonTooltip
+                label={recording ? "stop recording" : "record"}
+              >
                 <IconButton
                   transform={"scale(1.1)"}
                   borderWidth="2px"
@@ -404,7 +352,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   rounded="full"
                   variant="outline"
                   colorScheme="red"
-                  aria-label="record or stop recording"
+                  aria-label={recording ? "stop recording" : "record"}
                   bg={useColorModeValue("gray.100", "gray.600")}
                   opacity=".9"
                   _focus={{
@@ -430,16 +378,13 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   cursor={playing || recording ? "not-allowed" : "pointer"}
                 />
               </IconButtonTooltip>
-              <IconButtonTooltip label="stop recording">
-                <IconButton
-                  rounded="full"
-                  aria-label="stop recording"
-                  icon={<BsFillStopFill />}
-                  bg={useColorModeValue("gray.100", "gray.600")}
-                  onClick={handleStopRecording}
-                  cursor={recording ? "pointer" : "not-allowed"}
-                />
-              </IconButtonTooltip>
+              <MusicButton
+                label="stop recording"
+                icon={<BsFillStopFill />}
+                onClick={handleStopRecording}
+                cursor={recording ? "pointer" : "not-allowed"}
+                bg={useColorModeValue("gray.100", "gray.600")}
+              />
             </HStack>
             <Button
               h="70px"
@@ -524,24 +469,19 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   mt={[0, 0, 6, 0]}
                 >
                   <HStack spacing={2} mt={4} justifyContent="center">
-                    <IconButtonTooltip label="skip to start">
-                      <IconButton
-                        rounded="full"
-                        aria-label="skip to start"
-                        icon={<BsSkipStartFill />}
-                        onClick={recording ? () => false : handleBacktoHead}
-                        cursor={recording ? "not-allowed" : "pointer"}
-                      />
-                    </IconButtonTooltip>
-                    <IconButtonTooltip label={playing ? "pause" : "play"}>
-                      <IconButton
-                        rounded="full"
-                        aria-label="play or pause"
-                        icon={playing ? <BsPauseFill /> : <BsPlayFill />}
-                        onClick={recording ? () => false : handlePlaying}
-                        cursor={recording ? "not-allowed" : "pointer"}
-                      />
-                    </IconButtonTooltip>
+                    <MusicButton
+                      label="skip to start"
+                      icon={<BsSkipStartFill />}
+                      onClick={recording ? () => false : handleBacktoHead}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
+                    <MusicButton
+                      label={playing ? "pause" : "play"}
+                      icon={playing ? <BsPauseFill /> : <BsPlayFill />}
+                      onClick={recording ? () => false : handlePlaying}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
+
                     <IconButtonTooltip
                       label={recording ? "stop recording" : "record"}
                     >
@@ -552,7 +492,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                         variant="outline"
                         colorScheme="red"
                         position="relative"
-                        aria-label="record or stop recording"
+                        aria-label={recording ? "stop recording" : "record"}
                         icon={
                           recording ? (
                             <Notification
@@ -570,24 +510,18 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                         cursor={playing ? "not-allowed" : "pointer"}
                       />
                     </IconButtonTooltip>
-                    <IconButtonTooltip label="stop recording">
-                      <IconButton
-                        rounded="full"
-                        aria-label="stop recording"
-                        icon={<BsFillStopFill />}
-                        onClick={handleStopRecording}
-                        cursor={recording ? "pointer" : "not-allowed"}
-                      />
-                    </IconButtonTooltip>
-                    <Tooltip label="clean up">
-                      <IconButton
-                        rounded="full"
-                        aria-label="clean up"
-                        icon={<BsArrowCounterclockwise />}
-                        onClick={recording ? () => false : handleCleanUp}
-                        cursor={recording ? "not-allowed" : "pointer"}
-                      />
-                    </Tooltip>
+                    <MusicButton
+                      label="stop recording"
+                      icon={<BsFillStopFill />}
+                      onClick={handleStopRecording}
+                      cursor={recording ? "pointer" : "not-allowed"}
+                    />
+                    <MusicButton
+                      label="clean up"
+                      icon={<BsArrowCounterclockwise />}
+                      onClick={recording ? () => false : handleCleanUp}
+                      cursor={recording ? "not-allowed" : "pointer"}
+                    />
                   </HStack>
                 </Box>
                 <Box
@@ -622,38 +556,24 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                     size="xs"
                     position="absolute"
                     bottom="1px"
-                    left="-40px"
+                    left="-45px"
                     leftIcon={<BsMusicNote />}
-                    px={1}
                     iconSpacing="0.1"
                     variant="ghost"
                   >
                     4/4
                   </Button>
-                  <Text fontWeight="600" fontSize="lg">
-                    1
-                  </Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600" fontSize="lg">
-                    2
-                  </Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600" fontSize="lg">
-                    3
-                  </Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
-                  <Text fontWeight="600" fontSize="lg">
-                    4
-                  </Text>
-                  <Text fontSize="sm">2</Text>
-                  <Text fontSize="sm">3</Text>
-                  <Text fontSize="sm">4</Text>
+                  {Array(steps)
+                    .fill(null)
+                    .map((_, index) => {
+                      if (index % 4 === 0)
+                        return (
+                          <Text fontWeight="600" fontSize="lg">
+                            {index / 4 + 1}
+                          </Text>
+                        );
+                      return <Text fontSize="sm">{index % 4}</Text>;
+                    })}
                 </HStack>
                 <HStack w="100%" position="relative">
                   <IconStack currentPage={currentPage} />

@@ -2,15 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { colorTheme } from "./visual/colorTheme";
 import { MotionWrapper } from "./visual/MotionWrapper";
-import { BoomTransition } from "./visual/BoomTransition";
-import { ClapTransition } from "./visual/ClapTransition";
-import { HihatTransition } from "./visual/HihatTransition";
-import { KickTransition } from "./visual/KickTransition";
-import { OpenhatTransition } from "./visual/OpenhatTransition";
-import { RideTransition } from "./visual/RideTransition";
-import { SnareTransition } from "./visual/SnareTransition";
-import { TomTransition } from "./visual/TomTransition";
-import { TinkTransition } from "./visual/TinkTransition";
+import { MotionElement } from "./visual/MotionElement";
 
 //sequence
 const steps = 16;
@@ -62,50 +54,9 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
     <>
       <ThemeProvider theme={colorTheme[themeColor]}>
         <MotionWrapper>
-          <BoomTransition
-            alphabeta="a"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <KickTransition
-            alphabeta="f"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <TomTransition
-            alphabeta="k"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <ClapTransition
-            alphabeta="s"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <HihatTransition
-            alphabeta="d"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <OpenhatTransition
-            alphabeta="g"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <RideTransition
-            alphabeta="h"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <SnareTransition
-            alphabeta="j"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <TinkTransition
-            alphabeta="k"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
+          <MotionElement
+            visualEffect={visualEffect}
+            setVisualEffect={setVisualEffect}
           />
         </MotionWrapper>
       </ThemeProvider>

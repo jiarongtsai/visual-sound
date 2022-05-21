@@ -3,16 +3,8 @@ import { IconButton, Image } from "@chakra-ui/react";
 import { BsPlayCircle, BsPauseCircle } from "react-icons/bs";
 import { ThemeProvider } from "styled-components";
 import { MotionWrapper } from "./visual/MotionWrapper";
+import { MotionElement } from "./visual/MotionElement";
 import { colorTheme } from "./visual/colorTheme";
-import { BoomTransition } from "./visual/BoomTransition";
-import { ClapTransition } from "./visual/ClapTransition";
-import { HihatTransition } from "./visual/HihatTransition";
-import { KickTransition } from "./visual/KickTransition";
-import { OpenhatTransition } from "./visual/OpenhatTransition";
-import { RideTransition } from "./visual/RideTransition";
-import { SnareTransition } from "./visual/SnareTransition";
-import { TomTransition } from "./visual/TomTransition";
-import { TinkTransition } from "./visual/TinkTransition";
 import usePlayer from "./usePlayer";
 //sequence
 
@@ -78,7 +70,7 @@ export default function SequencePlayer({
           onMouseLeave={() => setIsHover(false)}
           onClick={() => setPlaying(!playing)}
         >
-          {isHover ? (
+          {isHover && (
             <IconButton
               zIndex="999"
               transform={"scale(3)"}
@@ -91,59 +83,13 @@ export default function SequencePlayer({
               icon={playing ? <BsPauseCircle /> : <BsPlayCircle />}
               onClick={() => setPlaying(!playing)}
             />
-          ) : (
-            ""
           )}
-          {/* fixme */}
-          {!playing && imageUrl ? (
+          {!playing && imageUrl && (
             <Image w="100%" maxH="564px" objectFit="cover" src={imageUrl} />
-          ) : (
-            ""
           )}
-          <BoomTransition
-            alphabeta="a"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <KickTransition
-            alphabeta="f"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <TomTransition
-            alphabeta="k"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <ClapTransition
-            alphabeta="s"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <HihatTransition
-            alphabeta="d"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <OpenhatTransition
-            alphabeta="g"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <RideTransition
-            alphabeta="h"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <SnareTransition
-            alphabeta="j"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
-          />
-          <TinkTransition
-            alphabeta="k"
-            effect={visualEffect}
-            setEffect={setVisualEffect}
+          <MotionElement
+            visualEffect={visualEffect}
+            setVisualEffect={setVisualEffect}
           />
         </MotionWrapper>
       </ThemeProvider>
