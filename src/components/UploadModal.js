@@ -21,43 +21,31 @@ import {
 import { CreatableSelect } from "chakra-react-select";
 import { useNavigate } from "react-router-dom";
 import SequencePlayer from "../components/SequencePlayer";
+import Loader from "./Loader";
 
 export default function UploadModal({
   sequence,
   bpm,
-  setIsUploaded,
   image,
-  setImage,
   themeColor,
   isOpen,
   onClose,
 }) {
   const [user, loading, error] = useContext(AuthContext);
   const [inputs, setInputs] = useState({ description: "try to make a sound" });
-  const [alltags, setAlltags] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
-      setAlltags(data);
+      setAllTags(data);
     });
   }, []);
 
   function handleInputs(e) {
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
-  }
-
-  function handleSequenceData(currentSequence) {
-    for (let i = 0; i < currentSequence.length; i++) {
-      for (let j = 0; j < currentSequence[i].length; j++) {
-        const { activated } = currentSequence[i][j];
-        currentSequence[i][j] = { activated };
-      }
-    }
-    return JSON.stringify(currentSequence);
   }
 
   async function uploadtoFirebase() {
@@ -70,32 +58,29 @@ export default function UploadModal({
     });
 
     const imageUrl = await Firebase.uploadFile(workFile, "images");
+    const uploadTags = selectedOption.map((tag) => tag.value);
 
     const data = {
       author_id: user.uid,
       description: inputs.description,
       comments_count: 0,
       image_url: imageUrl,
-      tags: selectedOption.map((tag) => tag.value),
+      tags: uploadTags,
       collected_by: [],
       liked_by: [],
-      sheetmusic: handleSequenceData(sequence),
+      sheetmusic: JSON.stringify(sequence),
       bpm: bpm,
       themeColor: themeColor,
     };
 
     await Firebase.addNewWork(workRef, data);
-    await Firebase.updateTags(tags);
+    await Firebase.updateTags([...new Set([...uploadTags, ...allTags])]);
 
-    setInputs({});
-    setTags([]);
-    setIsUploaded(true);
-    setImage(null);
-    onClose();
     navigate(`/explore`);
   }
 
-  if (!user) return null;
+  if (loading) return <Loader />;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
@@ -114,7 +99,7 @@ export default function UploadModal({
               <Text>Preview</Text>
 
               <SequencePlayer
-                sheetmusic={handleSequenceData(sequence)}
+                sheetmusic={JSON.stringify(sequence)}
                 bpm={bpm}
                 themeColor={themeColor}
                 imageUrl={image}
@@ -153,7 +138,7 @@ export default function UploadModal({
                       isMulti
                       colorScheme="purple"
                       name="tags"
-                      options={alltags.map((tag) => ({
+                      options={allTags.map((tag) => ({
                         value: tag,
                         label: tag,
                       }))}

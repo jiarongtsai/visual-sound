@@ -14,99 +14,32 @@ import { TinkTransition } from "./visual/TinkTransition";
 
 //sequence
 const steps = 16;
+const meterPerMeasure = 4; //一小節分成幾拍
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
-const initialCellState = { triggered: false, activated: false };
-const initialState = [
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-  Array(16).fill(initialCellState),
-];
+const initialVisualEffectState = initialVisualEffect(lineMap, false);
+
+function initialVisualEffect(arr, fill) {
+  const obj = {};
+  arr.forEach((key) => (obj[key] = fill));
+  return obj;
+}
 
 export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
-  const [playing, setPlaying] = useState(true);
-  const [boomEffect, setBoomEffect] = useState(false);
-  const [clapEffect, setClapEffect] = useState(false);
-  const [hihatEffect, setHihatEffect] = useState(false);
-  const [kickEffect, setKickEffect] = useState(false);
-  const [openhatEffect, setOpenhatEffect] = useState(false);
-  const [rideEffect, setRideEffect] = useState(false);
-  const [snareEffect, setSnareEffect] = useState(false);
-  const [tomEffect, setTomEffect] = useState(false);
-  const [tinkEffect, setTinkEffect] = useState(false);
-
-  const [sequence, setSequence] = useState(
-    transformStoredSequence(sheetmusic) || initialState
-  );
+  const [playing, setPlaying] = useState(false);
+  const [visualEffect, setVisualEffect] = useState(initialVisualEffectState);
+  const [sequence, setSequence] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
 
-  function transformStoredSequence(storedData) {
-    if (!storedData) return;
-    const storedSequence = JSON.parse(storedData);
-    for (let i = 0; i < storedSequence.length; i++) {
-      for (let j = 0; j < storedSequence[i].length; j++) {
-        const { activated } = storedSequence[i][j];
-        storedSequence[i][j] = { activated, triggered: false };
-      }
-    }
-    return storedSequence;
-  }
-
-  const nextStep = (time) => {
-    const sequenceCopy = [...sequence];
-    for (let i = 0; i < sequenceCopy.length; i++) {
-      for (let j = 0; j < sequenceCopy[i].length; j++) {
-        const { triggered, activated } = sequenceCopy[i][j];
-        sequenceCopy[i][j] = { activated, triggered: j === time };
-        if (triggered && activated) {
-          switch (lineMap[i]) {
-            case "a":
-              setBoomEffect((v) => !v);
-              break;
-            case "s":
-              setClapEffect((v) => !v);
-              break;
-            case "d":
-              setHihatEffect((v) => !v);
-              break;
-            case "f":
-              setKickEffect((v) => !v);
-              break;
-            case "g":
-              setOpenhatEffect((v) => !v);
-              break;
-            case "h":
-              setRideEffect((v) => !v);
-              break;
-            case "j":
-              setSnareEffect((v) => !v);
-              break;
-            case "k":
-              setTomEffect((v) => !v);
-              break;
-            case "l":
-              setTinkEffect((v) => !v);
-              break;
-            default:
-              return;
-          }
-        }
-      }
-    }
-    setSequence(sequenceCopy);
-  };
+  useEffect(() => {
+    sheetmusic && setSequence(JSON.parse(sheetmusic));
+  }, [sheetmusic]);
 
   useEffect(() => {
-    const timeOutspeed = (15 / bpm) * 1000;
+    const timeOutspeed = (60 / meterPerMeasure / bpm) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
         setCurrentStep((currentStep + 1) % steps);
-        nextStep(currentStep);
+        playSequence(currentStep);
       }
     }, timeOutspeed);
     return () => {
@@ -114,22 +47,66 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
     };
   }, [currentStep, playing]);
 
+  const playSequence = (currentStep) => {
+    for (let i = 0; i < sequence.length; i++) {
+      for (let j = 0; j < sequence[i].length; j++) {
+        if (sequence[i][j] && j === currentStep) {
+          const alphabeta = lineMap[i];
+          setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
+        }
+      }
+    }
+  };
+
   return (
     <>
-      <ThemeProvider theme={colorTheme[themeColor] || colorTheme.main}>
+      <ThemeProvider theme={colorTheme[themeColor]}>
         <MotionWrapper>
-          <BoomTransition effect={boomEffect} setEffect={setBoomEffect} />
-          <KickTransition effect={kickEffect} setEffect={setKickEffect} />
-          <TomTransition effect={tomEffect} setEffect={setTomEffect} />
-          <ClapTransition effect={clapEffect} setEffect={setClapEffect} />
-          <HihatTransition effect={hihatEffect} setEffect={setHihatEffect} />
-          <OpenhatTransition
-            effect={openhatEffect}
-            setEffect={setOpenhatEffect}
+          <BoomTransition
+            alphabeta="a"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
           />
-          <RideTransition effect={rideEffect} setEffect={setRideEffect} />
-          <SnareTransition effect={snareEffect} setEffect={setSnareEffect} />
-          <TinkTransition effect={tinkEffect} setEffect={setTinkEffect} />
+          <KickTransition
+            alphabeta="f"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <TomTransition
+            alphabeta="k"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <ClapTransition
+            alphabeta="s"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <HihatTransition
+            alphabeta="d"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <OpenhatTransition
+            alphabeta="g"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <RideTransition
+            alphabeta="h"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <SnareTransition
+            alphabeta="j"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
+          <TinkTransition
+            alphabeta="k"
+            effect={visualEffect}
+            setEffect={setVisualEffect}
+          />
         </MotionWrapper>
       </ThemeProvider>
     </>

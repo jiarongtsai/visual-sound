@@ -533,9 +533,7 @@ const Firebase = {
 
     return docSnap.data().tags;
   },
-  async updateTags(updateTags) {
-    const oldTags = await this.getAllTags();
-    const tags = [...new Set([...updateTags, ...oldTags])];
+  async updateTags(tags) {
     await setDoc(this.tagsRef(), { tags });
   },
   async getChatrooms() {

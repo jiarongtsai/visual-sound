@@ -72,7 +72,7 @@ export default function Main() {
         toast({
           position: "top",
           isClosable: true,
-          duration: 4000,
+          duration: 3000,
           render: () => (
             <Box w="100vw">
               <Button

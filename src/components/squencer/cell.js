@@ -1,21 +1,21 @@
 import styled from "styled-components";
 
-const getBackground = (activated, triggered) => {
-  switch (true) {
-    case activated && triggered:
-      return "#805ad5";
-    case activated && !triggered:
-      return "#805ad5";
-    case !activated && triggered:
-      return "#eef";
-    default:
-      return "#ccc";
-  }
+const getBackground = (activated, currentPlay) => {
+  if (activated) return "#805ad5";
+  if (currentPlay) return "#eef";
+
+  return "#ccc";
 };
 
-const Cell = styled.div.attrs(({ activated, triggered }) => ({
+const getOpacity = (triggered) => {
+  if (triggered) return 0.7;
+  return 1;
+};
+
+const Cell = styled.div.attrs(({ activated, triggered, currentPlay }) => ({
   style: {
-    background: getBackground(activated, triggered),
+    background: getBackground(activated, currentPlay),
+    opacity: getOpacity(triggered),
   },
 }))`
   border-radius: 4px;

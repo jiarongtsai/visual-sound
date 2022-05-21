@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import Frame from "./frame";
 import Cell from "./cell";
-const Grid = ({ sequence, toggleStep, currentPage }) => {
-  const [curItems, setCurItems] = useState([]);
+const Grid = ({
+  sequence,
+  toggleStep,
+  currentPage,
+  currentStep,
+  toggleLine,
+}) => {
+  const [currentItems, setCurrentItems] = useState([]);
   const countPerPage = 9;
 
   useEffect(() => {
@@ -11,19 +17,20 @@ const Grid = ({ sequence, toggleStep, currentPage }) => {
       countPerPage * currentPage
     );
 
-    setCurItems(currentSequence);
+    setCurrentItems(currentSequence);
   }, [currentPage, sequence]);
 
   return (
-    <Frame rows={curItems.length} columns={16}>
-      {curItems.map((line, i) =>
+    <Frame rows={currentItems.length} columns={currentItems[0]?.length}>
+      {currentItems.map((line, i) =>
         line.map((_, j) => (
           <Cell
             key={i + j}
             column={j + 1}
             row={i + 1}
-            activated={curItems[i][j]["activated"]}
-            triggered={curItems[i][j]["triggered"]}
+            activated={currentItems[i][j]}
+            triggered={toggleLine === i}
+            currentPlay={currentStep === j}
             onClick={() => toggleStep(i, j)}
           />
         ))

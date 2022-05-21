@@ -59,19 +59,17 @@ import ScaleSpring from "./ScaleSpring";
 import Grid from "./grid";
 //sequence
 const steps = 16;
+const meterPerMeasure = 4; //一小節分成幾拍
 const instruments = Array(27).fill(null);
-const initialCellState = { triggaered: false, activated: false };
 const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
 
-const initialState = instruments.map((_) =>
-  Array(steps).fill(initialCellState)
-);
+const newSequenceState = instruments.map((_) => Array(steps).fill(false));
 
-const initialVisualEffectState = initialVisualEffect(lineMap);
+const initialVisualEffectState = initialVisualEffect(lineMap, false);
 
-function initialVisualEffect(arr) {
+function initialVisualEffect(arr, fill) {
   const obj = {};
-  arr.forEach((key) => (obj[key] = false));
+  arr.forEach((key) => (obj[key] = fill));
   return obj;
 }
 
@@ -94,47 +92,67 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const player = usePlayer();
 
-  const [isUploaded, setIsUploaded] = useState(false);
   const [screenshotSpring, setScreenshotSpring] = useState(false);
   const [themeColor, setThemeColor] = useState("purple");
 
   const [visualEffect, setVisualEffect] = useState(initialVisualEffectState);
   const [BPMValue, setBPMValue] = useState(120);
 
-  const [sequence, setSequence] = useState(initialState);
+  const [newSequence, setNewSequence] = useState(newSequenceState);
+
   const [currentStep, setCurrentStep] = useState(0);
+  const [toggleLine, setToggleLine] = useState(null);
 
   const toggleStep = (line, step) => {
     if (currentPage === 2) line = line + 9;
     if (currentPage === 3) line = line + 18;
 
-    const sequenceCopy = [...sequence];
-    const { triggered, activated } = sequenceCopy[line][step];
-    sequenceCopy[line][step] = { triggered, activated: !activated };
+    const newSequenceCopy = [...newSequence];
+    const status = newSequenceCopy[line][step];
+    newSequenceCopy[line][step] = !status;
 
-    setSequence(sequenceCopy);
-    if (!recording) {
+    setNewSequence(newSequenceCopy);
+    setToggleLine(line);
+
+    if (!recording && !status) {
       const alphabeta = lineMap[line];
       setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
       player.player(alphabeta).start();
     }
   };
 
-  const nextStep = (time) => {
-    const sequenceCopy = [...sequence];
-    for (let i = 0; i < sequenceCopy.length; i++) {
-      for (let j = 0; j < sequenceCopy[i].length; j++) {
-        const { triggered, activated } = sequenceCopy[i][j];
-        sequenceCopy[i][j] = { activated, triggered: j === time };
-        if (triggered && activated) {
+  useEffect(() => {
+    if (toggleLine !== null) {
+      setTimeout(() => {
+        setToggleLine(null);
+      }, 150);
+    }
+  }, [toggleLine]);
+
+  const playSequence = (currentStep) => {
+    for (let i = 0; i < newSequence.length; i++) {
+      for (let j = 0; j < newSequence[i].length; j++) {
+        if (newSequence[i][j] && j === currentStep) {
           const alphabeta = lineMap[i];
           player.player(alphabeta).start();
           setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
         }
       }
     }
-    setSequence(sequenceCopy);
   };
+
+  useEffect(() => {
+    const timeOutspeed = (60 / meterPerMeasure / BPMValue) * 1000;
+    const timer = setTimeout(() => {
+      if (recording || playing) {
+        setCurrentStep((currentStep + 1) % steps);
+        playSequence(currentStep);
+      }
+    }, timeOutspeed);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [currentStep, recording, playing]);
 
   const useKeyboardBindings = (map) => {
     useEffect(() => {
@@ -153,16 +171,16 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   };
 
   function ObjectFunctionMap(arr) {
-    const keyboardToggleStep = currentStep - 1 < 0 ? 15 : currentStep - 1;
     const obj = {};
     arr.forEach((key, index) => {
       obj[key] = () => {
+        setToggleLine(index);
         if (!recording) {
           player.player(key).start();
           setVisualEffect((pre) => ({ ...pre, [key]: true }));
           return;
         }
-        toggleStep(lineMap[index], keyboardToggleStep);
+        toggleStep(index, currentStep);
       };
     });
     return obj;
@@ -183,29 +201,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   useKeyboardBindings({ ...keyboardColorObject, ...keybroadKeyObject });
 
   useEffect(() => {
-    const timeOutspeed = (15 / BPMValue) * 1000;
-    const timer = setTimeout(() => {
-      if (recording || playing) {
-        setCurrentStep((currentStep + 1) % steps);
-        nextStep(currentStep);
-      }
-    }, timeOutspeed);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [currentStep, recording, playing]);
-
-  useEffect(() => {
-    if (isUploaded) {
-      handleCleanUp();
-      setBPMValue(120);
-      setCurrentStep(0);
-      setVisualEffect(initialVisualEffectState);
-      setIsUploaded(false);
-    }
-  }, [isUploaded]);
-
-  useEffect(() => {
     if (!recording && !image) {
       setScreenshotSpring(true);
     }
@@ -213,7 +208,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   function handleBacktoHead() {
     setCurrentStep(0);
-    if (!recording) nextStep(0);
+    if (!recording) playSequence(0);
   }
 
   function handlePlaying() {
@@ -224,28 +219,23 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     if (!recording) return;
     setRecording(false);
     setCurrentStep(0);
-    nextStep(0);
+    playSequence(0);
   }
 
   function handleCleanUp() {
-    const sequenceCopy = [...sequence];
-    for (let i = 0; i < sequenceCopy.length; i++) {
-      for (let j = 0; j < sequenceCopy[i].length; j++) {
-        const { triggered } = sequenceCopy[i][j];
-        sequenceCopy[i][j] = { activated: false, triggered };
-      }
-    }
-    setSequence(sequenceCopy);
+    console.log("work");
+    setNewSequence(instruments.map((_) => Array(steps).fill(false)));
   }
+
+  console.log(newSequence);
 
   return (
     <>
       <UploadModal
         isOpen={isOpen}
         onClose={onClose}
-        sequence={sequence}
+        sequence={newSequence}
         bpm={BPMValue}
-        setIsUploaded={setIsUploaded}
         image={image}
         setImage={setImage}
         themeColor={themeColor}
@@ -668,9 +658,11 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 <HStack w="100%" position="relative">
                   <IconStack currentPage={currentPage} />
                   <Grid
-                    sequence={sequence}
+                    sequence={newSequence}
                     toggleStep={toggleStep}
                     currentPage={currentPage}
+                    currentStep={currentStep}
+                    toggleLine={toggleLine}
                   />
                 </HStack>
               </Flex>
