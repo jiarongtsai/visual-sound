@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Flex, Text, Image, Button } from "@chakra-ui/react";
 
 function CollectionWrapper({
@@ -57,3 +58,10 @@ function CollectionWrapper({
 }
 
 export default CollectionWrapper;
+
+CollectionWrapper.propTypes = {
+  collectionName: PropTypes.string,
+  imageUrl: PropTypes.string,
+  currentTerm: PropTypes.string,
+  setCurrentTerm: PropTypes.func,
+};

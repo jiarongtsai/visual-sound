@@ -47,7 +47,7 @@ import ChainSpring from "./helper/ChainSpring";
 import ScaleSpring from "./helper/ScaleSpring";
 
 import BpmController from "./BpmController";
-import Pagination from "./Pagination";
+import { Pagination } from "./Pagination";
 import { IconStack } from "./IconStack";
 import Grid from "./Grid";
 //sequence
@@ -551,15 +551,17 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   </Button>
                   {Array(steps)
                     .fill(null)
-                    .map((_, index) => {
-                      if (index % 4 === 0)
-                        return (
-                          <Text fontWeight="600" fontSize="lg">
-                            {index / 4 + 1}
-                          </Text>
-                        );
-                      return <Text fontSize="sm">{index % 4}</Text>;
-                    })}
+                    .map((_, index) =>
+                      index % 4 === 0 ? (
+                        <Text fontWeight="600" fontSize="lg" key={index}>
+                          {index / 4 + 1}
+                        </Text>
+                      ) : (
+                        <Text fontSize="sm" key={index}>
+                          {index % 4}
+                        </Text>
+                      )
+                    )}
                 </HStack>
                 <HStack w="100%" position="relative">
                   <IconStack currentPage={currentPage} />

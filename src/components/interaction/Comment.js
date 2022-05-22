@@ -1,6 +1,4 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from "../auth/Auth";
-import { Firebase } from "../../utils/firebase";
 import {
   IconButton,
   Input,
@@ -8,6 +6,9 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { BsCursorFill } from "react-icons/bs";
+import PropTypes from "prop-types";
+import { AuthContext } from "../auth/Auth";
+import { Firebase } from "../../utils/firebase";
 
 export default function Comment({
   i,
@@ -81,3 +82,10 @@ export default function Comment({
     </>
   );
 }
+
+Comment.propTypes = {
+  i: PropTypes.number,
+  work: PropTypes.object,
+  followingWorks: PropTypes.array,
+  setFollowingWorks: PropTypes.func,
+};

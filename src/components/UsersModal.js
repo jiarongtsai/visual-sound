@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Modal,
   ModalOverlay,
@@ -48,3 +49,14 @@ export default function UsersModal({ isOpen, onClose, action }) {
     </Modal>
   );
 }
+
+UsersModal.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  action: PropTypes.shape({
+    name: PropTypes.string,
+    userList: PropTypes.array,
+    invokeFunction: PropTypes.func,
+    buttonText: PropTypes.string,
+  }),
+};

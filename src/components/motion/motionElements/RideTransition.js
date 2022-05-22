@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
-
+import PropTypes from "prop-types";
 const rideVariant = [
   { positionx: "10%" },
   { positionx: "20%" },
@@ -49,3 +49,9 @@ export function RideTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+
+RideTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

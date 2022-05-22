@@ -1,4 +1,5 @@
 import { Tooltip, useColorModeValue } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 export const IconButtonTooltip = ({ label, placement, children }) => {
   return (
     <Tooltip
@@ -10,4 +11,10 @@ export const IconButtonTooltip = ({ label, placement, children }) => {
       {children}
     </Tooltip>
   );
+};
+
+IconButtonTooltip.propTypes = {
+  label: PropTypes.string,
+  placement: PropTypes.string,
+  children: PropTypes.element,
 };

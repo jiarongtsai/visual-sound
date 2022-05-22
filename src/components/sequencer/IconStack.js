@@ -1,4 +1,5 @@
 import { VStack } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 import {
   IconClap,
   IconHiHat,
@@ -57,3 +58,5 @@ export const IconStack = ({ currentPage }) => {
     </VStack>
   );
 };
+
+IconStack.propsTypes = { currentPage: PropTypes.number };

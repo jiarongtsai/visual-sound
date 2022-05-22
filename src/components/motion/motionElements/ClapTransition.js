@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
-
+import PropTypes from "prop-types";
 const ClapElementRandom = styled(animated.div).attrs((props) => ({
   style: {
     left: props.position,
@@ -57,3 +57,8 @@ export function ClapTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+ClapTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

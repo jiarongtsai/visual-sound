@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../auth/Auth";
-import { Firebase } from "../../utils/firebase";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { IconButton } from "@chakra-ui/react";
+import PropTypes from "prop-types";
+import { AuthContext } from "../auth/Auth";
+import { Firebase } from "../../utils/firebase";
 
 export default function Like({ i, id, likedList, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);
@@ -47,3 +48,10 @@ export default function Like({ i, id, likedList, setFollowingWorks }) {
     </>
   );
 }
+
+Like.propTypes = {
+  i: PropTypes.number,
+  id: PropTypes.string,
+  likedList: PropTypes.array,
+  setFollowingWorks: PropTypes.func,
+};

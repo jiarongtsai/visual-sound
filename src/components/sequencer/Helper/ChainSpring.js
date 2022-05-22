@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
-
+import PropTypes from "prop-types";
 const ChainWrapper = styled(animated.div)`
   width: 100vw;
   position: fixed;
@@ -18,3 +18,8 @@ export default function ChainSpring({ children, open }) {
   // ...
   return <ChainWrapper style={styles}>{children}</ChainWrapper>;
 }
+
+ChainSpring.propTypes = {
+  children: PropTypes.element,
+  open: PropTypes.bool,
+};

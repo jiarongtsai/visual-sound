@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import {
@@ -178,3 +179,7 @@ export default function WorkView({ setFollowingWorks }) {
     </>
   );
 }
+
+WorkView.propTypes = {
+  setFollowingWorks: PropTypes.func,
+};

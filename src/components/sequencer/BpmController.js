@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import PropTypes from "prop-types";
 import {
   Slider,
   SliderTrack,
@@ -50,3 +50,8 @@ export default function BPMController({ BPMValue, setBPMValue }) {
     </Slider>
   );
 }
+
+BPMController.propTypes = {
+  BPMValue: PropTypes.number,
+  setBPMValue: PropTypes.func,
+};

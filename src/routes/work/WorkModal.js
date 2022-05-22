@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import PropTypes from "prop-types";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import {
@@ -203,3 +204,8 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
     </>
   );
 }
+
+WorkModal.propTypes = {
+  followingWorks: PropTypes.arrayOf(PropTypes.object),
+  setFollowingWorks: PropTypes.func,
+};

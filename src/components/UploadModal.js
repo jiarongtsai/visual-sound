@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {
   Modal,
@@ -165,3 +166,12 @@ export default function UploadModal({
     </Modal>
   );
 }
+
+UploadModal.propTypes = {
+  sequence: PropTypes.array,
+  bpm: PropTypes.number,
+  image: PropTypes.string,
+  themeColor: PropTypes.string,
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+};

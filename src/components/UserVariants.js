@@ -9,20 +9,15 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import PropTypes from "prop-types";
 
 function getReadableTime(timestamp) {
-  let calcTime;
   const cur = Math.floor(Date.now() / 1000);
   const base = (cur - timestamp) / 86400;
-
   if (base < 1) {
-    calcTime = moment.unix(timestamp).fromNow();
-    return calcTime;
+    return moment.unix(timestamp).fromNow();
   }
-
-  calcTime = moment.unix(timestamp).calendar();
-
-  return calcTime;
+  return moment.unix(timestamp).calendar();
 }
 
 export const UserWithName = ({ id, name, thumbnail }) => {
@@ -97,4 +92,25 @@ export const MessageUserSmall = ({ name, thumbnail }) => {
       </Text>
     </HStack>
   );
+};
+
+UserWithName.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  thumbnail: PropTypes.string,
+};
+UserWithTime.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  thumbnail: PropTypes.string,
+  timestamp: PropTypes.number,
+};
+UserSmall.propTypes = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  thumbnail: PropTypes.string,
+};
+MessageUserSmall.propTypes = {
+  name: PropTypes.string,
+  thumbnail: PropTypes.string,
 };

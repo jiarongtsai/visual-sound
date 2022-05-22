@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Box, keyframes } from "@chakra-ui/react";
 const ringScaleMin = 0.11;
 const ringScaleMax = 0.66;
@@ -64,4 +65,10 @@ export const Notification = ({ right, top, activeColor }) => {
       }}
     />
   );
+};
+
+Notification.propTypes = {
+  right: PropTypes.string,
+  top: PropTypes.string,
+  activeColor: PropTypes.string,
 };

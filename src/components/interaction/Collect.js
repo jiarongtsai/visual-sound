@@ -13,6 +13,7 @@ import {
   EditablePreview,
 } from "@chakra-ui/react";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
+import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
 
@@ -157,3 +158,9 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
     </>
   );
 }
+Collect.propTypes = {
+  i: PropTypes.number,
+  id: PropTypes.string,
+  collectedList: PropTypes.array,
+  setFollowingWorks: PropTypes.func,
+};

@@ -1,4 +1,5 @@
 import { Tooltip, IconButton, useColorModeValue } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 export const MusicButton = ({
   label,
   icon,
@@ -24,4 +25,13 @@ export const MusicButton = ({
       />
     </Tooltip>
   );
+};
+
+MusicButton.propTypes = {
+  label: PropTypes.string,
+  icon: PropTypes.element,
+  onClick: PropTypes.func,
+  cursor: PropTypes.string,
+  bg: PropTypes.string,
+  placement: PropTypes.string,
 };

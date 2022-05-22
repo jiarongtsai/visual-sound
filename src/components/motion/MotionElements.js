@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { BoomTransition } from "./motionElements/BoomTransition";
 import { ClapTransition } from "./motionElements/ClapTransition";
 import { HihatTransition } from "./motionElements/HihatTransition";
@@ -58,4 +59,9 @@ export const MotionElements = ({ visualEffect, setVisualEffect }) => {
       />
     </>
   );
+};
+
+MotionElements.propTypes = {
+  visualEffect: PropTypes.object,
+  setVisualEffect: PropTypes.func,
 };

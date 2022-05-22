@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Firebase } from "../../utils/firebase";
 import Gallery from "./Gallery";
 
@@ -46,3 +47,8 @@ export default function IntersectionGallery({ term, currentUserID }) {
     </>
   );
 }
+
+IntersectionGallery.propTypes = {
+  term: PropTypes.string,
+  currentUserID: PropTypes.string,
+};

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../../components/auth/Auth";
 
@@ -20,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 
 import { BsPencilSquare } from "react-icons/bs";
+import Loader from "../../components/Loader";
 
 export default function EditProfileModal({
   isOpen,
@@ -34,6 +36,7 @@ export default function EditProfileModal({
     user_thumbnail: profile.user_thumbnail,
   });
   const [preview, setPreview] = useState("");
+  const borderColor = useColorModeValue("gray.200", "gray.500");
   useEffect(() => {
     if (!preview) setPreview(profile.user_thumbnail);
   }, [isOpen]);
@@ -71,6 +74,8 @@ export default function EditProfileModal({
     onClose();
   }
 
+  if (loading) return <Loader />;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -87,7 +92,7 @@ export default function EditProfileModal({
                 objectFit="cover"
                 rounded="full"
                 border="1px"
-                borderColor={useColorModeValue("gray.200", "gray.500")}
+                borderColor={borderColor}
               />
               <label
                 htmlFor="upload"
@@ -150,3 +155,10 @@ export default function EditProfileModal({
     </Modal>
   );
 }
+
+EditProfileModal.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  profile: PropTypes.object,
+  setProfile: PropTypes.func,
+};
