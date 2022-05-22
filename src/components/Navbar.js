@@ -16,9 +16,11 @@ import {
   useColorMode,
   useColorModeValue,
   Divider,
-  Slide,
   Stack,
-  Fade,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  CloseButton,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
@@ -66,7 +68,7 @@ export default function Navbar() {
   const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   function UserSignOut() {
     const auth = getAuth();
@@ -95,7 +97,7 @@ export default function Navbar() {
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
             display={{ md: "none" }}
-            onClick={onToggle}
+            onClick={onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
@@ -162,72 +164,56 @@ export default function Navbar() {
             </Box>
           </Flex>
         </Flex>
-
-        <Fade in={isOpen}>
-          <Box
-            w="100vw"
-            h="100vh"
-            bg="blackAlpha.600"
-            position="fixed"
-            top="0"
-            left="0"
-            display={{ md: "none" }}
-            style={{ zIndex: 50 }}
-          />
-        </Fade>
-        <Slide
-          direction="left"
-          in={isOpen}
-          style={{ zIndex: 97 }}
-          onClick={onToggle}
-        >
-          <Box
-            mt="64px"
-            bg={useColorModeValue("gray.200", "gray.700")}
-            shadow="base"
-            w="45vw"
-            h="100vh"
-            display={{ md: "none" }}
-          >
-            <Stack as={"nav"}>
-              {Links.map((link, i) => (
-                <CustomLink key={i} to={link.value}>
-                  {link.label}
-                </CustomLink>
-              ))}
-              <Divider />
-              {user ? (
-                <>
-                  <CustomLink to="/profile">Profile</CustomLink>
-                  <CustomLink to="/profile/collection">
-                    My Collection
+        <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <Box
+              bg={useColorModeValue("gray.200", "gray.700")}
+              shadow="base"
+              h="100vh"
+              display={{ md: "none" }}
+            >
+              <CloseButton onClick={onClose} p={1} m={4} ml="80%" />
+              <Stack as={"nav"}>
+                {Links.map((link, i) => (
+                  <CustomLink key={i} to={link.value}>
+                    {link.label}
                   </CustomLink>
-                  <Divider />
+                ))}
+                <Divider />
+                {user ? (
+                  <>
+                    <CustomLink to="/profile">Profile</CustomLink>
+                    <CustomLink to="/profile/collection">
+                      My Collection
+                    </CustomLink>
+                    <Divider />
+                    <Button
+                      justifyContent="flex-start"
+                      pl={6}
+                      fontWeight={600}
+                      variant={"ghost"}
+                      onClick={UserSignOut}
+                    >
+                      Log out
+                    </Button>
+                  </>
+                ) : (
                   <Button
+                    as={"a"}
                     justifyContent="flex-start"
                     pl={6}
                     fontWeight={600}
                     variant={"ghost"}
-                    onClick={UserSignOut}
+                    href={"/login"}
                   >
-                    Log out
+                    Sign In
                   </Button>
-                </>
-              ) : (
-                <Button
-                  as={"a"}
-                  justifyContent="flex-start"
-                  pl={6}
-                  fontWeight={600}
-                  variant={"ghost"}
-                  href={"/login"}
-                >
-                  Sign In
-                </Button>
-              )}
-            </Stack>
-          </Box>
-        </Slide>
+                )}
+              </Stack>
+            </Box>
+          </DrawerContent>
+        </Drawer>
       </Box>
 
       <Box

@@ -70,10 +70,12 @@ export default function Explore() {
               icon={<Search2Icon />}
               ml={2}
               d={["initial", "initial", "none"]}
+              type="submit"
             />
           </Center>
         </form>
       </Stack>
+
       <Stack mt={12}>
         <IntersectionGallery term={queryTerm} currentUserID={null} />
       </Stack>
