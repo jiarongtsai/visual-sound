@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
-
+import PropTypes from "prop-types";
 const OpenhatElement = styled(animated.div)`
   position: absolute;
   top: ${(props) => props.position};
@@ -80,3 +79,9 @@ export function OpenhatTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+
+OpenhatTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

@@ -1,16 +1,21 @@
 import {
-  Pagination,
+  Pagination as PaginationMain,
   PaginationPage,
   PaginationContainer,
   PaginationPageGroup,
 } from "@ajna/pagination";
 import { useColorModeValue } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
-export default ({ currentPage, setCurrentPage, pagesCount, pages }) => {
+export const Pagination = ({
+  currentPage,
+  setCurrentPage,
+  pagesCount,
+  pages,
+}) => {
   const currentBackground = useColorModeValue("gray.300", "gray.500");
-
   return (
-    <Pagination
+    <PaginationMain
       my={4}
       pagesCount={pagesCount}
       currentPage={currentPage}
@@ -30,6 +35,13 @@ export default ({ currentPage, setCurrentPage, pagesCount, pages }) => {
           ))}
         </PaginationPageGroup>
       </PaginationContainer>
-    </Pagination>
+    </PaginationMain>
   );
+};
+
+Pagination.propTypes = {
+  currentPage: PropTypes.number,
+  setCurrentPage: PropTypes.func,
+  pagesCount: PropTypes.number,
+  pages: PropTypes.arrayOf(PropTypes.number),
 };

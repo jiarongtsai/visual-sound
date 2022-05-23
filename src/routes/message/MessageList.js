@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-
+import PropTypes from "prop-types";
 import {
   Box,
   Button,
@@ -75,3 +75,10 @@ export default function MessageList({
     </>
   );
 }
+
+MessageList.propTypes = {
+  messageList: PropTypes.arrayOf(PropTypes.object),
+  openNewChatList: PropTypes.func,
+  setCurrentChatroom: PropTypes.func,
+  currentChatroom: PropTypes.object,
+};

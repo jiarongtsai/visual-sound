@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
+import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import {
@@ -20,11 +21,11 @@ import { AuthContext } from "../../components/auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import { UserWithName } from "../../components/UserVariants";
 import { MessageViewReceiver, MessageViewSender } from "./MessageViewCell";
+import Loader from "../../components/Loader";
 
 export default function MessageView({ currentChatroom, openNewChatList }) {
   const { mid } = useParams();
   const [user, loading, error] = useContext(AuthContext);
-
   const [chats, setChats] = useState([]);
   const [currentChatInfo, SetCurrentCahtInfo] = useState({});
   const [input, setInput] = useState("");
@@ -83,6 +84,8 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
 
     return calcTime;
   }
+
+  if (loading) return <Loader />;
 
   if (!mid)
     return (
@@ -170,3 +173,8 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
     </Flex>
   );
 }
+
+MessageView.propTypes = {
+  currentChatroom: PropTypes.object, // I dont understand.
+  openNewChatList: PropTypes.func,
+};

@@ -1,4 +1,5 @@
 import { Square, useColorModeValue } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 import { ReactComponent as Boom } from "../../../asset/react_icon/icon_boom.svg";
 import { ReactComponent as Clap } from "../../../asset/react_icon/icon_clap.svg";
 import { ReactComponent as HiHat } from "../../../asset/react_icon/icon_hiHat.svg";
@@ -36,6 +37,10 @@ const IconWrapper = ({ children }) => {
       {children}
     </Square>
   );
+};
+
+IconWrapper.propTypes = {
+  children: PropTypes.element,
 };
 
 const IconTink = () => {

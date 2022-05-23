@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
+import PropTypes from "prop-types";
 
 const SnareElement = styled(animated.div).attrs((props) => ({
   style: {
@@ -91,3 +92,8 @@ export function SnareTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+SnareTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

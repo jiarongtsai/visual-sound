@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
+import PropTypes from "prop-types";
 
 const TomElement = styled(animated.div)`
   position: absolute;
@@ -38,3 +39,9 @@ export function TomTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+
+TomTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

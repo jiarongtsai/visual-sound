@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import {
   Avatar,
@@ -98,3 +99,9 @@ export default function MessageBox({
     </Flex>
   );
 }
+
+MessageBox.propTypes = {
+  messageInfo: PropTypes.object,
+  setCurrentChatroom: PropTypes.func,
+  currentChatroom: PropTypes.object,
+};

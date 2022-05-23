@@ -6,7 +6,6 @@ import {
   useColorModeValue,
   CloseButton,
   Box,
-  IconButton,
   HStack,
   Text,
   Heading,
@@ -47,7 +46,7 @@ import ChainSpring from "./helper/ChainSpring";
 import ScaleSpring from "./helper/ScaleSpring";
 
 import BpmController from "./BpmController";
-import Pagination from "./Pagination";
+import { Pagination } from "./Pagination";
 import { IconStack } from "./IconStack";
 import Grid from "./Grid";
 //sequence
@@ -81,7 +80,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const ref = createRef(null);
-  const [image, setImage, takeScreenshot] = useScreenshot();
+  const [image, takeScreenshot] = useScreenshot();
   const getImage = () => takeScreenshot(ref.current);
 
   const player = usePlayer();
@@ -96,6 +95,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [toggleLine, setToggleLine] = useState(null);
+
+  const ButtonBackground = useColorModeValue("gray.100", "gray.600");
+  const ButtonBackgroundHover = useColorModeValue("gray.200", "gray.700");
 
   const toggleStep = (line, step) => {
     if (currentPage === 2) line = line + 9;
@@ -213,7 +215,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         sequence={newSequence}
         bpm={BpmValue}
         image={image}
-        setImage={setImage}
         themeColor={themeColor}
       />
       <Flex
@@ -245,9 +246,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   id="tour-screenshot"
                   onClick={getImage}
                   colorScheme="gray"
-                  bg={useColorModeValue("gray.100", "gray.600")}
+                  bg={ButtonBackground}
                   _hover={{
-                    bg: useColorModeValue("gray.200", "gray.700"),
+                    bg: ButtonBackgroundHover,
                   }}
                   leftIcon={<BsFillCameraFill />}
                   size="sm"
@@ -266,9 +267,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   id="tour-upload"
                   onClick={onOpen}
                   colorScheme="gray"
-                  bg={useColorModeValue("gray.100", "gray.600")}
+                  bg={ButtonBackground}
                   _hover={{
-                    bg: useColorModeValue("gray.200", "gray.700"),
+                    bg: ButtonBackgroundHover,
                   }}
                   leftIcon={<BsBoxArrowUp />}
                   size="sm"
@@ -325,51 +326,44 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 icon={playing ? <BsPauseFill /> : <BsPlayFill />}
                 onClick={recording ? () => false : handlePlaying}
                 cursor={recording ? "not-allowed" : "pointer"}
-                bg={useColorModeValue("gray.100", "gray.600")}
+                bg={ButtonBackground}
               />
-              <IconButtonTooltip
+              <MusicButton
                 label={recording ? "stop recording" : "record"}
-              >
-                <IconButton
-                  transform={"scale(1.1)"}
-                  borderWidth="2px"
-                  position="relative"
-                  bottom={1}
-                  rounded="full"
-                  variant="outline"
-                  colorScheme="red"
-                  aria-label={recording ? "stop recording" : "record"}
-                  bg={useColorModeValue("gray.100", "gray.600")}
-                  opacity=".9"
-                  _focus={{
-                    borderColor: "red.500",
-                    boxShadow: "0 0 0 1px red.500",
-                  }}
-                  icon={
-                    recording ? (
-                      <Notification
-                        right="12px"
-                        top="12px"
-                        activeColor="red.500"
-                      />
-                    ) : (
-                      <BsFillRecordFill />
-                    )
-                  }
-                  onClick={
-                    playing || recording
-                      ? () => false
-                      : () => setRecording(true)
-                  }
-                  cursor={playing || recording ? "not-allowed" : "pointer"}
-                />
-              </IconButtonTooltip>
+                _focus={{
+                  borderColor: "red.500",
+                  boxShadow: "0 0 0 1px red.500",
+                }}
+                icon={
+                  recording ? (
+                    <Notification
+                      right="12px"
+                      top="12px"
+                      activeColor="red.500"
+                    />
+                  ) : (
+                    <BsFillRecordFill />
+                  )
+                }
+                onClick={
+                  playing || recording ? () => false : () => setRecording(true)
+                }
+                cursor={playing || recording ? "not-allowed" : "pointer"}
+                transform={"scale(1.1)"}
+                borderWidth="2px"
+                position="relative"
+                bottom={1}
+                variant="outline"
+                colorScheme="red"
+                bg={ButtonBackground}
+                opacity=".9"
+              />
               <MusicButton
                 label="stop recording"
                 icon={<BsFillStopFill />}
                 onClick={handleStopRecording}
                 cursor={recording ? "pointer" : "not-allowed"}
-                bg={useColorModeValue("gray.100", "gray.600")}
+                bg={ButtonBackground}
               />
             </HStack>
             <Button
@@ -382,9 +376,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
               variant="ghost"
               onClick={onControllerOpen}
               style={{ zIndex: 199 }}
-              bg={useColorModeValue("gray.100", "gray.600")}
+              bg={ButtonBackground}
               _hover={{
-                bg: useColorModeValue("gray.200", "gray.700"),
+                bg: ButtonBackgroundHover,
               }}
               opacity="0.8"
               borderTopRadius="100%"
@@ -468,34 +462,29 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                       cursor={recording ? "not-allowed" : "pointer"}
                     />
 
-                    <IconButtonTooltip
+                    <MusicButton
                       label={recording ? "stop recording" : "record"}
-                    >
-                      <IconButton
-                        transform={"scale(1.1)"}
-                        borderWidth="2px"
-                        rounded="full"
-                        variant="outline"
-                        colorScheme="red"
-                        position="relative"
-                        aria-label={recording ? "stop recording" : "record"}
-                        icon={
-                          recording ? (
-                            <Notification
-                              right="12px"
-                              top="12px"
-                              activeColor="red.500"
-                            />
-                          ) : (
-                            <BsFillRecordFill />
-                          )
-                        }
-                        onClick={
-                          playing ? () => false : () => setRecording(!recording)
-                        }
-                        cursor={playing ? "not-allowed" : "pointer"}
-                      />
-                    </IconButtonTooltip>
+                      icon={
+                        recording ? (
+                          <Notification
+                            right="12px"
+                            top="12px"
+                            activeColor="red.500"
+                          />
+                        ) : (
+                          <BsFillRecordFill />
+                        )
+                      }
+                      onClick={
+                        playing ? () => false : () => setRecording(!recording)
+                      }
+                      cursor={playing ? "not-allowed" : "pointer"}
+                      transform={"scale(1.1)"}
+                      borderWidth="2px"
+                      variant="outline"
+                      colorScheme="red"
+                      position="relative"
+                    />
                     <MusicButton
                       label="stop recording"
                       icon={<BsFillStopFill />}
@@ -551,15 +540,17 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   </Button>
                   {Array(steps)
                     .fill(null)
-                    .map((_, index) => {
-                      if (index % 4 === 0)
-                        return (
-                          <Text fontWeight="600" fontSize="lg">
-                            {index / 4 + 1}
-                          </Text>
-                        );
-                      return <Text fontSize="sm">{index % 4}</Text>;
-                    })}
+                    .map((_, index) =>
+                      index % 4 === 0 ? (
+                        <Text fontWeight="600" fontSize="lg" key={index}>
+                          {index / 4 + 1}
+                        </Text>
+                      ) : (
+                        <Text fontSize="sm" key={index}>
+                          {index % 4}
+                        </Text>
+                      )
+                    )}
                 </HStack>
                 <HStack w="100%" position="relative">
                   <IconStack currentPage={currentPage} />

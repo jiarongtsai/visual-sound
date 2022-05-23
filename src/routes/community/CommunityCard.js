@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   Center,
@@ -190,3 +191,11 @@ export default function CommunityCard({
     </Center>
   );
 }
+
+CommunityCard.propTypes = {
+  i: PropTypes.number,
+  work: PropTypes.object,
+  location: PropTypes.object, //specific location object?
+  followingWorks: PropTypes.arrayOf(PropTypes.object),
+  setFollowingWorks: PropTypes.func,
+};

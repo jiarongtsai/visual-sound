@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Frame from "./Frame";
 import Cell from "./Cell";
 const Grid = ({
@@ -40,3 +41,11 @@ const Grid = ({
 };
 
 export default Grid;
+
+Grid.propTypes = {
+  sequence: PropTypes.arrayOf(PropTypes.array),
+  toggleStep: PropTypes.func,
+  currentPage: PropTypes.number,
+  currentStep: PropTypes.number,
+  toggleLine: PropTypes.number,
+};

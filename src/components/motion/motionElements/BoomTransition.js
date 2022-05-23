@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
-
+import PropTypes from "prop-types";
 const BoomElement = styled(animated.div)`
   position: absolute;
   top: 0;
@@ -28,3 +28,8 @@ export function BoomTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+BoomTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
+import PropTypes from "prop-types";
 
 const KickElement = styled(animated.div)`
   position: absolute;
@@ -48,3 +49,9 @@ export function KickTransition({ alphabeta, effect, setEffect }) {
     </>
   );
 }
+
+KickTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

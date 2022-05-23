@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
-
+import PropTypes from "prop-types";
 const hihatArray = ["45%", "50%", "55%"];
 
 const HihatElement = styled(animated.div)`
@@ -34,3 +34,9 @@ export function HihatTransition({ alphabeta, effect, setEffect }) {
       ))
   );
 }
+
+HihatTransition.propTypes = {
+  alphabeta: PropTypes.string,
+  effect: PropTypes.object,
+  setEffect: PropTypes.func,
+};

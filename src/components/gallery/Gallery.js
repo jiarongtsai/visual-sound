@@ -1,4 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import SequencerMotionOnly from "../sequencer/SequencerMotionOnly";
 import { WorkGrid, VideoWrapper, CoverImage } from "./element";
 
@@ -49,3 +50,9 @@ export default function Gallery({ works, isShown, setIsShown }) {
     </>
   );
 }
+
+Gallery.propTypes = {
+  works: PropTypes.array,
+  isShown: PropTypes.array,
+  setIsShown: PropTypes.func,
+};

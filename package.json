@@ -9,7 +9,6 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/exo-2": "^4.5.8",
-    "@fontsource/raleway": "^4.5.8",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -17,10 +16,8 @@
     "firebase": "^9.6.10",
     "framer-motion": "^6",
     "html2canvas": "^1.4.1",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.3.7",
     "moment": "^2.29.3",
-    "prettier": "^2.6.2",
+    "prop-types": "^15.8.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-firebase-hooks": "^5.0.3",
@@ -70,5 +67,10 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "devDependencies": {
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2"
   }
 }

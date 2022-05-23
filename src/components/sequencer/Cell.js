@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import PropTypes from "prop-types";
 const getBackground = (activated, currentPlay) => {
   if (activated) return "#805ad5";
   if (currentPlay) return "#eef";
@@ -26,3 +26,9 @@ const Cell = styled.div.attrs(({ activated, triggered, currentPlay }) => ({
 `;
 
 export default Cell;
+
+Cell.propTypes = {
+  activated: PropTypes.bool,
+  triggered: PropTypes.bool,
+  currentPlay: PropTypes.bool,
+};
