@@ -5,8 +5,8 @@ export const MusicButton = ({
   icon,
   onClick,
   cursor,
-  bg,
   placement,
+  ...props
 }) => {
   return (
     <Tooltip
@@ -21,7 +21,7 @@ export const MusicButton = ({
         icon={icon}
         onClick={onClick}
         cursor={cursor}
-        bg={bg}
+        {...props}
       />
     </Tooltip>
   );
@@ -32,6 +32,5 @@ MusicButton.propTypes = {
   icon: PropTypes.element,
   onClick: PropTypes.func,
   cursor: PropTypes.string,
-  bg: PropTypes.string,
   placement: PropTypes.string,
 };

@@ -1,4 +1,6 @@
 import { useContext } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import {
   Heading,
   Box,
@@ -23,11 +25,9 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { getAuth, signOut } from "firebase/auth";
-import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth/Auth";
+import CustomLink from "./CustomLink";
 
 const Links = [
   { value: "", label: "Create" },
@@ -35,34 +35,6 @@ const Links = [
   { value: "explore", label: "Explore" },
   { value: "message", label: "Message" },
 ];
-
-function CustomLink({ children, to, ...props }) {
-  let resolved = useResolvedPath(to);
-  let match = useMatch({ path: resolved.pathname, end: true });
-  const bgDefault = useColorModeValue("gray.100", "gray.600");
-
-  return (
-    <Box
-      px={[6, 6, 3]}
-      py={[4, 4, 2]}
-      rounded={"md"}
-      fontWeight={[400, 400, 600]}
-      _hover={{
-        bg: bgDefault,
-      }}
-    >
-      <Link
-        style={{
-          borderBottom: match ? "2px solid #805ad5" : "",
-        }}
-        to={to}
-        {...props}
-      >
-        {children}
-      </Link>
-    </Box>
-  );
-}
 
 export default function Navbar() {
   const [user, loading, error] = useContext(AuthContext);
@@ -176,7 +148,7 @@ export default function Navbar() {
               <CloseButton onClick={onClose} p={1} m={4} ml="80%" />
               <Stack as={"nav"}>
                 {Links.map((link, i) => (
-                  <CustomLink key={i} to={link.value}>
+                  <CustomLink key={i} to={link.value} onClick={onClose}>
                     {link.label}
                   </CustomLink>
                 ))}
