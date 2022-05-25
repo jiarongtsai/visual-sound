@@ -25,12 +25,12 @@ export default function Main() {
     {
       target: "#tour-player",
       title: "Record the Music",
-      content: "Record music by clicking Record button",
+      content: "Record music by clicking the Record button",
     },
     {
       target: "#tour-edit-panel",
       title: "Edit your Recording",
-      content: "Edit your recording and change colors with editing panel",
+      content: "Edit your recording and change colors with the editing panel",
     },
     {
       target: "#tour-screenshot",
@@ -40,9 +40,9 @@ export default function Main() {
     },
     {
       target: "#tour-upload",
-      title: "Share with Public",
+      title: "Share with Others",
       content:
-        "Add description to your recording, and share with the Visual Sound community",
+        "Add a description to your recording, and share it with the Visual Sound community",
     },
   ];
 
@@ -74,21 +74,22 @@ export default function Main() {
           isClosable: true,
           duration: 3000,
           render: () => (
-            <Box w="100vw">
-              <Button
-                mt="40vh"
-                mx="auto"
-                colorScheme="purple"
-                transform="translateX(55%)"
-              >
-                Press A to Z, and turn up speakers
-              </Button>
-            </Box>
+            <Button
+              mt="40vh"
+              mx="auto"
+              colorScheme="purple"
+              w="300px"
+              textAlign="center"
+            >
+              Press A to Z, and turn up speakers
+            </Button>
           ),
         });
+        if (JSON.parse(localStorage.getItem("hasRuntour"))) return;
         setTimeout(() => {
           setRunTour(true);
         }, 10000);
+        localStorage.setItem("hasRuntour", "true");
         isMounted.current = false;
       }
     } else {
@@ -103,7 +104,7 @@ export default function Main() {
         steps={TOUR_STEPS}
         continuous={true}
         showSkipButton={true}
-        // showProgress={true}
+        showProgress={true}
         styles={{
           options: {
             primaryColor: "#805ad5",
