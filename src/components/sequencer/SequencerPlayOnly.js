@@ -65,7 +65,6 @@ export default function SequencePlayer({
     <>
       <ThemeProvider theme={colorTheme[themeColor]}>
         <MotionWrapper
-          // disable hover effect when playing
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
           onClick={() => setPlaying(!playing)}
@@ -85,7 +84,13 @@ export default function SequencePlayer({
             />
           )}
           {!playing && imageUrl && (
-            <Image w="100%" maxH="564px" objectFit="cover" src={imageUrl} />
+            <Image
+              w="100%"
+              h="100%"
+              maxH="564px"
+              objectFit="cover"
+              src={imageUrl}
+            />
           )}
           <MotionElements
             visualEffect={visualEffect}

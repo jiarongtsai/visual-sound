@@ -8,15 +8,16 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   ModalCloseButton,
   Flex,
+  Box,
   Spacer,
   Text,
   VStack,
   useColorModeValue,
   HStack,
   Tag,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { Firebase } from "../../utils/firebase";
 import SequencerPlayOnly from "../../components/sequencer/SequencerPlayOnly";
@@ -29,13 +30,13 @@ import { UserSmall } from "../../components/userVariants/UserSmall";
 import Loader from "../../components/Loader";
 
 export default function WorkModal({ followingWorks, setFollowingWorks }) {
-  const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [work, setWork] = useState({});
   const [comments, setComments] = useState([]);
   const endRef = useRef(null);
   const [index, setIndex] = useState(-1);
+  const isMounted = useRef(false);
 
   const borderColor = useColorModeValue("gray.300", "gray.800");
 
@@ -79,22 +80,27 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
   }, []);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    if (comments.length === 0) return;
+    if (isMounted.current) {
+      endRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    } else {
+      isMounted.current = true;
+    }
   }, [comments]);
 
   function onDismiss() {
     navigate(-1);
   }
 
-  if (loading || Object.keys(work).length === 0) return <Loader />;
+  if (Object.keys(work).length === 0) return <Loader />;
 
   return (
     <>
       <Modal size="6xl" isOpen={true} onClose={onDismiss}>
         <ModalOverlay />
-        <ModalContent minHeight="80%">
+        <ModalContent height="80%">
           <ModalHeader
             pb={0}
             borderBottom="1px"
@@ -109,21 +115,29 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
             />
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody pt={8} pb="0">
+          <ModalBody pt={6} h="60%" overflow="scroll">
             <Flex
               direction={["column", "column", "row"]}
               justify="space-between"
+              h="100%"
             >
-              <Flex direction="column" w={["100%", "100%", "68%"]}>
+              <Box w={["100%", "100%", "68%"]} h={["30vh", "30vh", "100%"]}>
                 <SequencerPlayOnly
                   imageUrl={work.image_url}
                   sheetmusic={work.sheetmusic}
                   bpm={work.bpm}
                   themeColor={work.themeColor}
                 />
-              </Flex>
+              </Box>
               <Flex direction="column" w={["100%", "100%", "30%"]}>
-                <VStack align="flex-start" h="55vh" overflowY={"scroll"} p={1}>
+                <VStack
+                  align="flex-start"
+                  h={["25vh", "25vh", "55vh"]}
+                  overflowY={"scroll"}
+                  p={1}
+                  pt={[4, 4, 0]}
+                  pl={[2, 2, 0]}
+                >
                   <UserSmall
                     id={work.author_id}
                     name={work.author_name}
@@ -150,7 +164,6 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                       .unix(work.created_time?.seconds)
                       .calendar()}`}
                   </Text>
-
                   {comments.map((comment) => {
                     return (
                       <div key={comment.id}>
@@ -188,7 +201,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                   />
                 </Flex>
 
-                <Flex align="center" justify="center" pt={2}>
+                <Flex align="center" justify="center">
                   <Comment
                     i={index}
                     work={work}

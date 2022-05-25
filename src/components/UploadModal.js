@@ -85,7 +85,7 @@ export default function UploadModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent minHeight="80%">
+      <ModalContent h="80%">
         <ModalHeader
           borderBottom="1px"
           borderColor={borderColor}
@@ -94,9 +94,13 @@ export default function UploadModal({
           Upload your new work
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pt={8} pb="0">
-          <Flex direction={["column", "row"]} justify="space-between">
-            <Flex direction="column" w={["100%", "100%", "68%"]}>
+        <ModalBody py={6} h="60%" overflow="scroll">
+          <Flex direction={["column", "column", "row"]} justify="space-between">
+            <Flex
+              direction="column"
+              w={["100%", "100%", "68%"]}
+              h={["30vh", "30vh", "100%"]}
+            >
               <Text>Preview</Text>
               <SequencerPlayOnly
                 sheetmusic={JSON.stringify(sequence)}
@@ -108,12 +112,12 @@ export default function UploadModal({
             <Flex direction="column" w={["100%", "100%", "30%"]}>
               <VStack
                 align="flex-start"
-                h="65vh"
+                h={["auto", "auto", "65vh"]}
                 overflowY={"scroll"}
                 p={1}
                 spacing={4}
               >
-                <Text>Edit Details</Text>
+                <Text pt={4}>Edit Details</Text>
 
                 <Box w="100%">
                   <Text color="gray.500" fontSize="sm">
@@ -153,8 +157,11 @@ export default function UploadModal({
             </Flex>
           </Flex>
         </ModalBody>
-
-        <ModalFooter>
+        <ModalFooter
+          borderTop="1px"
+          borderColor={borderColor}
+          boxShadow="rgba(0, 0, 0, 0.06) 0 -1px 3px 0"
+        >
           <Button colorScheme={"gray"} onClick={onClose} mr={3}>
             Cancel
           </Button>

@@ -14,7 +14,6 @@ import {
   Code,
   Heading,
   Button,
-  Box,
 } from "@chakra-ui/react";
 import onboardingVisual from "../asset/illustration/visualsound.png";
 
