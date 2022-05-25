@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { animated, useSpring } from "react-spring";
 import PropTypes from "prop-types";
 const ChainWrapper = styled(animated.div)`

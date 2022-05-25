@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "@emotion/react";
 import { colorTheme } from "../motion/colorTheme";
 import { MotionWrapper } from "../motion/MotionWrapper";
 import { MotionElements } from "../motion/MotionElements";

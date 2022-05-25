@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import RequireAuth from "./components/auth/RequireAuth";
-import Main from "./routes/Main";
-import ProfileLayout from "./routes/profile/ProfileLayout";
-import ProfileWorks from "./routes/profile/ProfileWorks";
-import ProfileCollections from "./routes/profile/ProfileCollections";
-import Message from "./routes/message/Message";
-import Community from "./routes/community/Community";
-import Explore from "./routes/Explore";
-import User from "./routes/User";
-import WorkModal from "./routes/work/WorkModal";
-import WorkView from "./routes/work/WorkView";
-import Login from "./routes/Login";
-import NotFound from "./routes/NotFound";
-import Create from "./routes/create/Create";
+import Main from "./pages/Main";
+import Profile from "./pages/profile/Profile";
+import ProfileWorks from "./pages/profile/ProfileWorks";
+import ProfileCollections from "./pages/profile/ProfileCollections";
+import Message from "./pages/message/Message";
+import Community from "./pages/community/Community";
+import Explore from "./pages/Explore";
+import User from "./pages/User";
+import WorkModal from "./pages/work/WorkModal";
+import WorkView from "./pages/work/WorkView";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
     <>
       <Routes location={state?.backgroundLocation || location}>
         <Route path="/" element={<Navbar />}>
-          <Route path="create" element={<Create />} />
           <Route index element={<Main />} />
           <Route
             path="community"
@@ -55,7 +53,7 @@ function App() {
             path="profile"
             element={
               <RequireAuth>
-                <ProfileLayout />
+                <Profile />
               </RequireAuth>
             }
           >

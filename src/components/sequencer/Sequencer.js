@@ -27,11 +27,11 @@ import {
   BsMusicNote,
 } from "react-icons/bs";
 import { usePagination } from "@ajna/pagination";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "@emotion/react";
 
-import usePlayer from "../customHook/usePlayer";
-import useKeyboardBindings from "../customHook/useKeybroadBindings";
-import { useScreenshot } from "../customHook/useScreenshot";
+import usePlayer from "../../customHook/usePlayer";
+import useKeyboardBindings from "../../customHook/useKeybroadBindings";
+import { useScreenshot } from "../../customHook/useScreenshot";
 
 import UploadModal from "../UploadModal";
 
@@ -49,21 +49,8 @@ import BpmController from "./BpmController";
 import { Pagination } from "./Pagination";
 import { IconStack } from "./IconStack";
 import Grid from "./Grid";
-//sequence
-const steps = 16;
-const meterPerMeasure = 4; //一小節分成幾拍
-const instruments = Array(27).fill(null);
-const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
 
-const newSequenceState = instruments.map((_) => Array(steps).fill(false));
-
-const initialVisualEffectState = initialVisualEffect(lineMap, false);
-
-function initialVisualEffect(arr, fill) {
-  const obj = {};
-  arr.forEach((key) => (obj[key] = fill));
-  return obj;
-}
+import { sequenceConfig } from "../../config";
 
 const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
@@ -88,10 +75,12 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const [screenshotSpring, setScreenshotSpring] = useState(false);
   const [themeColor, setThemeColor] = useState("purple");
 
-  const [visualEffect, setVisualEffect] = useState(initialVisualEffectState);
+  const [visualEffect, setVisualEffect] = useState(
+    sequenceConfig.initialVisualEffectState
+  );
   const [BpmValue, setBpmValue] = useState(120);
 
-  const [newSequence, setNewSequence] = useState(newSequenceState);
+  const [newSequence, setNewSequence] = useState(sequenceConfig.sequenceState);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [toggleLine, setToggleLine] = useState(null);
@@ -111,7 +100,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     setToggleLine(line);
 
     if (!recording && !status) {
-      const alphabeta = lineMap[line];
+      const alphabeta = sequenceConfig.lineMap[line];
       setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
       player.player(alphabeta).start();
     }
@@ -129,7 +118,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     for (let i = 0; i < newSequence.length; i++) {
       for (let j = 0; j < newSequence[i].length; j++) {
         if (newSequence[i][j] && j === currentStep) {
-          const alphabeta = lineMap[i];
+          const alphabeta = sequenceConfig.lineMap[i];
           player.player(alphabeta).start();
           setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
         }
@@ -138,10 +127,11 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   };
 
   useEffect(() => {
-    const timeOutspeed = (60 / meterPerMeasure / BpmValue) * 1000;
+    const timeOutspeed =
+      (60 / sequenceConfig.meterPerMeasure / BpmValue) * 1000;
     const timer = setTimeout(() => {
       if (recording || playing) {
-        setCurrentStep((currentStep + 1) % steps);
+        setCurrentStep((currentStep + 1) % sequenceConfig.steps);
         playSequence(currentStep);
       }
     }, timeOutspeed);
@@ -177,7 +167,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
     6: () => setThemeColor("purple"),
   };
 
-  const keybroadKeyObject = ObjectFunctionMap(lineMap);
+  const keybroadKeyObject = ObjectFunctionMap(sequenceConfig.lineMap);
 
   useKeyboardBindings({ ...keyboardColorObject, ...keybroadKeyObject });
 
@@ -204,7 +194,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   }
 
   function handleCleanUp() {
-    setNewSequence(instruments.map((_) => Array(steps).fill(false)));
+    setNewSequence(sequenceConfig.sequenceState);
   }
 
   return (
@@ -538,7 +528,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   >
                     4/4
                   </Button>
-                  {Array(steps)
+                  {Array(sequenceConfig.steps)
                     .fill(null)
                     .map((_, index) =>
                       index % 4 === 0 ? (

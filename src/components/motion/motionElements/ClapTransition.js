@@ -1,12 +1,27 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 import PropTypes from "prop-types";
-const ClapElementRandom = styled(animated.div).attrs((props) => ({
-  style: {
-    left: props.position,
-  },
-}))`
+
+// const Password = styled(Input).attrs({ type: "password" })`
+//   color: blue;
+// `;
+// const MyComponent = (props) => (
+//   <input
+//     type="checkbox"
+//     css={{
+//       height: 40,
+//       width: 40,
+//       color: "green",
+//     }}
+//     {...props}
+//   />
+// );
+
+const ClapElementRandom = styled(animated.div)// }, //   left: props.position, // style: { // .attrs((props) => ({
+// }))
+`
+left: props.position
   position: absolute;
   top: 0;
   width: 4px;

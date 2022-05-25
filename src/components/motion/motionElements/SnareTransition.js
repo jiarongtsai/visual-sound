@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 import PropTypes from "prop-types";
 
-const SnareElement = styled(animated.div).attrs((props) => ({
-  style: {
-    top: props.random.x,
-    left: props.random.y,
-  },
-}))`
-  position: absolute;
-  width: 10vw;
-  height: 10vw;
-  border-radius: 50%;
-  background: ${(props) => props.theme.special};
+const SnareElement = styled(animated.div)`
+top: props.random.x,
+left: props.random.y,
+  position: absolute,
+  width: 10vw,
+  height: 10vw,
+  border-radius: 50%,
+  background: ${(props) => props.theme.special},
 `;
 
 export function SnareTransition({ alphabeta, effect, setEffect }) {

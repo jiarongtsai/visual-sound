@@ -12,7 +12,7 @@ import {
   VStack,
   Spacer,
 } from "@chakra-ui/react";
-import { UserWithName } from "./UserVariants";
+import { UserWithName } from "./userVariants/UserWithName";
 
 export default function UsersModal({ isOpen, onClose, action }) {
   return (

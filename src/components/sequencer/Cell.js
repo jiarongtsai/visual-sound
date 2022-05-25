@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import PropTypes from "prop-types";
+
 const getBackground = (activated, currentPlay) => {
   if (activated) return "#805ad5";
   if (currentPlay) return "#eef";
@@ -12,18 +13,19 @@ const getOpacity = (triggered) => {
   return 1;
 };
 
-const Cell = styled.div.attrs(({ activated, triggered, currentPlay }) => ({
-  style: {
-    background: getBackground(activated, currentPlay),
-    opacity: getOpacity(triggered),
+const Cell = styled.div(
+  {
+    borderRadius: "4px",
+    margin: "2px",
+    cursor: "pointer",
   },
-}))`
-  border-radius: 4px;
-  grid-column: ${(props) => props.column};
-  grid-row: ${(props) => props.row};
-  margin: 2px;
-  cursor: pointer;
-`;
+  (props) => ({
+    gridColumn: props.column,
+    gridRow: props.row,
+    background: getBackground(props.activated, props.currentPlay),
+    opacity: getOpacity(props.triggered),
+  })
+);
 
 export default Cell;
 

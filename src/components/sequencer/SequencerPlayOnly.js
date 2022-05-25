@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { IconButton, Image } from "@chakra-ui/react";
 import { BsPlayCircle, BsPauseCircle } from "react-icons/bs";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "@emotion/react";
 import { MotionWrapper } from "../motion/MotionWrapper";
 import { MotionElements } from "../motion/MotionElements";
 import { colorTheme } from "../motion/colorTheme";
-import usePlayer from "../customHook/usePlayer";
+import usePlayer from "../../customHook/usePlayer";
 //sequence
 
 const steps = 16;

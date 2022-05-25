@@ -25,14 +25,9 @@
     "react-joyride": "^2.4.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
-    "react-simple-keyboard": "^3.4.122",
     "react-spring": "^9.4.4",
-    "styled-components": "^5.3.5",
     "tone": "^14.7.77",
     "web-vitals": "^2.1.0"
-  },
-  "resolutions": {
-    "styled-components": "^5"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

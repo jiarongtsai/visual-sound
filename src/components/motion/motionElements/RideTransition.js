@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { animated } from "react-spring";
 import { useTransition } from "react-spring";
 import PropTypes from "prop-types";
@@ -9,12 +9,9 @@ const rideVariant = [
   { positionx: "75%" },
 ];
 
-const RideElement = styled(animated.div).attrs((props) => ({
-  style: {
-    left: props.positiony,
-  },
-}))`
+const RideElement = styled(animated.div)`
   position: absolute;
+  left: props.position;
   top: ${(props) => props.positionx};
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;

@@ -27,7 +27,7 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { AuthContext } from "./auth/Auth";
-import CustomLink from "./CustomLink";
+import NavLink from "./NavLink";
 
 const Links = [
   { value: "", label: "Create" },
@@ -88,9 +88,9 @@ export default function Navbar() {
             </Box>
             <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
               {Links.map((link, i) => (
-                <CustomLink key={i} to={link.value}>
+                <NavLink key={i} to={link.value}>
                   {link.label}
-                </CustomLink>
+                </NavLink>
               ))}
             </HStack>
           </HStack>
@@ -148,17 +148,15 @@ export default function Navbar() {
               <CloseButton onClick={onClose} p={1} m={4} ml="80%" />
               <Stack as={"nav"}>
                 {Links.map((link, i) => (
-                  <CustomLink key={i} to={link.value} onClick={onClose}>
+                  <NavLink key={i} to={link.value} onClick={onClose}>
                     {link.label}
-                  </CustomLink>
+                  </NavLink>
                 ))}
                 <Divider />
                 {user ? (
                   <>
-                    <CustomLink to="/profile">Profile</CustomLink>
-                    <CustomLink to="/profile/collection">
-                      My Collection
-                    </CustomLink>
+                    <NavLink to="/profile">Profile</NavLink>
+                    <NavLink to="/profile/collection">My Collection</NavLink>
                     <Divider />
                     <Button
                       justifyContent="flex-start"

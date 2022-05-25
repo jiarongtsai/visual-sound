@@ -20,7 +20,7 @@ export default function IntersectionGallery({ term, currentUserID }) {
     const pagingObserver = new IntersectionObserver((entries) => {
       if (entries[0].intersectionRatio <= 0) return;
       if (isFetching) return;
-      if (typeof pagingRef.current === "undefined") return;
+      if (pagingRef.current === undefined) return;
       isFetching = true;
       Firebase.getWorks(pagingRef.current, term, currentUserID).then(
         ({ fetchWorks, lastVisibleWork }) => {
