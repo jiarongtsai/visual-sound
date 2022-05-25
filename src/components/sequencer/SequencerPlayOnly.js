@@ -63,7 +63,7 @@ export default function SequencePlayer({
 
   return (
     <>
-      <ThemeProvider theme={colorTheme[themeColor]}>
+      <ThemeProvider theme={colorTheme[themeColor] || colorTheme["purple"]}>
         <MotionWrapper
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}

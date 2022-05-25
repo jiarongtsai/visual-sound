@@ -111,7 +111,7 @@ export default function MessageView({
           icon={<MdOutlineArrowBackIosNew />}
           mr={4}
           display={{ base: "inline-flex", md: "none" }}
-          onClick={() => setCurrentChatroom({})}
+          onClick={() => setCurrentChatroom("")}
         />
         <UserWithName
           id={currentChatInfo.author_id}
@@ -153,7 +153,6 @@ export default function MessageView({
         })}
         <div ref={endRef}></div>
       </VStack>
-      {/* simillar component as comment */}
       <Flex align="center" justify="center" p={4}>
         <InputGroup size="md" position="relative">
           <Input
@@ -181,6 +180,7 @@ export default function MessageView({
 }
 
 MessageView.propTypes = {
-  currentChatroom: PropTypes.object, // I dont understand.
+  currentChatroom: PropTypes.string,
+  setCurrentChatroom: PropTypes.func,
   openNewChatList: PropTypes.func,
 };

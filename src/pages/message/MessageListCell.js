@@ -95,5 +95,5 @@ export default function MessageBox({
 MessageBox.propTypes = {
   messageInfo: PropTypes.object,
   setCurrentChatroom: PropTypes.func,
-  currentChatroom: PropTypes.object,
+  currentChatroom: PropTypes.string,
 };

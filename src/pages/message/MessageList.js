@@ -79,5 +79,5 @@ MessageList.propTypes = {
   messageList: PropTypes.arrayOf(PropTypes.object),
   openNewChatList: PropTypes.func,
   setCurrentChatroom: PropTypes.func,
-  currentChatroom: PropTypes.object,
+  currentChatroom: PropTypes.string,
 };

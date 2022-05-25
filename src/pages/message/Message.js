@@ -10,7 +10,7 @@ import Loader from "../../components/Loader";
 
 export default function Message() {
   const [messageList, setMessageList] = useState([]);
-  const [currentChatroom, setCurrentChatroom] = useState({});
+  const [currentChatroom, setCurrentChatroom] = useState("");
   const [user, loading, error] = useContext(AuthContext);
   const { mid } = useParams();
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
 const colorTheme = {
-  main: {
-    background: "white",
-    light: "#76B972",
-    medium: "#F8B229",
-    dark: "tomato",
-    special: "#235e6f",
+  purple: {
+    background: "#805ad5",
+    light: "#D2C5F0",
+    medium: "#9678DD",
+    dark: "#F7CA4C",
+    special: "#263238",
   },
   energe: {
     background: "#219EBC",
@@ -33,13 +33,6 @@ const colorTheme = {
     medium: "#FAF5E4",
     dark: "#FFFFFF",
     special: "#F8B400",
-  },
-  purple: {
-    background: "#805ad5",
-    light: "#D2C5F0",
-    medium: "#9678DD",
-    dark: "#F7CA4C",
-    special: "#263238",
   },
 };
 

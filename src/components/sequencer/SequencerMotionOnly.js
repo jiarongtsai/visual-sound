@@ -52,7 +52,7 @@ export default function SequencePlayer({ sheetmusic, bpm, themeColor }) {
 
   return (
     <>
-      <ThemeProvider theme={colorTheme[themeColor]}>
+      <ThemeProvider theme={colorTheme[themeColor] || colorTheme["purple"]}>
         <MotionWrapper>
           <MotionElements
             visualEffect={visualEffect}

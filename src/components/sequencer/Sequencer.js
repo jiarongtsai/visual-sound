@@ -161,12 +161,11 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const keyboardColorObject = {
     Spacebar: () => setPlaying(!playing),
-    1: () => setThemeColor("main"),
+    1: () => setThemeColor("purple"),
     2: () => setThemeColor("energe"),
     3: () => setThemeColor("macaroon"),
     4: () => setThemeColor("neon"),
     5: () => setThemeColor("vintage"),
-    6: () => setThemeColor("purple"),
   };
 
   const keybroadKeyObject = ObjectFunctionMap(sequenceConfig.lineMap);
