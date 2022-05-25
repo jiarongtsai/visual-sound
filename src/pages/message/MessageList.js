@@ -25,7 +25,6 @@ export default function MessageList({
     <>
       <Flex direction="column">
         <Box
-          display={["none", "initial"]}
           borderBottom="1px"
           borderColor={useColorModeValue("gray.200", "gray.500")}
           boxShadow="base"
@@ -51,7 +50,7 @@ export default function MessageList({
 
         <VStack
           alignItems={"flex-start"}
-          h={["78vh", "65vh"]}
+          h={"65vh"}
           overflowY={"scroll"}
           divider={
             <StackDivider

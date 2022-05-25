@@ -127,7 +127,7 @@ export default function Profile() {
           <Grid
             flexBasis="40%"
             h="200px"
-            templateRows="repeat(5, 1fr)"
+            templateRows="repeat(6, 1fr)"
             templateColumns="repeat(3, 1fr)"
             gap={3}
             alignItems="center"
@@ -177,8 +177,10 @@ export default function Profile() {
               </Text>
               <Text>Following</Text>
             </GridItem>
-            <GridItem rowSpan={2} colSpan={3} alignSelf="flex-start">
-              <Text>{profile.user_bio}</Text>
+            <GridItem rowSpan={3} colSpan={3} alignSelf="flex-start">
+              <Text maxH="100px" overflow="scroll">
+                {profile.user_bio}
+              </Text>
             </GridItem>
           </Grid>
         </Flex>

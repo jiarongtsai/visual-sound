@@ -20,8 +20,8 @@ function CollectionWrapper({
     >
       <Button
         p={1}
-        w="100px"
-        h="100px"
+        w={["70px", "70px", "100px"]}
+        h={["70px", "70px", "100px"]}
         variant="unstyled"
         border="2px"
         rounded="full"
@@ -36,8 +36,8 @@ function CollectionWrapper({
         isActive={currentTerm === collectionName}
       >
         <Image
-          w="88px"
-          h="88px"
+          w={["58px", "58px", "88px"]}
+          h={["58px", "58px", "88px"]}
           objectFit="cover"
           rounded="full"
           src={imageUrl}

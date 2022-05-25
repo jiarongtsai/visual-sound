@@ -15,12 +15,7 @@ export const UserWithName = ({ id, name, thumbnail }) => {
           rounded={"full"}
           me="10px"
         />
-        <Text
-          fontSize="sm"
-          color={textColor}
-          fontWeight="bold"
-          display={["none", "initial"]}
-        >
+        <Text fontSize="sm" color={textColor} fontWeight="bold">
           {name}
         </Text>
       </Flex>

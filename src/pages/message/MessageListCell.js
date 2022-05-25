@@ -32,7 +32,6 @@ export default function MessageBox({
       justifyContent="space-between"
       w="92%"
       mx="auto"
-      maxW="290px"
       px={2}
       py={2}
       rounded={"md"}
@@ -64,12 +63,7 @@ export default function MessageBox({
             me="10px"
           />
           <Flex direction="column">
-            <Text
-              fontSize="sm"
-              color={textColor}
-              fontWeight="bold"
-              display={["none", "initial"]}
-            >
+            <Text fontSize="sm" color={textColor} fontWeight="bold">
               {messageInfo.author_name}
             </Text>
             <Text
@@ -80,13 +74,11 @@ export default function MessageBox({
               textOverflow="ellipsis"
               textAlign="left"
               h={6}
-              display={["none", "none", "initial"]}
             >
               {messageInfo.latestMessage.content}
             </Text>
           </Flex>
           <Spacer />
-
           {messageInfo.author_place === messageInfo.latestMessage.sender &&
           !messageInfo.latestMessage.has_read &&
           currentChatroom !== messageInfo.mid ? (

@@ -66,11 +66,10 @@ export default function Message() {
   return (
     <>
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
-
       <Flex
-        mt={12}
+        mt={[4, 4, 12]}
         mx="auto"
-        w="90%"
+        w={["100%", "100%", "90%"]}
         h="100%"
         rounded="md"
         maxW="1080px"
@@ -79,11 +78,13 @@ export default function Message() {
         bg={bgColor}
       >
         <Box
-          w={["20%", 160, "30%"]}
-          minW="80px"
-          maxW="300px"
+          w={["100%", "100%", "30%"]}
           borderRight="1px"
           borderColor={borderColor}
+          display={{
+            base: `${Object.keys(currentChatroom).length ? "none" : "initail"}`,
+            md: "initial",
+          }}
         >
           <MessageList
             messageList={messageList}
@@ -92,9 +93,17 @@ export default function Message() {
             openNewChatList={openNewChatList}
           />
         </Box>
-        <Box flex="1" h="100%">
+        <Box
+          flex="1"
+          h="100%"
+          display={{
+            base: `${Object.keys(currentChatroom).length ? "initail" : "none"}`,
+            md: "initial",
+          }}
+        >
           <MessageView
             currentChatroom={currentChatroom}
+            setCurrentChatroom={setCurrentChatroom}
             openNewChatList={openNewChatList}
           />
         </Box>

@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { BsCursorFill, BsPlusSquare } from "react-icons/bs";
+import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import { AuthContext } from "../../components/auth/Auth";
 import { Firebase } from "../../utils/firebase";
 import { UserWithName } from "../../components/userVariants/UserWithName";
@@ -24,7 +25,11 @@ import { MessageViewReceiver } from "./messageViewCell/MessageViewReceiver";
 import { MessageViewSender } from "./messageViewCell/MessageViewSender";
 import Loader from "../../components/Loader";
 
-export default function MessageView({ currentChatroom, openNewChatList }) {
+export default function MessageView({
+  currentChatroom,
+  setCurrentChatroom,
+  openNewChatList,
+}) {
   const { mid } = useParams();
   const [user, loading, error] = useContext(AuthContext);
   const [chats, setChats] = useState([]);
@@ -72,18 +77,14 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
   }
 
   function getReadableTime(timestamp) {
-    let calcTime;
     const cur = Math.floor(Date.now() / 1000);
     const base = (cur - timestamp) / 86400;
 
     if (base < 1) {
-      calcTime = moment.unix(timestamp).fromNow();
-      return calcTime;
+      return moment.unix(timestamp).fromNow();
     }
 
-    calcTime = moment.unix(timestamp).calendar();
-
-    return calcTime;
+    return moment.unix(timestamp).calendar();
   }
 
   if (loading) return <Loader />;
@@ -105,14 +106,19 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
     );
   return (
     <Flex direction="column">
-      <Box boxShadow="base" p={4}>
+      <Box boxShadow="base" p={4} d="flex" alignItems="center">
+        <IconButton
+          icon={<MdOutlineArrowBackIosNew />}
+          mr={4}
+          display={{ base: "inline-flex", md: "none" }}
+          onClick={() => setCurrentChatroom({})}
+        />
         <UserWithName
           id={currentChatInfo.author_id}
           name={currentChatInfo.author_name}
           thumbnail={currentChatInfo.author_thumbnail}
         />
       </Box>
-
       <VStack
         align="center"
         h={"62vh"}
@@ -121,7 +127,6 @@ export default function MessageView({ currentChatroom, openNewChatList }) {
         borderColor={borderColor}
         pt={3}
       >
-        {/* fixme: time calculate  MessageView cell */}
         {chats.map((chat, i) => {
           return (
             <Flex key={i} direction="column" w="100%" alignItems="center">
