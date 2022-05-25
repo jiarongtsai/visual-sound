@@ -3,19 +3,17 @@ export const sequenceConfig = {
   meterPerMeasure: 4, //一小節分成幾拍
   instruments: 27,
   lineMap: ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-  //fixme
-  sequenceState: Array(27)
-    .fill(null)
-    .map((_) => Array(16).fill(false)),
-  //fixme
-  initialVisualEffectState: initialVisualEffect(
-    ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-    false
-  ),
+  getSequenceState() {
+    return Array(this.instruments)
+      .fill(null)
+      .map((_) => Array(this.steps).fill(false));
+  },
+  getVisualEffectState() {
+    return this.generateObjectFromArrayWithDefaultValue(this.lineMap, false);
+  },
+  generateObjectFromArrayWithDefaultValue(array, defaultValue) {
+    const obj = {};
+    array.forEach((key) => (obj[key] = defaultValue));
+    return obj;
+  },
 };
-
-function initialVisualEffect(arr, fill) {
-  const obj = {};
-  arr.forEach((key) => (obj[key] = fill));
-  return obj;
-}

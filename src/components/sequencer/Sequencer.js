@@ -76,11 +76,13 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   const [themeColor, setThemeColor] = useState("purple");
 
   const [visualEffect, setVisualEffect] = useState(
-    sequenceConfig.initialVisualEffectState
+    sequenceConfig.getVisualEffectState()
   );
   const [BpmValue, setBpmValue] = useState(120);
 
-  const [newSequence, setNewSequence] = useState(sequenceConfig.sequenceState);
+  const [newSequence, setNewSequence] = useState(
+    sequenceConfig.getSequenceState()
+  );
 
   const [currentStep, setCurrentStep] = useState(0);
   const [toggleLine, setToggleLine] = useState(null);
@@ -194,7 +196,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   }
 
   function handleCleanUp() {
-    setNewSequence(sequenceConfig.sequenceState);
+    setNewSequence(sequenceConfig.getSequenceState());
   }
 
   return (
