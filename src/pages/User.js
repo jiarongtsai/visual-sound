@@ -17,6 +17,7 @@ import { AuthContext } from "../components/auth/Auth";
 import IntersectionGallery from "../components/gallery/IntersectionGallery";
 import UsersModal from "../components/UsersModal";
 import Loader from "../components/Loader";
+import AlertModal from "../components/AlertModal";
 
 export default function User() {
   const { uid } = useParams();
@@ -26,6 +27,11 @@ export default function User() {
   const [profile, setProfile] = useState({});
   const [user, loading, error] = useContext(AuthContext);
   const bgColor = useColorModeValue("gray.200", "gray.800");
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
 
   useEffect(() => {
     if (user?.uid === uid) {
@@ -43,12 +49,11 @@ export default function User() {
     };
   }, [user]);
 
-  //fix me : navigate to userpage doesn't work
-  // const chat = (userID) => {
-  //   navigate(`/message/${userID}`);
-  // };
-
   const chat = async (userID) => {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     const mid = await Firebase.getChatroom(user?.uid, userID);
     navigate(`/message/${mid}`);
   };
@@ -64,7 +69,7 @@ export default function User() {
       name: "Follower List",
       userList: FollowerListWithInfo,
       invokeFunction: chat,
-      buttonText: "Message",
+      buttonText: "chat",
     });
     onOpen();
   }
@@ -86,6 +91,10 @@ export default function User() {
   }
 
   function handleFollow() {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     if (!profile.followers?.includes(user?.uid)) {
       Firebase.followUser(user.uid, uid);
       return;
@@ -94,6 +103,10 @@ export default function User() {
   }
 
   function handleOpenCharoomt() {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     Firebase.getChatroom(user.uid, uid).then((mid) => {
       navigate(`/message/${mid}`);
     });
@@ -103,7 +116,11 @@ export default function User() {
   return (
     <>
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
-
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could interact with others."
+      />
       <Flex mt={20} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}

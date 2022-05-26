@@ -215,7 +215,11 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         image={image}
         themeColor={themeColor}
       />
-      <AlertModal isOpen={isAlertOpen} onClose={onAlertClose} />
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could upload works."
+      />
       <Flex
         direction={"column"}
         position="absolute"

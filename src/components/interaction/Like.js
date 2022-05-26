@@ -1,14 +1,23 @@
 import React, { useContext } from "react";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, useDisclosure } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
+import AlertModal from "../AlertModal";
 
 export default function Like({ i, id, likedList, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);
-
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
   async function handleLike() {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     let updatedLikedByList;
     if (likedList.includes(user.uid)) {
       updatedLikedByList = likedList.filter((id) => id !== user.uid);
@@ -28,6 +37,11 @@ export default function Like({ i, id, likedList, setFollowingWorks }) {
 
   return (
     <>
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could like works."
+      />
       {likedList?.includes(user?.uid) ? (
         <IconButton
           pt={1}
@@ -43,6 +57,7 @@ export default function Like({ i, id, likedList, setFollowingWorks }) {
           aria-label="like"
           icon={<BsHeart />}
           onClick={() => handleLike(i)}
+          opacity={!user && "0.7"}
         />
       )}
     </>

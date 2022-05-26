@@ -11,16 +11,16 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-export default function AlertModal({ isOpen, onClose }) {
+export default function AlertModal({ isOpen, onClose, content }) {
   const navigate = useNavigate();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mt="30%">
         <ModalHeader>Not Login?</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Only Registered users could upload works.</ModalBody>
+        <ModalBody>{content}</ModalBody>
         <ModalFooter>
           <Button colorScheme={"gray"} onClick={onClose} mr={3}>
             Back
@@ -37,4 +37,5 @@ export default function AlertModal({ isOpen, onClose }) {
 AlertModal.propTypes = {
   onClose: PropTypes.func,
   isOpen: PropTypes.bool,
+  content: PropTypes.string,
 };

@@ -11,16 +11,23 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
+import AlertModal from "../AlertModal";
 
 export default function Collect({ i, id, collectedList, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);
   const [collectionMap, setCollectionMap] = useState({});
   const [input, setInput] = useState("");
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
 
   useEffect(() => {
     if (!user) return;
@@ -32,7 +39,6 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
     };
   }, [user]);
 
-  //可以收藏到不只一個collection 嗎？ 還沒試
   async function collectWork(collectionName) {
     if (!collectionName.trim()) return;
 
@@ -101,6 +107,11 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
 
   return (
     <>
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could collect works."
+      />
       {collectedList?.includes(user?.uid) ? (
         <IconButton
           variant="ghost"
@@ -120,6 +131,8 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
               textDecoration: "none",
               bg: color,
             }}
+            opacity={!user && "0.7"}
+            onClick={!user && onAlertOpen}
           >
             <IconButton
               variant="ghost"
@@ -127,7 +140,7 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
               icon={<BsBookmark />}
             />
           </MenuButton>
-          <MenuList>
+          <MenuList display={!user && "none"}>
             <MenuOptionGroup>
               <Editable
                 defaultValue="+ New collection name..."
