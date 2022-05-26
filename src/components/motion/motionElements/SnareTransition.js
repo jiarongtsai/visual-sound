@@ -5,13 +5,13 @@ import { useTransition } from "react-spring";
 import PropTypes from "prop-types";
 
 const SnareElement = styled(animated.div)`
-top: props.random.x,
-left: props.random.y,
-  position: absolute,
-  width: 10vw,
-  height: 10vw,
-  border-radius: 50%,
-  background: ${(props) => props.theme.special},
+  top: ${(props) => props.random.x};
+  left: ${(props) => props.random.y};
+  position: absolute;
+  width: 10vw;
+  height: 10vw;
+  border-radius: 50%;
+  background: ${(props) => props.theme.special};
 `;
 
 export function SnareTransition({ alphabeta, effect, setEffect }) {

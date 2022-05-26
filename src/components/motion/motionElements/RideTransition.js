@@ -11,8 +11,8 @@ const rideVariant = [
 
 const RideElement = styled(animated.div)`
   position: absolute;
-  left: props.position;
-  top: ${(props) => props.positionx};
+  left: ${(props) => props.positionx};
+  top: ${(props) => props.positiony};
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   border-bottom: 50px solid ${(props) => props.theme.medium};

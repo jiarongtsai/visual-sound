@@ -60,6 +60,7 @@ export default () => {
         b: tom01,
         n: tom02,
         m: tom03,
+        ";": scratch,
       },
       () => {
         console.log("player loaded");
