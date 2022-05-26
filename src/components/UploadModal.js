@@ -17,6 +17,7 @@ import {
   Box,
   Text,
   FormControl,
+  useToast,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
 import { Firebase } from "../utils/firebase";
@@ -38,6 +39,14 @@ export default function UploadModal({
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
   const navigate = useNavigate();
+  const toast = useToast();
+  const toastProps = {
+    status: "error",
+    variant: "subtle",
+    duration: 3000,
+    isClosable: true,
+    position: "bottom-start",
+  };
 
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
@@ -50,6 +59,14 @@ export default function UploadModal({
   }
 
   async function uploadtoFirebase() {
+    if (!image) {
+      toast({
+        ...toastProps,
+        title: "Cover Image is required",
+        description: "Please close the upload window and take a screenshot.",
+      });
+      return;
+    }
     const workRef = Firebase.getNewWorkRef();
     const workID = workRef.id;
 
@@ -76,10 +93,13 @@ export default function UploadModal({
 
     await Firebase.addNewWork(workRef, data);
     await Firebase.updateTags([...new Set([...uploadTags, ...allTags])]);
-
+    toast({
+      ...toastProps,
+      title: "successfully uploaded",
+      status: "success",
+    });
     navigate(`/explore`);
   }
-
   if (loading) return <Loader />;
 
   return (
