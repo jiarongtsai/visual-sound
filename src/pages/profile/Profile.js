@@ -125,8 +125,8 @@ export default function Profile() {
             />
           </Box>
           <Grid
+            ml={{ base: 0, md: 4 }}
             flexBasis="40%"
-            h="200px"
             templateRows="repeat(6, 1fr)"
             templateColumns="repeat(3, 1fr)"
             gap={3}

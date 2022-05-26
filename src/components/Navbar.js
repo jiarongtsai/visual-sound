@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import {
@@ -23,6 +23,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   CloseButton,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
@@ -41,6 +42,13 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [breakPoint] = useMediaQuery("(max-width: 767px)");
+
+  useEffect(() => {
+    if (!breakPoint) {
+      onClose();
+    }
+  }, [breakPoint]);
 
   function UserSignOut() {
     const auth = getAuth();

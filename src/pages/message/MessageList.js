@@ -12,8 +12,6 @@ import { BsPlusSquare } from "react-icons/bs";
 import { AuthContext } from "../../components/auth/Auth";
 import { UserWithName } from "../../components/userVariants/UserWithName";
 import MessageListCell from "./MessageListCell";
-import { EmptyHandle } from "../../components/EmptyHandle";
-
 export default function MessageList({
   messageList,
   openNewChatList,
