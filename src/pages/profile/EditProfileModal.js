@@ -30,19 +30,25 @@ export default function EditProfileModal({
   setProfile,
 }) {
   const [user, loading, error] = useContext(AuthContext);
-  const [inputs, setInputs] = useState({
-    user_bio: profile.user_bio,
-    user_name: profile.user_name,
-    user_thumbnail: profile.user_thumbnail,
-  });
+  const [inputs, setInputs] = useState({});
   const [preview, setPreview] = useState("");
   const borderColor = useColorModeValue("gray.200", "gray.500");
+
+  useEffect(() => {
+    setInputs({
+      user_bio: profile.user_bio,
+      user_name: profile.user_name,
+      user_thumbnail: profile.user_thumbnail,
+    });
+  }, [profile]);
+
   useEffect(() => {
     if (!preview) setPreview(profile.user_thumbnail);
   }, [isOpen]);
 
   useEffect(() => {
     if (!inputs.user_thumbnail) return;
+    if (inputs.user_thumbnail === profile.user_thumbnail) return;
 
     const objectUrl = URL.createObjectURL(inputs.user_thumbnail);
     setPreview(objectUrl);
@@ -53,11 +59,14 @@ export default function EditProfileModal({
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   }
+
   async function handelUpdate() {
-    const imageUrl = await Firebase.uploadFile(
-      inputs.user_thumbnail,
-      "thumbnails"
-    );
+    let imageUrl;
+    if (inputs.user_thumbnail !== profile.user_thumbnail) {
+      imageUrl = await Firebase.uploadFile(inputs.user_thumbnail, "thumbnails");
+    } else {
+      imageUrl = profile.user_thumbnail;
+    }
     await Firebase.updateProfile(
       user,
       inputs.user_name,
