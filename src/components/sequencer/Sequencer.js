@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, createRef, useContext } from "react";
 import {
   Flex,
   Button,
@@ -34,6 +34,7 @@ import useKeyboardBindings from "../../customHook/useKeybroadBindings";
 import { useScreenshot } from "../../customHook/useScreenshot";
 
 import UploadModal from "../UploadModal";
+import AlertModal from "../AlertModal";
 
 import { colorTheme } from "../motion/colorTheme";
 import { MotionWrapper } from "../motion/MotionWrapper";
@@ -51,20 +52,26 @@ import { IconStack } from "./IconStack";
 import Grid from "./Grid";
 
 import { sequenceConfig } from "../../config";
+import { AuthContext } from "../auth/Auth";
 
 const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
+  const [user, isloading, error] = useContext(AuthContext);
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
     initialState: { currentPage: 1 },
   });
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
   const {
     isOpen: isControllerOpen,
     onOpen: onControllerOpen,
     onClose: onControllerClose,
   } = useDisclosure();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const ref = createRef(null);
   const [image, takeScreenshot] = useScreenshot();
@@ -208,6 +215,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         image={image}
         themeColor={themeColor}
       />
+      <AlertModal isOpen={isAlertOpen} onClose={onAlertClose} />
       <Flex
         direction={"column"}
         position="absolute"
@@ -256,7 +264,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
               >
                 <Button
                   id="tour-upload"
-                  onClick={onOpen}
+                  onClick={user ? onOpen : onAlertOpen}
                   colorScheme="gray"
                   bg={ButtonBackground}
                   _hover={{
