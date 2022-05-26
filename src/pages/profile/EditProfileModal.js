@@ -18,6 +18,7 @@ import {
   Textarea,
   IconButton,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 
 import { BsPencilSquare } from "react-icons/bs";
@@ -33,7 +34,7 @@ export default function EditProfileModal({
   const [inputs, setInputs] = useState({});
   const [preview, setPreview] = useState("");
   const borderColor = useColorModeValue("gray.200", "gray.500");
-
+  const toast = useToast();
   useEffect(() => {
     setInputs({
       user_bio: profile.user_bio,
@@ -73,6 +74,14 @@ export default function EditProfileModal({
       inputs.user_bio,
       imageUrl
     );
+    toast({
+      title: "Successfully Updated",
+      status: "success",
+      variant: "subtle",
+      duration: 3000,
+      isClosable: true,
+      position: "bottom-start",
+    });
     setProfile((pre) => ({
       ...pre,
       user_bio: inputs.user_bio,

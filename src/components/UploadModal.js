@@ -95,7 +95,7 @@ export default function UploadModal({
     await Firebase.updateTags([...new Set([...uploadTags, ...allTags])]);
     toast({
       ...toastProps,
-      title: "successfully uploaded",
+      title: "Successfully Uploaded",
       status: "success",
     });
     navigate(`/explore`);

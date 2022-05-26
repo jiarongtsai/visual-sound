@@ -97,12 +97,22 @@ export default function Login() {
       }
       Firebase.register(inputs.username, inputs.email, inputs.password).then(
         () => {
+          toast({
+            ...toastProps,
+            status: "success",
+            title: "Successfully Registed",
+          });
           navigate(from, { replace: true });
         }
       );
       return;
     }
     Firebase.login(inputs.email, inputs.password).then(() => {
+      toast({
+        ...toastProps,
+        status: "success",
+        title: "Successfully Loged in",
+      });
       navigate(from, { replace: true });
     });
   }

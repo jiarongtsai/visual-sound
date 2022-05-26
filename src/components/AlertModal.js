@@ -17,7 +17,7 @@ export default function AlertModal({ isOpen, onClose, content }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm">
       <ModalOverlay />
-      <ModalContent mt="30%">
+      <ModalContent>
         <ModalHeader>Not Login?</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{content}</ModalBody>
