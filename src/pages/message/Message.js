@@ -53,10 +53,10 @@ export default function Message() {
     const newChatList = await Firebase.getAllUsers(excludeChatList);
 
     setAction({
-      name: "Send Message to...",
+      name: "Start a chat with...",
       userList: newChatList,
       invokeFunction: openNewChat,
-      buttonText: "Message",
+      buttonText: "Chat",
     });
     onOpen();
   }

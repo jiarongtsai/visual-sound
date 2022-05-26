@@ -15,6 +15,7 @@ import { UserWithName } from "../../components/userVariants/UserWithName";
 import { AuthContext } from "../../components/auth/Auth";
 import CommunityCard from "./CommunityCard";
 import Loader from "../../components/Loader";
+import { EmptyHandle } from "../../components/EmptyHandle";
 
 export default function Community({ followingWorks, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);
@@ -40,9 +41,13 @@ export default function Community({ followingWorks, setFollowingWorks }) {
 
   if (followingWorks.length === 0)
     return (
-      <Flex h="100vh" justify="center" align="center">
-        Go 'Explore' to follow more users
-      </Flex>
+      <Box mt="30vh">
+        <EmptyHandle
+          showText="No works from following users yet."
+          buttonText="Go Explore"
+          link="/explore"
+        />
+      </Box>
     );
 
   async function handleFollow(i) {

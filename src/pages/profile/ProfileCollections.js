@@ -1,16 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import { Flex } from "@chakra-ui/react";
+
 import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../../components/auth/Auth";
 import CollectionWrapper from "./CollectionWrapper";
 import Gallery from "../../components/gallery/Gallery";
+import { EmptyHandle } from "../../components/EmptyHandle";
 import Loader from "../../components/Loader";
 
 export default function ProfileCollections() {
   const [user, loading, error] = useContext(AuthContext);
   const [collectedWorks, setCollectedWorks] = useState([]);
   const [currentTerm, setCurrentTerm] = useState("all");
-
   const [isShown, setIsShown] = useState([]);
 
   useEffect(() => {
@@ -50,7 +51,13 @@ export default function ProfileCollections() {
   if (loading) return <Loader />;
 
   if (collectedWorks.length === 1)
-    return <div>Go 'Explore' to collect more works</div>;
+    return (
+      <EmptyHandle
+        showText="Go go 'Explore page' to collect works!"
+        buttonText="Explore"
+        link="/explore"
+      />
+    );
 
   return (
     <>

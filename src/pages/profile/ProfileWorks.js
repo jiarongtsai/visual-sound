@@ -7,5 +7,7 @@ export default function ProfileWorks() {
   const [user, loading, error] = useContext(AuthContext);
 
   if (loading) return <Loader />;
-  return <IntersectionGallery term={null} currentUserID={user.uid} />;
+  return (
+    <IntersectionGallery term={null} currentUserID={user.uid} isCurrentUser />
+  );
 }

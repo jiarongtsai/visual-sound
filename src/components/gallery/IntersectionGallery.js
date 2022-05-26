@@ -1,14 +1,22 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Firebase } from "../../utils/firebase";
 import Gallery from "./Gallery";
+import { EmptyHandle } from "../EmptyHandle";
 
-export default function IntersectionGallery({ term, currentUserID }) {
+export default function IntersectionGallery({
+  term,
+  currentUserID,
+  isCurrentUser,
+}) {
   let isFetching = false;
   const [works, setWorks] = useState([]);
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
   const pagingRef = useRef(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (term) {
       pagingRef.current = null;
@@ -39,6 +47,42 @@ export default function IntersectionGallery({ term, currentUserID }) {
       endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
     };
   }, [term]);
+
+  if (isCurrentUser && works.length === 0)
+    return (
+      <>
+        <EmptyHandle
+          showText="No works yet"
+          buttonText="Create"
+          link="/create"
+        />
+        <div ref={endofPageRef}></div>
+      </>
+    );
+
+  if (currentUserID && works.length === 0)
+    return (
+      <>
+        <EmptyHandle
+          showText="No works yet"
+          buttonText="Explore other pages"
+          link="/explore"
+        />
+        <div ref={endofPageRef}></div>
+      </>
+    );
+
+  if (works.length === 0)
+    return (
+      <>
+        <EmptyHandle
+          showText="No works found"
+          buttonText="Back to Explore"
+          link="/explore"
+        />
+        <div ref={endofPageRef}></div>
+      </>
+    );
 
   return (
     <>
