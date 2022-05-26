@@ -12,6 +12,7 @@ import {
   Text,
   useColorModeValue,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -20,6 +21,7 @@ import { AuthContext } from "../components/auth/Auth";
 import Loader from "../components/Loader";
 
 export default function Login() {
+  const toast = useToast();
   const [user, loading, error] = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showCheckPassword, setShowCheckPassword] = useState(false);
@@ -33,6 +35,14 @@ export default function Login() {
   });
   const bg = useColorModeValue("white", "gray.700");
   const from = location.state?.from?.pathname || "/";
+  const toastProps = {
+    status: "error",
+    variant: "subtle",
+    duration: 3000,
+    isClosable: true,
+    position: "bottom-start",
+  };
+  const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
   useEffect(() => {
     if (user) navigate(from, { replace: true });
@@ -50,7 +60,41 @@ export default function Login() {
   }
 
   function handelLogin() {
+    if (!inputs.email || !inputs.email.match(emailFormat)) {
+      toast({
+        title: "Check your email",
+        description: "Please enter a valid email. (ex: Emily@visualsound.com )",
+        ...toastProps,
+      });
+      return;
+    }
+    if (!inputs.password || inputs.password.length < 7) {
+      toast({
+        title: "Check your Password",
+        description:
+          "Please enter a valid password. (between 6 to 20 characters)",
+        ...toastProps,
+      });
+      return;
+    }
     if (isRegister) {
+      if (!inputs.username) {
+        toast({
+          title: "Username is required",
+          description: "Please enter a username for your account.",
+          ...toastProps,
+        });
+        return;
+      }
+      if (!inputs.checkPassword || inputs.password !== inputs.checkPassword) {
+        toast({
+          title: "Password does not match",
+          description:
+            "Please enter the same password in the check password field.",
+          ...toastProps,
+        });
+        return;
+      }
       Firebase.register(inputs.username, inputs.email, inputs.password).then(
         () => {
           navigate(from, { replace: true });
@@ -77,7 +121,7 @@ export default function Login() {
         <Stack spacing={4}>
           {isRegister && (
             <FormControl id="firstName" isRequired>
-              <FormLabel>User Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <Input
                 type="text"
                 name="username"
@@ -190,6 +234,5 @@ export default function Login() {
         </Stack>
       </Box>
     </Stack>
-    // </Flex>
   );
 }
