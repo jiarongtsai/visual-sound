@@ -4,8 +4,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  FacebookAuthProvider,
-  signInWithPopup,
 } from "firebase/auth";
 
 import {
@@ -41,9 +39,6 @@ const firebaseConfig = {
 const Firebase = {
   app: initializeApp(firebaseConfig),
   pageLimit: 12,
-  ProviderFB() {
-    return new FacebookAuthProvider();
-  },
   auth() {
     return getAuth(this.app);
   },
@@ -105,20 +100,6 @@ const Firebase = {
       password
     );
     return userCredential.user;
-  },
-  async SignInWithFB() {
-    try {
-      const result = await signInWithPopup(this.auth(), this.ProviderFB());
-      const user = result.user;
-
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential.accessToken;
-
-      const currentUser = await this.addNewUser(user);
-      return { currentUser, accessToken };
-    } catch (error) {
-      console.log(error);
-    }
   },
   async getWorks(lastVisibleData, term, uid) {
     let queryCondition;

@@ -22,12 +22,14 @@ import Loader from "../components/Loader";
 export default function Login() {
   const [user, loading, error] = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [showCheckPassword, setShowCheckPassword] = useState(false);
   const [isRegister, switchPanel] = useState(false);
+  const [passwordwarning, setPasswordWarning] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const [inputs, setInputs] = useState({
-    email: "jiarongtsai19@gmail.com",
-    password: "web123",
+    email: "shane@visualsound.com",
+    password: "visualsound",
   });
   const bg = useColorModeValue("white", "gray.700");
   const from = location.state?.from?.pathname || "/";
@@ -35,6 +37,13 @@ export default function Login() {
   useEffect(() => {
     if (user) navigate(from, { replace: true });
   }, [user]);
+
+  useEffect(() => {
+    if (!inputs.checkPassword) return;
+    if (inputs.password !== inputs.checkPassword) {
+      setPasswordWarning(true);
+    }
+  }, [inputs]);
 
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -49,36 +58,24 @@ export default function Login() {
       );
       return;
     }
-    Firebase.login(inputs.email, inputs.password).then((data) => {
+    Firebase.login(inputs.email, inputs.password).then(() => {
       navigate(from, { replace: true });
     });
-  }
-
-  //fix me: login with FB
-  function loginFB() {
-    Firebase.SignInWithFB().then((result) => {
-      console.log(result);
-      navigate(from, { replace: true });
-    });
-  }
-  //fix me: forgot password
-  function forgotPassword() {
-    console.log("I forgot");
   }
 
   if (loading) return <Loader />;
 
   return (
-    <Stack spacing={8} mt={16} mx={"auto"} maxW={"lg"} py={12} px={6}>
-      <Stack align={"center"}>
-        <Heading fontSize={"3xl"} textAlign={"center"}>
-          {isRegister ? "Register" : "Sign in"}
-        </Heading>
-        <Text color={"gray.600"}>Enjoy the world of music</Text>
-      </Stack>
+    <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
       <Box rounded={"lg"} bg={bg} boxShadow={"base"} px={12} py={8}>
+        <Stack align={"center"} mt={4} mb={8}>
+          <Heading fontSize={"3xl"} textAlign={"center"}>
+            {isRegister ? "Register" : "Sign in"}
+          </Heading>
+          <Text color={"gray.600"}>Enjoy the world of music</Text>
+        </Stack>
         <Stack spacing={4}>
-          {isRegister ? (
+          {isRegister && (
             <FormControl id="firstName" isRequired>
               <FormLabel>User Name</FormLabel>
               <Input
@@ -88,10 +85,7 @@ export default function Login() {
                 onChange={(e) => handleInputs(e)}
               />
             </FormControl>
-          ) : (
-            ""
           )}
-
           <FormControl id="email" isRequired>
             <FormLabel>Email address</FormLabel>
             <Input
@@ -122,6 +116,36 @@ export default function Login() {
               </InputRightElement>
             </InputGroup>
           </FormControl>
+          {isRegister && (
+            <>
+              <FormControl id="checkPassword" isRequired>
+                <FormLabel>Check Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showCheckPassword ? "text" : "password"}
+                    name="checkPassword"
+                    value={inputs.checkPassword}
+                    onChange={(e) => handleInputs(e)}
+                  />
+                  <InputRightElement h={"full"}>
+                    <Button
+                      variant={"ghost"}
+                      onClick={() =>
+                        setShowCheckPassword(
+                          (showCheckPassword) => !showCheckPassword
+                        )
+                      }
+                    >
+                      {showCheckPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+              {passwordwarning && (
+                <Text color="red.500">Please enter the same password.</Text>
+              )}
+            </>
+          )}
           <Stack spacing={10} pt={2}>
             <Button
               loadingText="Submitting"
@@ -140,8 +164,9 @@ export default function Login() {
             <Box align={"center"}>
               {isRegister ? (
                 <Box>
-                  Already a user ?
+                  Already a user?
                   <Link
+                    ml={1}
                     color={"purple.400"}
                     onClick={() => switchPanel((pre) => !pre)}
                   >
@@ -152,14 +177,11 @@ export default function Login() {
                 <Box>
                   Haven't have an a account?
                   <Link
+                    ml={1}
                     color={"purple.400"}
                     onClick={() => switchPanel((pre) => !pre)}
                   >
                     Register
-                  </Link>
-                  <br />
-                  <Link color={"purple.400"} onClick={forgotPassword}>
-                    Forgot Password ?
                   </Link>
                 </Box>
               )}
@@ -171,106 +193,3 @@ export default function Login() {
     // </Flex>
   );
 }
-
-// ('Already a user? '< Link color={"purple.400"}>Login</>) :
-//                 'Haven't have an a account?'
-
-function SignIn() {}
-
-// export default function Login() {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const [inputs, setInputs] = useState({});
-
-//   const from = location.state?.from?.pathname || "/";
-
-//   function handleInputs(e) {
-//     setInputs({ ...inputs, [e.target.name]: e.target.value });
-//   }
-//   function loginFirebase() {
-//     Firebase.login(inputs.email, inputs.password).then((data) => {
-//       console.log(data);
-//       navigate(from, { replace: true });
-//     });
-//   }
-
-//   function registerFirebase() {
-//     Firebase.register(inputs.username, inputs.email, inputs.password).then(
-//       (data) => {
-//         console.log(data);
-//         navigate(from, { replace: true });
-//       }
-//     );
-//   }
-
-//   function loginFB() {
-//     Firebase.SignInWithFB().then((result) => {
-//       console.log(result);
-//       navigate(from, { replace: true });
-//     });
-//   }
-
-//   return (
-//     <>
-//       <br />
-//       <div>Login</div>
-//       <div>
-//         <label>email</label>
-//         <input
-//           name="email"
-//           value={inputs.email || ""}
-//           onChange={(e) => handleInputs(e)}
-//         />
-//       </div>
-//       <div>
-//         <label>password</label>
-//         <input
-//           type="password"
-//           name="password"
-//           value={inputs.password || ""}
-//           onChange={(e) => handleInputs(e)}
-//         ></input>
-//       </div>
-//       <button onClick={loginFirebase}>Login</button>
-//       <button onClick={loginFB}>Login with FB</button>
-//       <hr />
-//       <br />
-//       <div>Register</div>
-//       <div>
-//         <label>username</label>
-//         <input
-//           name="username"
-//           value={inputs.username || ""}
-//           onChange={(e) => handleInputs(e)}
-//         ></input>
-//       </div>
-//       <div>
-//         <label>email</label>
-//         <input
-//           name="email"
-//           value={inputs.email || ""}
-//           onChange={(e) => handleInputs(e)}
-//         ></input>
-//       </div>
-//       <div>
-//         <label>password</label>
-//         <input
-//           type="password"
-//           name="password"
-//           value={inputs.password || ""}
-//           onChange={(e) => handleInputs(e)}
-//         ></input>
-//       </div>
-//       <div>
-//         <input
-//           type="checkbox"
-//           name="checkbox"
-//           value={inputs.checkbox || false}
-//           onChange={(e) => handleInputs(e)}
-//         ></input>
-//         <label>I agree with ...</label>
-//       </div>
-//       <button onClick={registerFirebase}>Register</button>
-//     </>
-//   );
-// }
