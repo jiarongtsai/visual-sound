@@ -105,7 +105,14 @@ export default function WorkView({ setFollowingWorks }) {
           />
         </Flex>
         <Flex direction="column" w={["100%", "100%", "35%"]}>
-          <VStack align="flex-start" h="43vh" overflowY={"scroll"} p={1}>
+          <VStack
+            align="flex-start"
+            h="43vh"
+            overflowY={"scroll"}
+            p={1}
+            pt={[4, 4, 0]}
+            pl={[2, 2, 0]}
+          >
             <UserSmall
               id={work.author_id}
               name={work.author_name}
@@ -170,6 +177,9 @@ export default function WorkView({ setFollowingWorks }) {
         </Flex>
       </Flex>
       <Box my={16}>
+        <Flex justify="center" align="center" mb={4}>
+          <Text>Related Works</Text>
+        </Flex>
         <Gallery
           works={relatedWorks}
           isShown={isShown}

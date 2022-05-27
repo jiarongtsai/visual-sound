@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import { Firebase } from "../../utils/firebase";
 import Gallery from "./Gallery";
@@ -15,20 +15,20 @@ export default function IntersectionGallery({
   const [isShown, setIsShown] = useState([]);
   const endofPageRef = useRef();
   const pagingRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (term) {
       pagingRef.current = null;
       setWorks([]);
       setIsShown([]);
-      //might have error when query term have more than one page
     }
-
     const pagingObserver = new IntersectionObserver((entries) => {
       if (entries[0].intersectionRatio <= 0) return;
+
       if (isFetching) return;
+
       if (pagingRef.current === undefined) return;
+
       isFetching = true;
       Firebase.getWorks(pagingRef.current, term, currentUserID).then(
         ({ fetchWorks, lastVisibleWork }) => {

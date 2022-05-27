@@ -71,7 +71,7 @@ export default function Comment({
         size="sm"
         position="relative"
         style={{ zIndex: "0" }}
-        onClick={!user && onAlertOpen}
+        onClick={user ? null : onAlertOpen}
         opacity={!user && "0.7"}
       >
         <Input

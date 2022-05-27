@@ -21,7 +21,6 @@ import {
 } from "@chakra-ui/react";
 import { Firebase } from "../../utils/firebase";
 import SequencerPlayOnly from "../../components/sequencer/SequencerPlayOnly";
-import { AuthContext } from "../../components/auth/Auth";
 import Collect from "../../components/interaction/Collect";
 import Like from "../../components/interaction/Like";
 import Comment from "../../components/interaction/Comment";

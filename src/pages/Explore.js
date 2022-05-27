@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Firebase } from "../utils/firebase";
 import {
   Button,
@@ -8,6 +8,7 @@ import {
   Stack,
   FormControl,
   IconButton,
+  CloseButton,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 import { Select } from "chakra-react-select";
@@ -16,8 +17,8 @@ import IntersectionGallery from "../components/gallery/IntersectionGallery";
 export default function Explore() {
   const [alltags, setAlltags] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   let queryTerm = searchParams.get("query");
 
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function Explore() {
                   value: tag,
                   label: tag,
                 }))}
-                placeholder="Search by tags..."
+                placeholder="Search..."
                 closeMenuOnSelect={true}
                 selectedOptionColor="purple"
                 defaultValue={selectedOption}
