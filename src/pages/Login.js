@@ -44,6 +44,16 @@ export default function Login() {
   };
   const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
+  const errorMessage = {
+    "auth/email-already-in-use":
+      "The e-mail you entered is already registered, please sign in.",
+    "auth/wrong-password": "Wrong password, please try again.",
+    "auth/user-not-found":
+      "The e-mail address you entered couldn't be found, please create one.",
+    "auth/network-request-failed": "Request failed, please try again later.",
+    "auth/internal-error": "Something Wrong, please try again later.",
+  };
+
   useEffect(() => {
     if (user) navigate(from, { replace: true });
   }, [user]);
@@ -52,14 +62,16 @@ export default function Login() {
     if (!inputs.checkPassword) return;
     if (inputs.password !== inputs.checkPassword) {
       setPasswordWarning(true);
+      return;
     }
+    setPasswordWarning(false);
   }, [inputs]);
 
   function handleInputs(e) {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   }
 
-  function handelLogin() {
+  async function handelLogin() {
     if (!inputs.email || !inputs.email.match(emailFormat)) {
       toast({
         title: "Check your email",
@@ -95,26 +107,36 @@ export default function Login() {
         });
         return;
       }
-      Firebase.register(inputs.username, inputs.email, inputs.password).then(
-        () => {
-          toast({
-            ...toastProps,
-            status: "success",
-            title: "Successfully Registed",
-          });
-          navigate(from, { replace: true });
-        }
-      );
+      try {
+        await Firebase.register(inputs.username, inputs.email, inputs.password);
+        toast({
+          ...toastProps,
+          status: "success",
+          title: "Successfully Registed",
+        });
+        navigate(from, { replace: true });
+      } catch (error) {
+        toast({
+          ...toastProps,
+          title: errorMessage[error.code],
+        });
+      }
       return;
     }
-    Firebase.login(inputs.email, inputs.password).then(() => {
+    try {
+      await Firebase.login(inputs.email, inputs.password);
       toast({
         ...toastProps,
         status: "success",
         title: "Successfully Loged in",
       });
       navigate(from, { replace: true });
-    });
+    } catch (error) {
+      toast({
+        ...toastProps,
+        title: errorMessage[error.code],
+      });
+    }
   }
 
   if (loading) return <Loader />;
@@ -194,10 +216,13 @@ export default function Login() {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                <Text
+                  color="red.500"
+                  visibility={passwordwarning ? "visible" : "hidden"}
+                >
+                  Please enter the same password.
+                </Text>
               </FormControl>
-              {passwordwarning && (
-                <Text color="red.500">Please enter the same password.</Text>
-              )}
             </>
           )}
           <Stack spacing={10} pt={2}>
