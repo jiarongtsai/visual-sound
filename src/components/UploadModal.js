@@ -105,7 +105,7 @@ export default function UploadModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent h="80%">
+      <ModalContent h="85%">
         <ModalHeader
           borderBottom="1px"
           borderColor={borderColor}
@@ -114,8 +114,12 @@ export default function UploadModal({
           Upload your new work
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody py={6} h="60%" overflow="scroll">
-          <Flex direction={["column", "column", "row"]} justify="space-between">
+        <ModalBody pt={2} pb={4} overflow="scroll">
+          <Flex
+            direction={["column", "column", "row"]}
+            justify="space-between"
+            h="100%"
+          >
             <Flex
               direction="column"
               w={["100%", "100%", "68%"]}
@@ -132,13 +136,12 @@ export default function UploadModal({
             <Flex direction="column" w={["100%", "100%", "30%"]}>
               <VStack
                 align="flex-start"
-                h={["auto", "auto", "65vh"]}
-                overflowY={"scroll"}
-                p={1}
-                spacing={4}
+                h={["auto", "auto", "100%"]}
+                overflowY={"overlay"}
+                px={1}
+                spacing={1}
               >
                 <Text pt={4}>Edit Details</Text>
-
                 <Box w="100%">
                   <Text color="gray.500" fontSize="sm">
                     Description
@@ -148,7 +151,8 @@ export default function UploadModal({
                     name="description"
                     value={inputs.description || ""}
                     onChange={handleInputs}
-                    rows="7"
+                    overflowY="scroll"
+                    rows="4"
                     my={2}
                   />
                 </Box>

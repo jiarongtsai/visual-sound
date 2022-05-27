@@ -10,7 +10,6 @@ import {
   useColorModeValue,
   Box,
   Tag,
-  HStack,
 } from "@chakra-ui/react";
 import Gallery from "../../components/gallery/Gallery";
 import { Firebase } from "../../utils/firebase";
@@ -122,13 +121,19 @@ export default function WorkView({ setFollowingWorks }) {
             <Text fontWeight="400" my={2} color="gray.500">
               {work.description}
             </Text>
-            <HStack>
+            <Flex wrap="wrap">
               {work.tags?.map((tag) => (
-                <Tag size="md" key={tag} borderRadius="md" colorScheme="purple">
+                <Tag
+                  size="md"
+                  key={tag}
+                  borderRadius="md"
+                  colorScheme="purple"
+                  m={1}
+                >
                   {tag}
                 </Tag>
               ))}
-            </HStack>
+            </Flex>
             <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
               {`Created at ${moment
                 .unix(work.created_time?.seconds)

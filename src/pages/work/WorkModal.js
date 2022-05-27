@@ -15,7 +15,6 @@ import {
   Text,
   VStack,
   useColorModeValue,
-  HStack,
   Tag,
   ModalFooter,
 } from "@chakra-ui/react";
@@ -146,18 +145,19 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                   <Text fontWeight="400" my={2} color="gray.500">
                     {work.description}
                   </Text>
-                  <HStack spacing={2} my={4}>
+                  <Flex wrap="wrap">
                     {work.tags?.map((tag) => (
                       <Tag
                         key={tag}
                         size="md"
                         borderRadius="md"
                         colorScheme="purple"
+                        m={1}
                       >
                         {tag}
                       </Tag>
                     ))}
-                  </HStack>
+                  </Flex>
                   <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
                     {`Created at ${moment
                       .unix(work.created_time?.seconds)
@@ -165,17 +165,17 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                   </Text>
                   {comments.map((comment) => {
                     return (
-                      <div key={comment.id}>
+                      <Box key={comment.id} w="100%">
                         <UserSmall
                           id={comment.author_id}
                           name={comment.author_name}
                           thumbnail={comment.author_thumbnail}
                         />
 
-                        <Text color={"gray.500"} ml={9} mb={2}>
+                        <Text color={"gray.500"} ml={9} mb={2} w="80%">
                           {comment.content}
                         </Text>
-                      </div>
+                      </Box>
                     );
                   })}
                   <div ref={endRef}></div>
