@@ -8,16 +8,7 @@ import { colorTheme } from "../motion/colorTheme";
 import usePlayer from "../../customHook/usePlayer";
 //sequence
 
-const steps = 16;
-const meterPerMeasure = 4; //一小節分成幾拍
-const lineMap = ["a", "s", "d", "f", "g", "h", "j", "k", "l"];
-const initialVisualEffectState = initialVisualEffect(lineMap, false);
-
-function initialVisualEffect(arr, fill) {
-  const obj = {};
-  arr.forEach((key) => (obj[key] = fill));
-  return obj;
-}
+import { sequenceConfig } from "../../config";
 
 export default function SequencePlayer({
   imageUrl,
@@ -26,7 +17,9 @@ export default function SequencePlayer({
   themeColor,
 }) {
   const [playing, setPlaying] = useState(false);
-  const [visualEffect, setVisualEffect] = useState(initialVisualEffectState);
+  const [visualEffect, setVisualEffect] = useState(
+    sequenceConfig.getVisualEffectState()
+  );
   const [sequence, setSequence] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isHover, setIsHover] = useState(true);
@@ -37,10 +30,10 @@ export default function SequencePlayer({
   }, [sheetmusic]);
 
   useEffect(() => {
-    const timeOutspeed = (60 / meterPerMeasure / bpm) * 1000;
+    const timeOutspeed = (60 / sequenceConfig.meterPerMeasure / bpm) * 1000;
     const timer = setTimeout(() => {
       if (playing) {
-        setCurrentStep((currentStep + 1) % steps);
+        setCurrentStep((currentStep + 1) % sequenceConfig.steps);
         playSequence(currentStep);
       }
     }, timeOutspeed);
@@ -53,7 +46,7 @@ export default function SequencePlayer({
     for (let i = 0; i < sequence.length; i++) {
       for (let j = 0; j < sequence[i].length; j++) {
         if (sequence[i][j] && j === currentStep) {
-          const alphabeta = lineMap[i];
+          const alphabeta = sequenceConfig.lineMap[i];
           player.player(alphabeta).start();
           setVisualEffect((pre) => ({ ...pre, [alphabeta]: !pre[alphabeta] }));
         }

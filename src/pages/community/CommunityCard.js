@@ -76,6 +76,7 @@ export default function CommunityCard({
                 sheetmusic={work.sheetmusic}
                 bpm={work.bpm}
                 themeColor={work.themeColor}
+                isHover={previewVisual}
               />
             </Box>
             <Image

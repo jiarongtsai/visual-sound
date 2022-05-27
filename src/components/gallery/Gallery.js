@@ -24,6 +24,7 @@ export default function Gallery({ works, isShown, setIsShown }) {
                     sheetmusic={work.sheetmusic}
                     bpm={work.bpm}
                     themeColor={work.themeColor}
+                    isHover={isShown[i]}
                   />
                 </VideoWrapper>
                 <CoverImage
