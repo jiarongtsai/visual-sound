@@ -113,6 +113,7 @@ export default function Profile() {
           justify="center"
           align={["center", "center", "flex-start"]}
           w="70%"
+          mb={4}
         >
           <Box flexBasis="30%">
             <Image
@@ -127,7 +128,6 @@ export default function Profile() {
           <Grid
             ml={{ base: 0, md: 4 }}
             flexBasis="40%"
-            templateRows="repeat(6, 1fr)"
             templateColumns="repeat(3, 1fr)"
             gap={3}
             alignItems="center"

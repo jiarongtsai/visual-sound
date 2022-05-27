@@ -17,11 +17,12 @@ export default function IntersectionGallery({
   const pagingRef = useRef(null);
 
   useEffect(() => {
-    if (term) {
+    if (term || currentUserID) {
       pagingRef.current = null;
       setWorks([]);
       setIsShown([]);
     }
+
     const pagingObserver = new IntersectionObserver((entries) => {
       if (entries[0].intersectionRatio <= 0) return;
 
@@ -46,7 +47,7 @@ export default function IntersectionGallery({
     return () => {
       endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
     };
-  }, [term]);
+  }, [term, currentUserID]);
 
   if (isCurrentUser && works.length === 0)
     return (

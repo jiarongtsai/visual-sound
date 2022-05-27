@@ -37,7 +37,7 @@ export default function User() {
     if (user?.uid === uid) {
       navigate(`/profile`);
     }
-  }, [user]);
+  }, [user, uid]);
 
   useEffect(() => {
     const snapshot = Firebase.onSnapshotProfile(uid, (data) => {
@@ -47,7 +47,7 @@ export default function User() {
     return () => {
       snapshot();
     };
-  }, [user]);
+  }, [user, uid]);
 
   const chat = async (userID) => {
     if (!user) {
@@ -69,7 +69,7 @@ export default function User() {
       name: "Follower List",
       userList: FollowerListWithInfo,
       invokeFunction: chat,
-      buttonText: "chat",
+      buttonText: "Chat",
     });
     onOpen();
   }
@@ -85,7 +85,7 @@ export default function User() {
       name: "Following List",
       userList: FollowingListWithInfo,
       invokeFunction: chat,
-      buttonText: "Message",
+      buttonText: "Chat",
     });
     onOpen();
   }
