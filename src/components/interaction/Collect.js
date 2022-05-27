@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Box,
   Menu,
   MenuItem,
   MenuOptionGroup,
@@ -122,51 +123,53 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
           onClick={uncollectWork}
         />
       ) : (
-        <Menu>
-          <MenuButton
-            as={Link}
-            rounded={"md"}
-            cursor={"pointer"}
-            _hover={{
-              textDecoration: "none",
-              bg: color,
-            }}
-            opacity={!user && "0.7"}
-            onClick={!user && onAlertOpen}
-          >
-            <IconButton
-              variant="ghost"
-              aria-label="collect"
-              icon={<BsBookmark />}
-            />
-          </MenuButton>
-          <MenuList display={!user && "none"}>
-            <MenuOptionGroup>
-              <Editable
-                defaultValue="+ New collection name..."
-                onSubmit={() => collectWork(input)}
-              >
-                <EditablePreview px={3} />
-                <EditableInput
-                  mx={3}
-                  w="90%"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
-              </Editable>
-              {collectionMap &&
-                Object.keys(collectionMap).map((term) => (
-                  <MenuItem
-                    key={term}
-                    value={term}
-                    onClick={() => collectWork(term)}
-                  >
-                    {term}
-                  </MenuItem>
-                ))}
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
+        <Box onClick={user ? null : onAlertOpen}>
+          <Menu>
+            <MenuButton
+              as={Link}
+              display="block"
+              h="40px"
+              rounded={"md"}
+              _hover={{
+                textDecoration: "none",
+                bg: color,
+              }}
+              opacity={!user && "0.7"}
+            >
+              <IconButton
+                variant="ghost"
+                aria-label="collect"
+                icon={<BsBookmark />}
+              />
+            </MenuButton>
+            <MenuList display={!user && "none"}>
+              <MenuOptionGroup>
+                <Editable
+                  defaultValue="+ New collection name..."
+                  onSubmit={() => collectWork(input)}
+                >
+                  <EditablePreview px={3} />
+                  <EditableInput
+                    mx={3}
+                    w="90%"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                </Editable>
+                {collectionMap &&
+                  Object.keys(collectionMap).map((term) => (
+                    <MenuItem
+                      key={term}
+                      value={term}
+                      onClick={() => collectWork(term)}
+                    >
+                      {term}
+                    </MenuItem>
+                  ))}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </Box>
       )}
     </>
   );
