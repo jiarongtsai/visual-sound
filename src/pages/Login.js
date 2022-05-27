@@ -80,7 +80,7 @@ export default function Login() {
       });
       return;
     }
-    if (!inputs.password || inputs.password.length < 7) {
+    if (!inputs.password || inputs.password.length < 6) {
       toast({
         title: "Check your Password",
         description:

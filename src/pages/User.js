@@ -157,8 +157,9 @@ export default function User() {
                   colorScheme="purple"
                   onClick={handleOpenCharoomt}
                   mr={2}
+                  w="80px"
                 >
-                  Message
+                  Chat
                 </Button>
                 <Button
                   w="92px"
@@ -176,7 +177,6 @@ export default function User() {
               </Flex>
             </GridItem>
             <GridItem colSpan={1} d="flex">
-              {/* need real data */}
               <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.works_count || 0}
               </Text>
@@ -205,7 +205,9 @@ export default function User() {
               <Text>Following</Text>
             </GridItem>
             <GridItem rowSpan={2} colSpan={3} alignSelf="flex-start">
-              <Text>{profile.user_bio}</Text>
+              <Box h={["60px", "60px", "120px"]} overflow="auto" w="100%">
+                <Text>{profile.user_bio}</Text>
+              </Box>
             </GridItem>
           </Grid>
         </Flex>

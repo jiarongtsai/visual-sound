@@ -177,10 +177,10 @@ export default function Profile() {
               </Text>
               <Text>Following</Text>
             </GridItem>
-            <GridItem rowSpan={3} colSpan={3} alignSelf="flex-start">
-              <Text maxH="100px" overflow="scroll">
-                {profile.user_bio}
-              </Text>
+            <GridItem rowSpan={3} colSpan={3} alignSelf="flex-start" w="100%">
+              <Box h={["60px", "60px", "120px"]} overflow="auto" w="100%">
+                <Text>{profile.user_bio}</Text>
+              </Box>
             </GridItem>
           </Grid>
         </Flex>
