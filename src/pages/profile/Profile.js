@@ -107,7 +107,7 @@ export default function Profile() {
         profile={profile}
         setProfile={setProfile}
       />
-      <Flex mt={20} direction="column" align="center">
+      <Flex mt={[10, 10, 20]} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}
           justify="center"

@@ -163,8 +163,12 @@ export default function Navbar() {
                 <Divider />
                 {user ? (
                   <>
-                    <NavLink to="/profile">Profile</NavLink>
-                    <NavLink to="/profile/collection">My Collection</NavLink>
+                    <NavLink to="/profile" onClick={onClose}>
+                      Profile
+                    </NavLink>
+                    <NavLink to="/profile/collection" onClick={onClose}>
+                      My Collection
+                    </NavLink>
                     <Divider />
                     <Button
                       justifyContent="flex-start"

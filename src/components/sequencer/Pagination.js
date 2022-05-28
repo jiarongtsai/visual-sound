@@ -9,11 +9,13 @@ import PropTypes from "prop-types";
 
 export const Pagination = ({
   currentPage,
+  toggleLine,
   setCurrentPage,
   pagesCount,
   pages,
 }) => {
-  const currentBackground = useColorModeValue("gray.300", "gray.500");
+  console.log(toggleLine + 1);
+  const background = useColorModeValue("gray.300", "gray.500");
   return (
     <PaginationMain
       my={4}
@@ -28,8 +30,13 @@ export const Pagination = ({
               w={10}
               key={`pagination_page_${page}`}
               page={page}
+              bg={background}
+              borderBottom="4px"
+              borderColor="transparent"
+              // opacity={togglePage === page ? 0.7 : 1}
               _current={{
-                bg: currentBackground,
+                textDecor: "underline",
+                // borderColor: "purple.500",
               }}
             />
           ))}

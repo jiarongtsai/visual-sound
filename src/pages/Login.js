@@ -50,7 +50,7 @@ export default function Login() {
     "auth/wrong-password": "Wrong password, please try again.",
     "auth/user-not-found":
       "The e-mail address you entered couldn't be found, please create one.",
-    "auth/network-request-failed": "Request failed, please try again later.",
+    "auth/network-request-failed": "Request failed, please check the internet.",
     "auth/internal-error": "Something Wrong, please try again later.",
   };
 

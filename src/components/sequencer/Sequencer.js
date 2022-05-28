@@ -572,6 +572,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   setCurrentPage={setCurrentPage}
                   pagesCount={pagesCount}
                   pages={pages}
+                  toggleLine={toggleLine}
                 />
               </Flex>
             </Box>

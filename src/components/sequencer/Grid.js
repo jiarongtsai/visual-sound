@@ -14,7 +14,7 @@ const Grid = ({
 
   useEffect(() => {
     const currentSequence = sequence.slice(
-      countPerPage * currentPage - 9,
+      countPerPage * currentPage - countPerPage,
       countPerPage * currentPage
     );
 
@@ -30,7 +30,7 @@ const Grid = ({
             column={j + 1}
             row={i + 1}
             activated={currentItems[i][j]}
-            triggered={toggleLine === i}
+            triggered={toggleLine === i + (currentPage - 1) * 9}
             currentPlay={currentStep === j}
             onClick={() => toggleStep(i, j)}
           />

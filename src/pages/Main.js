@@ -14,6 +14,7 @@ import {
   Code,
   Heading,
   Button,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import onboardingVisual from "../asset/illustration/visualsound.png";
 
@@ -44,7 +45,7 @@ export default function Main() {
         "Add a description to your recording, and share it with the Visual Sound community",
     },
   ];
-
+  const [breakPoint] = useMediaQuery("(max-width: 767px)");
   const [runTour, setRunTour] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -79,8 +80,17 @@ export default function Main() {
               colorScheme="purple"
               w="300px"
               textAlign="center"
+              h={breakPoint ? "60px" : "40px"}
             >
-              Press A to Z, and turn up speakers
+              {breakPoint ? (
+                <>
+                  <>Open edit panel, press a button,</>
+                  <br />
+                  <> and turn up speakers </>
+                </>
+              ) : (
+                "Press A to Z, and turn up speakers"
+              )}
             </Button>
           ),
         });
@@ -133,12 +143,32 @@ export default function Main() {
               Welcom to Visual Sound
             </Heading>
             <Text mt={2}>
-              Press any key, <Code>A</Code> to <Code>Z</Code>, and turn up
-              speakers
+              {breakPoint ? (
+                <>
+                  <>Open edit panel, press a button,</>
+                  <br />
+                  <> and turn up speakers </>
+                </>
+              ) : (
+                <>
+                  Press any key, <Code>A</Code> to <Code>Z</Code>, and turn up
+                  speakers
+                </>
+              )}
             </Text>
-            <Image src={onboardingVisual} w="100%" mx="auto" mt={4} mb={8} />
-            <Button colorScheme="purple" onClick={onClose}>
-              Start
+            <Image
+              src={onboardingVisual}
+              w={["60%", "60%", "100%"]}
+              mx="auto"
+              mt={4}
+            />
+            {breakPoint && (
+              <Text mt={4}>
+                Swith to <strong>desktop</strong> for best experience
+              </Text>
+            )}
+            <Button colorScheme="purple" onClick={onClose} mt={8}>
+              {breakPoint ? "Keep using mobile" : "Start"}
             </Button>
           </ModalBody>
           <ModalFooter></ModalFooter>

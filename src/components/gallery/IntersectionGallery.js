@@ -52,11 +52,7 @@ export default function IntersectionGallery({
   if (isCurrentUser && works.length === 0)
     return (
       <>
-        <EmptyHandle
-          showText="No works yet"
-          buttonText="Create"
-          link="/create"
-        />
+        <EmptyHandle showText="No works yet" buttonText="Create" link="/" />
         <div ref={endofPageRef}></div>
       </>
     );

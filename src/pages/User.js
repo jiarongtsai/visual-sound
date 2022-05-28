@@ -121,7 +121,7 @@ export default function User() {
         onClose={onAlertClose}
         content="Only Registered users could interact with others."
       />
-      <Flex mt={20} direction="column" align="center">
+      <Flex mt={[10, 10, 20]} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}
           justify="center"
@@ -146,7 +146,6 @@ export default function User() {
             gap={3}
             alignItems="center"
             justifyItems={["center", "center", "flex-start"]}
-            mb={12}
           >
             <GridItem colSpan={[3, 3, 2]}>
               <Heading fontSize="xl">{profile.user_name}</Heading>

@@ -51,7 +51,7 @@ export default function MessageBox({
         <Flex
           align="center"
           justify="space-between"
-          w="100%"
+          w="75%"
           position="relative"
         >
           <Avatar
@@ -62,16 +62,18 @@ export default function MessageBox({
             rounded={"full"}
             me="10px"
           />
-          <Flex direction="column">
+          <Flex direction="column" w="100%">
             <Text fontSize="sm" color={textColor} fontWeight="bold">
               {messageInfo.author_name}
             </Text>
             <Text
+              w="100%"
               fontSize="sm"
               color={useColorModeValue("gray.500", "gray.400")}
               fontWeight="400"
               overflow="hidden"
               textOverflow="ellipsis"
+              whiteSpace="nowrap"
               textAlign="left"
               h={6}
             >
