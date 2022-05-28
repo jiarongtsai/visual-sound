@@ -13,6 +13,7 @@ import {
   Drawer,
   DrawerOverlay,
   DrawerContent,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import {
@@ -93,6 +94,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [toggleLine, setToggleLine] = useState(null);
+  const [breakPoint] = useMediaQuery("(max-width: 767px)");
 
   const ButtonBackground = useColorModeValue("gray.100", "gray.600");
   const ButtonBackgroundHover = useColorModeValue("gray.200", "gray.700");
@@ -411,7 +413,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
             >
               <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
               <Heading size="md">Edit Panel</Heading>
-
               <Flex
                 direction={["column", "column", "row", "row"]}
                 justifyContent={[
@@ -425,7 +426,12 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 mb={8}
                 mx="auto"
               >
-                <Box mx="auto" flexBasis="30%" pl={[0, 0, 0, "2%"]}>
+                <Box
+                  mx="auto"
+                  flexBasis="30%"
+                  pl={[0, 0, 0, "2%"]}
+                  display={{ base: "none", md: "initial" }}
+                >
                   <Text>Color Theme</Text>
                   <HStack spacing={2} mt={2}>
                     {Object.entries(colorTheme).map(([key, value], i) => {
@@ -507,6 +513,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   mx="auto"
                   flexBasis="30%"
                   pl={[0, 0, "10%", "5%", "10%"]}
+                  display={{ base: "none", md: "initial" }}
                 >
                   <Text>Bpm</Text>
                   <BpmController
@@ -539,7 +546,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                     iconSpacing="0.1"
                     variant="ghost"
                   >
-                    4/4
+                    {breakPoint ? "2/4" : "4/4"}
                   </Button>
                   {Array(sequenceConfig.steps)
                     .fill(null)
@@ -549,8 +556,16 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                           {index / 4 + 1}
                         </Text>
                       ) : (
-                        <Text fontSize="sm" key={index}>
-                          {index % 4}
+                        <Text
+                          fontSize="sm"
+                          key={index}
+                          display={
+                            breakPoint && ((index % 4) + 1) % 2 === 0
+                              ? "none"
+                              : "initial"
+                          }
+                        >
+                          {breakPoint ? index % 4 : (index % 4) + 1}
                         </Text>
                       )
                     )}
