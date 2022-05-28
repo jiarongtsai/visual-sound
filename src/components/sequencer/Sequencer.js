@@ -607,7 +607,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                     iconSpacing="0.1"
                     variant="ghost"
                   >
-                    {breakPoint ? "2/4" : "4/4"}
+                    4/4
                   </Button>
                   {Array(sequenceConfig.steps)
                     .fill(null)

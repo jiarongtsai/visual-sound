@@ -58,8 +58,12 @@ export default function Community({ followingWorks, setFollowingWorks }) {
     setFollow((pre) => [...pre.slice(0, i), !pre[i], ...pre.slice(i + 1)]);
   }
   return (
-    <Flex maxW="840px" mx="auto" justify={{ base: "center", lg: "flex-start" }}>
-      <Box>
+    <Flex
+      maxW={"840px"}
+      mx="auto"
+      justify={{ base: "center", lg: "flex-start" }}
+    >
+      <Box w="100%">
         <Container>
           {followingWorks.map((work, i) => (
             <CommunityCard
