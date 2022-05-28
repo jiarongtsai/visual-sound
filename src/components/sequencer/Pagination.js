@@ -4,7 +4,7 @@ import {
   PaginationContainer,
   PaginationPageGroup,
 } from "@ajna/pagination";
-import { useColorModeValue } from "@chakra-ui/react";
+import { Box, useColorModeValue } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 export const Pagination = ({
@@ -14,7 +14,7 @@ export const Pagination = ({
   pagesCount,
   pages,
 }) => {
-  console.log(toggleLine + 1);
+  const togglePage = toggleLine !== null && Math.ceil((toggleLine + 1) / 9);
   const background = useColorModeValue("gray.300", "gray.500");
   return (
     <PaginationMain
@@ -27,16 +27,15 @@ export const Pagination = ({
         <PaginationPageGroup mx={2}>
           {pages.map((page) => (
             <PaginationPage
+              key={`page_${page}`}
               w={10}
-              key={`pagination_page_${page}`}
               page={page}
               bg={background}
-              borderBottom="4px"
+              borderBottom="2px"
               borderColor="transparent"
-              // opacity={togglePage === page ? 0.7 : 1}
+              opacity={togglePage === page ? 0.7 : 1}
               _current={{
-                textDecor: "underline",
-                // borderColor: "purple.500",
+                borderColor: "purple.500",
               }}
             />
           ))}
