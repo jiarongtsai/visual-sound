@@ -134,7 +134,9 @@ export default function Profile() {
             justifyItems={["center", "center", "flex-start"]}
           >
             <GridItem colSpan={[3, 3, 2]}>
-              <Heading fontSize="xl">{profile.user_name}</Heading>
+              <Heading fontSize="xl" mt={[3, 3, 0]}>
+                {profile.user_name}
+              </Heading>
             </GridItem>
             <GridItem colSpan={[3, 3, 1]}>
               <Button

@@ -53,6 +53,7 @@ export default () => {
         j: brush01,
         k: brush02,
         l: tink,
+        ";": scratch,
         z: pedalhat,
         x: closhat,
         c: openhat,
@@ -60,7 +61,6 @@ export default () => {
         b: tom01,
         n: tom02,
         m: tom03,
-        ";": scratch,
       },
       () => {
         console.log("player loaded");

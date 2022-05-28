@@ -10,6 +10,16 @@ import {
   IconSnare,
   IconTom,
   IconTink,
+  IconBrush,
+  IconCrashCymbal,
+  IconCymbal,
+  IconMaracas,
+  IconReverse,
+  IconScratch,
+  IconSnareSide,
+  IconTomLarge,
+  IconUnknown,
+  IconXylophone,
 } from "./helper/icon.js";
 
 export const IconStack = ({ currentPage }) => {
@@ -17,41 +27,40 @@ export const IconStack = ({ currentPage }) => {
     <VStack spacing={1}>
       {currentPage === 1 && (
         <>
-          <IconBoom />
+          <IconUnknown />
+          <IconXylophone />
+          <IconXylophone />
+          <IconSnareSide />
+          <IconCymbal />
+          <IconCrashCymbal />
           <IconClap />
-          <IconHiHat />
-          <IconKick />
-          <IconOpenHat />
+          <IconClap />
           <IconRideCymbal />
-          <IconSnare />
-          <IconTom />
-          <IconTink />
         </>
       )}
       {currentPage === 2 && (
         <>
           <IconRideCymbal />
-          <IconSnare />
-          <IconTom />
-          <IconTink />
-          <IconBoom />
-          <IconClap />
           <IconHiHat />
+          <IconReverse />
+          <IconSnare />
+          <IconSnare />
           <IconKick />
-          <IconOpenHat />
+          <IconBoom />
+          <IconBrush />
+          <IconMaracas />
         </>
       )}
       {currentPage === 3 && (
         <>
           <IconTink />
+          <IconScratch />
           <IconHiHat />
-          <IconKick />
+          <IconHiHat />
           <IconOpenHat />
-          <IconRideCymbal />
           <IconBoom />
-          <IconClap />
-
-          <IconSnare />
+          <IconTomLarge />
+          <IconTom />
           <IconTom />
         </>
       )}
