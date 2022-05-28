@@ -174,7 +174,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
           setVisualEffect((pre) => ({ ...pre, [key]: true }));
           return;
         }
-        toggleStep(index, currentStep);
+        toggleStep(index % 9, currentStep);
       };
     });
     return obj;
@@ -190,7 +190,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
   };
 
   const keybroadKeyObject = ObjectFunctionMap(sequenceConfig.lineMap);
-
   useKeyboardBindings({ ...keyboardColorObject, ...keybroadKeyObject });
 
   useEffect(() => {
