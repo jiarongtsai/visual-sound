@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {
@@ -39,7 +39,7 @@ export default function UploadModal({
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
   const navigate = useNavigate();
-  const endofPageRef = useRef();
+
   const toast = useToast();
   const toastProps = {
     status: "error",
@@ -176,7 +176,6 @@ export default function UploadModal({
                       closeMenuOnSelect={false}
                     />
                   </FormControl>
-                  <Box ref={endofPageRef}></Box>
                 </Box>
               </VStack>
             </Flex>

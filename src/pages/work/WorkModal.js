@@ -116,7 +116,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
           <ModalBody pt={6} h="60%" overflow="scroll">
             <Flex
               direction={["column", "column", "row"]}
-              justify="space-between"
+              justify={["flex-start", "flex-start", "space-between"]}
               h="100%"
             >
               <Box w={["100%", "100%", "68%"]} h={["30vh", "30vh", "100%"]}>
@@ -130,7 +130,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
               <Flex direction="column" w={["100%", "100%", "30%"]}>
                 <VStack
                   align="flex-start"
-                  h={["25vh", "25vh", "55vh"]}
+                  h={["auto", "auto", "55vh"]}
                   overflowY={"scroll"}
                   p={1}
                   pt={[4, 4, 0]}
