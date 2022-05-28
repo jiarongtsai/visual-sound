@@ -20,7 +20,7 @@ export function TomTransition({ alphabeta, effect, setEffect }) {
   const [random, setrandom] = useState(0);
 
   useEffect(() => {
-    if (!effect) return;
+    if (!effect[alphabeta]) return;
     setrandom(Math.ceil(Math.random() * 50) + 20 + "%");
   }, [effect]);
 

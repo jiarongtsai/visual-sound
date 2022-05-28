@@ -20,7 +20,7 @@ export function SnareTransition({ alphabeta, effect, setEffect }) {
   const [random, setrandom] = useState([]);
 
   useEffect(() => {
-    if (!effect) return;
+    if (!effect[alphabeta]) return;
     setrandom([
       {
         x: Math.ceil(Math.random() * 50) + 20 + "%",

@@ -19,7 +19,7 @@ export function OpenhatTransition({ alphabeta, effect, setEffect }) {
   const [openhatVariant, setOpenhatVariant] = useState([]);
 
   useEffect(() => {
-    if (!effect) return;
+    if (!effect[alphabeta]) return;
     setOpenhatVariant([
       Math.ceil(Math.random() * 50) + 20 + "%",
       Math.ceil(Math.random() * 50) + 20 + "%",

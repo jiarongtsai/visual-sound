@@ -25,7 +25,6 @@ export default function Community({ followingWorks, setFollowingWorks }) {
 
   const [follow, setFollow] = useState([]);
 
-  //fixme onsnapshot community!
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
       setFollowingWorks(data);

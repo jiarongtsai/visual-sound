@@ -9,44 +9,44 @@ import { SnareTransition } from "./motionElements/SnareTransition";
 import { TomTransition } from "./motionElements/TomTransition";
 import { TinkTransition } from "./motionElements/TinkTransition";
 
-const mappingObject = {
-  q: SnareTransition,
-  w: SnareTransition,
-  e: SnareTransition,
-  r: TinkTransition,
-  t: RideTransition,
-  y: RideTransition,
-  u: ClapTransition,
-  i: ClapTransition,
-  o: RideTransition,
-  p: RideTransition,
-  a: HihatTransition,
-  s: HihatTransition,
-  d: TomTransition,
-  f: TomTransition,
-  g: BoomTransition,
-  h: BoomTransition,
-  j: OpenhatTransition,
-  k: OpenhatTransition,
-  l: TinkTransition,
-  z: OpenhatTransition,
-  x: HihatTransition,
-  c: HihatTransition,
-  v: BoomTransition,
-  b: KickTransition,
-  n: KickTransition,
-  m: KickTransition,
-  ";": OpenhatTransition,
-};
+const keyMotionMapping = [
+  ["g", BoomTransition],
+  ["h", BoomTransition],
+  ["v", BoomTransition],
+  ["b", KickTransition],
+  ["n", KickTransition],
+  ["m", KickTransition],
+  ["d", TomTransition],
+  ["f", TomTransition],
+  ["r", TinkTransition],
+  ["t", RideTransition],
+  ["y", RideTransition],
+  ["u", ClapTransition],
+  ["i", ClapTransition],
+  ["o", RideTransition],
+  ["p", RideTransition],
+  ["a", HihatTransition],
+  ["s", HihatTransition],
+  ["l", TinkTransition],
+  ["x", HihatTransition],
+  ["c", HihatTransition],
+  ["j", OpenhatTransition],
+  ["k", OpenhatTransition],
+  ["z", OpenhatTransition],
+  [";", OpenhatTransition],
+  ["q", SnareTransition],
+  ["w", SnareTransition],
+  ["e", SnareTransition],
+];
 
 export const MotionElements = ({ visualEffect, setVisualEffect }) => {
   return (
     <>
-      {Object.entries(mappingObject).map(([key, Value]) => {
+      {keyMotionMapping.map(([alphabeta, Motion]) => {
         return (
-          <Value
-            key={key}
-            alphabeta={key}
+          <Motion
+            key={alphabeta}
+            alphabeta={alphabeta}
             effect={visualEffect}
             setEffect={setVisualEffect}
           />

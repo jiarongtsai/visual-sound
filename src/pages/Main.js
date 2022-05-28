@@ -80,7 +80,7 @@ export default function Main() {
               colorScheme="purple"
               w="300px"
               textAlign="center"
-              h={breakPoint ? "60px" : "40px"}
+              h={breakPoint ? "65px" : "40px"}
             >
               {breakPoint ? (
                 <>
