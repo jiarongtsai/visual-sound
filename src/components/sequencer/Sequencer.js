@@ -10,10 +10,21 @@ import {
   Text,
   Heading,
   Image,
+  IconButton,
   Drawer,
   DrawerOverlay,
   DrawerContent,
   useMediaQuery,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+  Spacer,
 } from "@chakra-ui/react";
 
 import {
@@ -27,6 +38,7 @@ import {
   BsBoxArrowUp,
   BsMusicNote,
 } from "react-icons/bs";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import { usePagination } from "@ajna/pagination";
 import { ThemeProvider } from "@emotion/react";
 
@@ -288,6 +300,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
           {image && (
             <Image
               w="200px"
+              maxH="250px"
+              objectFit="cover"
+              objectPosition="50% 50%"
               src={image}
               alt={"Screenshot"}
               mt={4}
@@ -400,32 +415,79 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
         >
           <DrawerOverlay />
           <DrawerContent>
-            <Box
+            <Flex
               py={5}
               px={10}
               rounded="md"
               shadow="base"
               bg={useColorModeValue("white", "gray.600")}
-              d="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
+              direction="column"
+              justify="center"
+              align="center"
             >
               <CloseButton onClick={onControllerClose} alignSelf="flex-end" />
               <Heading size="md">Edit Panel</Heading>
+
               <Flex
-                direction={["column", "column", "row", "row"]}
+                direction={["column", "column", "row"]}
                 justifyContent={[
                   "space-between",
                   "space-between",
                   "space-around",
                 ]}
+                align="center"
                 flexWrap="wrap"
-                w="70%"
+                w={["100%", "90%", "70%"]}
                 mt={4}
-                mb={8}
+                mb={[4, 4, 8]}
                 mx="auto"
               >
+                {breakPoint && (
+                  <Popover>
+                    <PopoverTrigger>
+                      <Button leftIcon={<HamburgerIcon />} size="sm">
+                        Color & Bpm
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverBody>
+                        <Flex direction="column" h="180px" pt={4} pl={4}>
+                          <Box>
+                            <Text>Color Theme</Text>
+                            <HStack spacing={2} mt={2}>
+                              {Object.entries(colorTheme).map(
+                                ([key, value], i) => {
+                                  return (
+                                    <Button
+                                      opacity={0.9}
+                                      key={key}
+                                      bg={value.background}
+                                      color={value.light}
+                                      onClick={() => setThemeColor(key)}
+                                      size="sm"
+                                      fontSize="md"
+                                    >
+                                      {i + 1}
+                                    </Button>
+                                  );
+                                }
+                              )}
+                            </HStack>
+                          </Box>
+                          <Box mt={4}>
+                            <Text>Bpm</Text>
+                            <BpmController
+                              BpmValue={BpmValue}
+                              setBpmValue={setBpmValue}
+                            />
+                          </Box>
+                        </Flex>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                )}
                 <Box
                   mx="auto"
                   flexBasis="30%"
@@ -433,7 +495,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   display={{ base: "none", md: "initial" }}
                 >
                   <Text>Color Theme</Text>
-                  <HStack spacing={2} mt={2}>
+                  <HStack spacing={{ base: 2, lg: 1, xl: 2 }} mt={2}>
                     {Object.entries(colorTheme).map(([key, value], i) => {
                       return (
                         <Button
@@ -457,7 +519,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   flexBasis={["60%", "60%", "60%", "30%"]}
                   mt={[0, 0, 6, 0]}
                 >
-                  <HStack spacing={2} mt={4} justifyContent="center">
+                  <HStack spacing={2} mt={[4]} justifyContent="center">
                     <MusicButton
                       label="skip to start"
                       icon={<BsSkipStartFill />}
@@ -522,7 +584,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   />
                 </Box>
               </Flex>
-
               <Flex
                 direction="column"
                 alignItems="flex-end"
@@ -590,7 +651,7 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                   toggleLine={toggleLine}
                 />
               </Flex>
-            </Box>
+            </Flex>
           </DrawerContent>
         </Drawer>
       </Flex>

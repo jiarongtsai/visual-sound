@@ -31,7 +31,6 @@ const Grid = ({
     >
       {currentItems.map((line, i) =>
         line.map((_, j) => {
-          console.log([j, Math.ceil(j / 2), (j % 2) + 1]);
           return breakPoint ? (
             j % 2 === 0 && (
               <Cell

@@ -9,19 +9,19 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 
-export default function BPMController({ BPMValue, setBPMValue }) {
+export default function BpmController({ BpmValue, setBpmValue }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <Slider
-      w={["50vw", "30vw", "20vw", "12vw"]}
+      w={{ base: "200px", lg: "180px", xl: "200px" }}
       id="slider"
       defaultValue={120}
       min={40}
       max={200}
       colorScheme="purple"
-      value={BPMValue}
-      onChange={(v) => setBPMValue(v)}
+      value={BpmValue}
+      onChange={(v) => setBpmValue(v)}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -43,7 +43,7 @@ export default function BPMController({ BPMValue, setBPMValue }) {
         color="white"
         placement="top"
         isOpen={showTooltip}
-        label={BPMValue}
+        label={BpmValue}
       >
         <SliderThumb />
       </Tooltip>
@@ -51,7 +51,7 @@ export default function BPMController({ BPMValue, setBPMValue }) {
   );
 }
 
-BPMController.propTypes = {
-  BPMValue: PropTypes.number,
-  setBPMValue: PropTypes.func,
+BpmController.propTypes = {
+  BpmValue: PropTypes.number,
+  setBpmValue: PropTypes.func,
 };

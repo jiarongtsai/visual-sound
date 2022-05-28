@@ -117,7 +117,7 @@ export default function UploadModal({
         <ModalBody pt={2} pb={4} overflow="scroll">
           <Flex
             direction={["column", "column", "row"]}
-            justify="space-between"
+            justify={["flex-start", "flex-start", "space-between"]}
             h="100%"
           >
             <Flex
