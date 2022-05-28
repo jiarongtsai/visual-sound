@@ -95,6 +95,7 @@ export default function Main() {
           ),
         });
         if (JSON.parse(localStorage.getItem("hasRuntour"))) return;
+        if (breakPoint) return;
         setTimeout(() => {
           setRunTour(true);
         }, 10000);

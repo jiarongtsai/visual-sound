@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import moment from "moment";
@@ -18,7 +18,7 @@ import Collect from "../../components/interaction/Collect";
 import Like from "../../components/interaction/Like";
 import Comment from "../../components/interaction/Comment";
 import { UserSmall } from "../../components/userVariants/UserSmall";
-
+import Loader from "../../components/Loader";
 export default function WorkView({ setFollowingWorks }) {
   const { id } = useParams();
   const [work, setWork] = useState({});
@@ -27,7 +27,6 @@ export default function WorkView({ setFollowingWorks }) {
   const borderColor = useColorModeValue("gray.200", "gray.500");
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const [isShown, setIsShown] = useState([]);
-  const endRef = useRef(null);
 
   useEffect(() => {
     const snapshot = Firebase.snapshotWork(id, (data) => {
@@ -71,14 +70,8 @@ export default function WorkView({ setFollowingWorks }) {
     };
   }, []);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
-  }, [comments]);
-
   if (!work) return <div>Work Not Found</div>;
-
+  if (Object.keys(work).length === 0) return <Loader />;
   return (
     <>
       <Flex
@@ -95,7 +88,11 @@ export default function WorkView({ setFollowingWorks }) {
         direction={["column", "column", "row"]}
         justify="space-between"
       >
-        <Flex direction="column" w={["100%", "100%", "60%"]}>
+        <Flex
+          direction="column"
+          w={["100%", "100%", "65%"]}
+          h={["30vh", "30vh", "60vh"]}
+        >
           <SequencerPlayOnly
             imageUrl={work.image_url}
             sheetmusic={work.sheetmusic}
@@ -103,10 +100,10 @@ export default function WorkView({ setFollowingWorks }) {
             themeColor={work.themeColor}
           />
         </Flex>
-        <Flex direction="column" w={["100%", "100%", "35%"]}>
+        <Flex direction="column" w={["100%", "100%", "30%"]}>
           <VStack
             align="flex-start"
-            h="43vh"
+            h={["auto", "auto", "50vh"]}
             overflowY={"scroll"}
             p={1}
             pt={[4, 4, 0]}
@@ -142,7 +139,7 @@ export default function WorkView({ setFollowingWorks }) {
 
             {comments.map((comment) => {
               return (
-                <div key={comment.id}>
+                <Box key={comment.id} w="100%">
                   <UserSmall
                     id={comment.author_id}
                     name={comment.author_name}
@@ -152,11 +149,10 @@ export default function WorkView({ setFollowingWorks }) {
                   <Text color={"gray.500"} ml={9} mb={2}>
                     {comment.content}
                   </Text>
-                </div>
+                </Box>
               );
             })}
           </VStack>
-          <div ref={endRef}></div>
           <Flex align="center">
             <Like
               i={-1}
@@ -176,7 +172,7 @@ export default function WorkView({ setFollowingWorks }) {
               setFollowingWorks={setFollowingWorks}
             />
           </Flex>
-          <Flex align="center" justify="center" pt={2}>
+          <Flex align="center" justify="center">
             <Comment i={-1} work={work} />
           </Flex>
         </Flex>

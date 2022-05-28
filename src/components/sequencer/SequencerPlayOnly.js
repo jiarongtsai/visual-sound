@@ -64,7 +64,7 @@ export default function SequencePlayer({
         >
           {isHover && (
             <IconButton
-              zIndex="999"
+              zIndex="99"
               transform={"scale(3)"}
               position="absolute"
               size="lg"

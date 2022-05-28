@@ -63,7 +63,7 @@ export default function Community({ followingWorks, setFollowingWorks }) {
       mx="auto"
       justify={{ base: "center", lg: "flex-start" }}
     >
-      <Box w="100%">
+      <Box w={["100%", "100%", "initial"]}>
         <Container>
           {followingWorks.map((work, i) => (
             <CommunityCard
