@@ -51,7 +51,7 @@ export default function MessageBox({
         <Flex
           align="center"
           justify="space-between"
-          w="75%"
+          w="100%"
           position="relative"
         >
           <Avatar
@@ -62,7 +62,7 @@ export default function MessageBox({
             rounded={"full"}
             me="10px"
           />
-          <Flex direction="column" w="100%">
+          <Flex direction="column" w="75%">
             <Text fontSize="sm" color={textColor} fontWeight="bold">
               {messageInfo.author_name}
             </Text>
@@ -84,7 +84,7 @@ export default function MessageBox({
           {messageInfo.author_place === messageInfo.latestMessage.sender &&
           !messageInfo.latestMessage.has_read &&
           currentChatroom !== messageInfo.mid ? (
-            <Notification right="0px" top="17.5px" activeColor="purple.500" />
+            <Notification left="0" top="0" activeColor="purple.500" />
           ) : (
             ""
           )}
