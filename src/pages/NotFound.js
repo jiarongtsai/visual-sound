@@ -14,7 +14,7 @@ export default function NotFound() {
   const navigate = useNavigate();
   return (
     <Container mt={[10, 10, 20]} justify="center" align="center">
-      <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+      <Heading as="h4" fontSize="21px">
         404 Not Found
       </Heading>
       <Text mt={2}>

@@ -140,7 +140,7 @@ export default function Main() {
         <ModalContent textAlign="center" mt="10vh">
           <ModalHeader></ModalHeader>
           <ModalBody>
-            <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+            <Heading as="h4" fontSize="21px">
               Welcom to Visual Sound
             </Heading>
             <Text mt={2}>

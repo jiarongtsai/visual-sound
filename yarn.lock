@@ -2194,11 +2194,6 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.6.1.tgz#0c74724ba6e9ea6ad25a391eab60a79eaba4c556"
   integrity sha512-9FqhNjKQWpQ3fGnSOCovHOm+yhhiorKEqYLAfd525jWavunDJcx8rOW6i6ozAh+FbwcYMkL7b+3j4UR/30MpoQ==
 
-"@fontsource/exo-2@^4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@fontsource/exo-2/-/exo-2-4.5.8.tgz#0ecf830e74725978803d695e2bd24f343cefbbaa"
-  integrity sha512-UHffqkk27vKuz2ApNWP/ySwsftEiRnNODyPLSU+SwL510kPiqf2TVszfYk0WTRscN14xIgb5nvBxgnWuxu6b3w==
-
 "@gilbarbara/deep-equal@^0.1.0":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@gilbarbara/deep-equal/-/deep-equal-0.1.1.tgz#91c8f291da6bf7e21cdbfb585fb072d59963acf3"

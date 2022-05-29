@@ -89,7 +89,7 @@ export default function Navbar() {
                 variant={"ghost"}
                 href={"/"}
               >
-                <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+                <Heading as="h4" fontSize="21px">
                   Visual Sound
                 </Heading>
               </Button>
