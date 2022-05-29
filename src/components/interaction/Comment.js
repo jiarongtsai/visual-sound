@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
-import { AuthContext } from "../auth/Auth";
-import { Firebase } from "../../utils/firebase";
 import {
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { BsCursorFill } from "react-icons/bs";
+import PropTypes from "prop-types";
+import { AuthContext } from "../auth/Auth";
+import { Firebase } from "../../utils/firebase";
+import AlertModal from "../AlertModal";
 
 export default function Comment({
   i,
@@ -17,6 +20,11 @@ export default function Comment({
 }) {
   const [user, loading, error] = useContext(AuthContext);
   const [input, setInput] = useState("");
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
 
   function sendComment() {
     if (!input.trim()) return;
@@ -51,6 +59,11 @@ export default function Comment({
 
   return (
     <>
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could leave comments."
+      />
       <InputGroup
         m={1}
         mt={2}
@@ -58,6 +71,8 @@ export default function Comment({
         size="sm"
         position="relative"
         style={{ zIndex: "0" }}
+        onClick={user ? null : onAlertOpen}
+        opacity={!user && "0.7"}
       >
         <Input
           rounded="full"
@@ -65,6 +80,7 @@ export default function Comment({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={sendCommentKeyDown}
+          pointerEvents={!user && "none"}
         />
         <InputRightElement>
           <IconButton
@@ -75,9 +91,17 @@ export default function Comment({
             aria-label="Search database"
             icon={<BsCursorFill />}
             onClick={sendComment}
+            pointerEvents={!user && "none"}
           />
         </InputRightElement>
       </InputGroup>
     </>
   );
 }
+
+Comment.propTypes = {
+  i: PropTypes.number,
+  work: PropTypes.object,
+  followingWorks: PropTypes.array,
+  setFollowingWorks: PropTypes.func,
+};

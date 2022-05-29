@@ -1,15 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "./components/App";
-import { GlobalStyles } from "./global";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+import { AuthProvider } from "./components/auth/Auth";
+import App from "./App";
+import theme from "./theme/theme";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <GlobalStyles />
-      <App />
+      <ChakraProvider theme={theme}>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ChakraProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

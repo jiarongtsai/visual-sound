@@ -4,8 +4,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  FacebookAuthProvider,
-  signInWithPopup,
 } from "firebase/auth";
 
 import {
@@ -41,9 +39,6 @@ const firebaseConfig = {
 const Firebase = {
   app: initializeApp(firebaseConfig),
   pageLimit: 12,
-  ProviderFB() {
-    return new FacebookAuthProvider();
-  },
   auth() {
     return getAuth(this.app);
   },
@@ -105,20 +100,6 @@ const Firebase = {
       password
     );
     return userCredential.user;
-  },
-  async SignInWithFB() {
-    try {
-      const result = await signInWithPopup(this.auth(), this.ProviderFB());
-      const user = result.user;
-
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const accessToken = credential.accessToken;
-
-      const currentUser = await this.addNewUser(user);
-      return { currentUser, accessToken };
-    } catch (error) {
-      console.log(error);
-    }
   },
   async getWorks(lastVisibleData, term, uid) {
     let queryCondition;
@@ -468,7 +449,7 @@ const Firebase = {
       collected_by: updatedCollectedByList,
     });
     await updateDoc(doc(this.db(), "users", uid), {
-      collction_map: updatedCollectionMap,
+      collection_map: updatedCollectionMap,
     });
   },
   async addComment(uid, id, content, count) {
@@ -533,9 +514,7 @@ const Firebase = {
 
     return docSnap.data().tags;
   },
-  async updateTags(updateTags) {
-    const oldTags = await this.getAllTags();
-    const tags = [...new Set([...updateTags, ...oldTags])];
+  async updateTags(tags) {
     await setDoc(this.tagsRef(), { tags });
   },
   async getChatrooms() {
@@ -547,7 +526,34 @@ const Firebase = {
       where("participants", "array-contains", uid)
     );
 
-    return onSnapshot(queryCondition, callback);
+    return onSnapshot(queryCondition, async (snapshot) => {
+      const promises = [];
+
+      snapshot.docs.forEach((chatroom) => {
+        chatroom.data().participants.forEach((id, i) => {
+          const promise = Firebase.getUserBasicInfo(id).then((senderInfo) => {
+            return {
+              ...senderInfo,
+              author_place: i,
+              mid: chatroom.id,
+              latestMessage: chatroom.data().latestMessage,
+            };
+          });
+
+          if (id !== uid) promises.push(promise);
+        });
+      });
+      const allchatrooms = await Promise.all(promises);
+
+      const sortedByTime = allchatrooms.sort((a, b) => {
+        return (
+          b.latestMessage.created_time.seconds -
+          a.latestMessage.created_time.seconds
+        );
+      });
+
+      callback(sortedByTime);
+    });
   },
   onSnapshotChats(mid, callback) {
     const queryCondition = query(

@@ -1,70 +1,143 @@
-# Getting Started with Create React App
+<div id="top"></div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![cover of visual sound](./asset/visualsound_cover.png)
+# Visual Sound 🎨🎵
 
-## Available Scripts
+## An online VJ/DJ Machine and Social Platform.   
 
-In the project directory, you can run:
+> [Demo](https://visual-sound-db.web.app/)
 
-### `yarn start`
+- An **audio-visual instrument** that creates animation through the **keyboard** and buttons.
+- Members could browse others’ creations, and interact by **liking**, **commenting**, or **saving to collections**. 
+- **Following** and sending **direct messages** are also supported.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<br/>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#technologies">Technologies</a>
+    </li>
+    <li><a href="#flow-chart">Flow Chart</a></li>
+    <li><a href="#features">Features</a><ul>
+        <li><a href="#music-production">Music Production</a></li>
+        <li><a href="#social-interaction">Social Interaction</a></li>
+      </ul></li>
+    <li><a href="#future-improvement">Future Improvement</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
+<br/>
 
-### `yarn test`
+## Technologies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Front-End Fundamental
+  - HTML / CSS / JavaScript
+  - Responsive Web Design (RWD)
+### Back-End Service
+  - [Firebase](https://firebase.google.com/) (Database, Storage, Authentication, and Hosting)
+### Frameworks & Libraries  
+  - [React.js](https://reactjs.org/) (Hooks)
+  - [React Router](https://reactrouter.com/) 
+  - [Tone.js](https://tonejs.github.io/)
+  - [Chakra-ui](https://chakra-ui.com/) / [Emotion](https://emotion.sh/docs/styled) / [React-spring](https://react-spring.io/) 
+  - [Html2canvas](https://html2canvas.hertzen.com/)
+### Packages
+  - [React-icons](https://react-icons.github.io/react-icons/)
+  - [React-joyride](https://react-joyride.com/)
+  - [React-firebase-hooks](https://firebaseopensource.com/projects/csfrequency/react-firebase-hooks/)
+  - [Prop-types](https://www.npmjs.com/package/prop-types)
+  - [Moment](https://momentjs.com/)
+  - [@ajna/pagination](https://www.npmjs.com/package/@ajna/pagination) / [Framer-motion](https://www.framer.com/motion/) / [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
 
-### `yarn build`
+Development tools  
+  - [Prettier](https://prettier.io/) / [Husky](https://typicode.github.io/husky/#/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Flow Chart
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![flow chart visual sound](./asset/visualsound_flowChart.png)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Features 
 
-### `yarn eject`
+### Music Production 
+Home(Create)
+- Record music by pressing a key or button.
+- Change theme color and bpm.
+- Upload works.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![visual sound demo create](./asset/visaulsound_demo_create.gif)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Social Interaction
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Explore
+- Browse works and search works by tags.
+- Interact with works.
+- View other users.
+- Follow/unfollow or send messages to the user.
+- Chat with others.
 
-## Learn More
+![visual sound demo explore](./asset/visualsound_demo_explore.gif)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Community
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![visual sound demo community](./asset/visualsound_demo_community.gif)
 
-### Code Splitting
+Profile
+- Check the profile page.
+- View the collection.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+![visual sound demo profile](./asset/visualsound_demo_profile.gif)
 
-### Analyzing the Bundle Size
+Register/Login
+- Validation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+![visual sound demo login](./asset/visualsound_demo_login.gif)
 
-### Making a Progressive Web App
+RWD/Dark mode
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  <img style="height: 300px;" src="./asset/visualsound_demo_mobile.gif" alt="sound demo RWD and Dark mode">
 
-### Advanced Configuration
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+[Features Demo Video](https://drive.google.com/file/d/1miDf0MIJI1NZqVNSte1aQ9Osrxpnb5uM/view?usp=sharing) (Mandarin)
 
-### Deployment
+## Future Improvement
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Visual 
+- Trigger music by screen touching.
+- Customize theme color.
+- Create 3D visual elements.
 
-### `yarn build` fails to minify
+### Sound
+- Implement melody instruments.
+- Record 16-32 scale (a song).
+- Allow mixing and mastering.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Social Interaction
+- Build notification system.
+- Share works on message.
+- Co-editing.
+
+
+##  Acknowledgements
+
+inspired by [patatap](https://patatap.com/) and [beact](https://beact.herokuapp.com/).
+
+##  Contact
+
+
+Welcome for any suggestion or collaboration, feel free to contact me! 
+
+Created by **Bella** [@jiarongtsai](https://github.com/jiarongtsai)  
+[jiarongtsai19@gmail.com](mailto:jiarongtsai19@gmail.com) | [Linkedin](https://www.linkedin.com/in/jia-rong-tsai/) |
+[Facebook](https://www.facebook.com/jiarongtsaiBella/)
+
+<br/>
+
+ 🎨🎵 Hope you have fun with [Visual Sound](https://visual-sound-db.web.app/).
+
+
+<p align="right"><a href="#top">back to top</a></p>

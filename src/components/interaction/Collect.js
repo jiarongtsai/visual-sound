@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
+  Box,
   Menu,
   MenuItem,
   MenuOptionGroup,
@@ -11,15 +12,23 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
+import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
+import AlertModal from "../AlertModal";
 
 export default function Collect({ i, id, collectedList, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);
   const [collectionMap, setCollectionMap] = useState({});
   const [input, setInput] = useState("");
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
 
   useEffect(() => {
     if (!user) return;
@@ -31,7 +40,6 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
     };
   }, [user]);
 
-  //可以收藏到不只一個collection 嗎？ 還沒試
   async function collectWork(collectionName) {
     if (!collectionName.trim()) return;
 
@@ -100,6 +108,11 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
 
   return (
     <>
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could collect works."
+      />
       {collectedList?.includes(user?.uid) ? (
         <IconButton
           variant="ghost"
@@ -110,50 +123,60 @@ export default function Collect({ i, id, collectedList, setFollowingWorks }) {
           onClick={uncollectWork}
         />
       ) : (
-        <Menu>
-          <MenuButton
-            as={Link}
-            rounded={"md"}
-            cursor={"pointer"}
-            _hover={{
-              textDecoration: "none",
-              bg: color,
-            }}
-          >
-            <IconButton
-              variant="ghost"
-              aria-label="collect"
-              icon={<BsBookmark />}
-            />
-          </MenuButton>
-          <MenuList>
-            <MenuOptionGroup>
-              <Editable
-                defaultValue="+ New collection name..."
-                onSubmit={() => collectWork(input)}
-              >
-                <EditablePreview px={3} />
-                <EditableInput
-                  mx={3}
-                  w="90%"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                />
-              </Editable>
-              {collectionMap &&
-                Object.keys(collectionMap).map((term) => (
-                  <MenuItem
-                    key={term}
-                    value={term}
-                    onClick={() => collectWork(term)}
-                  >
-                    {term}
-                  </MenuItem>
-                ))}
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
+        <Box onClick={user ? null : onAlertOpen}>
+          <Menu>
+            <MenuButton
+              as={Link}
+              display="block"
+              h="40px"
+              rounded={"md"}
+              _hover={{
+                textDecoration: "none",
+                bg: color,
+              }}
+              opacity={!user && "0.7"}
+            >
+              <IconButton
+                variant="ghost"
+                aria-label="collect"
+                icon={<BsBookmark />}
+              />
+            </MenuButton>
+            <MenuList display={!user && "none"}>
+              <MenuOptionGroup>
+                <Editable
+                  defaultValue="+ New collection name..."
+                  onSubmit={() => collectWork(input)}
+                >
+                  <EditablePreview px={3} />
+                  <EditableInput
+                    mx={3}
+                    w="90%"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                </Editable>
+                {collectionMap &&
+                  Object.keys(collectionMap).map((term) => (
+                    <MenuItem
+                      key={term}
+                      value={term}
+                      onClick={() => collectWork(term)}
+                    >
+                      {term}
+                    </MenuItem>
+                  ))}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </Box>
       )}
     </>
   );
 }
+Collect.propTypes = {
+  i: PropTypes.number,
+  id: PropTypes.string,
+  collectedList: PropTypes.array,
+  setFollowingWorks: PropTypes.func,
+};

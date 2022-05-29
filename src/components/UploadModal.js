@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Firebase } from "../utils/firebase";
-import { AuthContext } from "../components/auth/Auth";
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import {
   Modal,
   ModalOverlay,
@@ -13,38 +13,45 @@ import {
   Flex,
   VStack,
   Textarea,
-  Image,
   useColorModeValue,
   Box,
   Text,
   FormControl,
+  useToast,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
-import { useNavigate } from "react-router-dom";
-import { PlayerProvider } from "../components/PlayerProvider";
-import SequencePlayer from "../components/SequencePlayer";
+import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
+import SequencerPlayOnly from "../components/sequencer/SequencerPlayOnly";
+import Loader from "./Loader";
 
 export default function UploadModal({
   sequence,
   bpm,
-  setIsUploaded,
   image,
-  setImage,
   themeColor,
   isOpen,
   onClose,
 }) {
   const [user, loading, error] = useContext(AuthContext);
   const [inputs, setInputs] = useState({ description: "try to make a sound" });
-  const [alltags, setAlltags] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const borderColor = useColorModeValue("gray.300", "gray.800");
   const [selectedOption, setSelectedOption] = useState(null);
   const navigate = useNavigate();
 
+  const toast = useToast();
+  const toastProps = {
+    status: "error",
+    variant: "subtle",
+    duration: 3000,
+    isClosable: true,
+    position: "bottom-start",
+  };
+
   useEffect(() => {
     Firebase.getAllTags().then((data) => {
-      setAlltags(data);
+      setAllTags(data);
     });
   }, []);
 
@@ -52,17 +59,15 @@ export default function UploadModal({
     setInputs((pre) => ({ ...pre, [e.target.name]: e.target.value }));
   }
 
-  function handleSequenceData(currentSequence) {
-    for (let i = 0; i < currentSequence.length; i++) {
-      for (let j = 0; j < currentSequence[i].length; j++) {
-        const { activated } = currentSequence[i][j];
-        currentSequence[i][j] = { activated };
-      }
-    }
-    return JSON.stringify(currentSequence);
-  }
-
   async function uploadtoFirebase() {
+    if (!image) {
+      toast({
+        ...toastProps,
+        title: "Cover Image is required",
+        description: "Please close the upload window and take a screenshot.",
+      });
+      return;
+    }
     const workRef = Firebase.getNewWorkRef();
     const workID = workRef.id;
 
@@ -72,36 +77,36 @@ export default function UploadModal({
     });
 
     const imageUrl = await Firebase.uploadFile(workFile, "images");
+    const uploadTags = selectedOption.map((tag) => tag.value);
 
     const data = {
       author_id: user.uid,
       description: inputs.description,
       comments_count: 0,
       image_url: imageUrl,
-      tags: selectedOption.map((tag) => tag.value),
+      tags: uploadTags,
       collected_by: [],
       liked_by: [],
-      sheetmusic: handleSequenceData(sequence),
+      sheetmusic: JSON.stringify(sequence),
       bpm: bpm,
       themeColor: themeColor,
     };
 
     await Firebase.addNewWork(workRef, data);
-    await Firebase.updateTags(tags);
-
-    setInputs({});
-    setTags([]);
-    setIsUploaded(true);
-    setImage(null);
-    onClose();
+    await Firebase.updateTags([...new Set([...uploadTags, ...allTags])]);
+    toast({
+      ...toastProps,
+      title: "Successfully Uploaded",
+      status: "success",
+    });
     navigate(`/explore`);
   }
+  if (loading) return <Loader />;
 
-  if (!user) return null;
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent minHeight="80%">
+      <ModalContent h="85%">
         <ModalHeader
           borderBottom="1px"
           borderColor={borderColor}
@@ -110,34 +115,33 @@ export default function UploadModal({
           Upload your new work
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pt={8} pb="0">
-          <Flex direction={["column", "row"]} justify="space-between">
-            <Flex direction="column" w={["100%", "100%", "68%"]}>
+        <ModalBody pt={2} pb={4} overflow="scroll">
+          <Flex
+            direction={["column", "column", "row"]}
+            justify={["flex-start", "flex-start", "space-between"]}
+            h="100%"
+          >
+            <Flex
+              direction="column"
+              w={["100%", "100%", "68%"]}
+              h={["30vh", "30vh", "100%"]}
+            >
               <Text>Preview</Text>
-              <PlayerProvider>
-                {({ soundPlayer }) => {
-                  return (
-                    <SequencePlayer
-                      player={soundPlayer}
-                      sheetmusic={handleSequenceData(sequence)}
-                      bpm={bpm}
-                      themeColor={themeColor}
-                      imageUrl={image}
-                    />
-                  );
-                }}
-              </PlayerProvider>
+              <SequencerPlayOnly
+                sheetmusic={JSON.stringify(sequence)}
+                bpm={bpm}
+                themeColor={themeColor}
+                imageUrl={image}
+              />
             </Flex>
             <Flex direction="column" w={["100%", "100%", "30%"]}>
               <VStack
                 align="flex-start"
-                h="65vh"
-                overflowY={"scroll"}
-                p={1}
-                spacing={4}
+                h={["auto", "auto", "100%"]}
+                px={1}
+                spacing={1}
               >
-                <Text>Edit Details</Text>
-
+                <Text pt={4}>Edit Details</Text>
                 <Box w="100%">
                   <Text color="gray.500" fontSize="sm">
                     Description
@@ -147,7 +151,8 @@ export default function UploadModal({
                     name="description"
                     value={inputs.description || ""}
                     onChange={handleInputs}
-                    rows="7"
+                    overflowY="scroll"
+                    rows="4"
                     my={2}
                   />
                 </Box>
@@ -161,7 +166,7 @@ export default function UploadModal({
                       isMulti
                       colorScheme="purple"
                       name="tags"
-                      options={alltags.map((tag) => ({
+                      options={allTags.map((tag) => ({
                         value: tag,
                         label: tag,
                       }))}
@@ -176,8 +181,11 @@ export default function UploadModal({
             </Flex>
           </Flex>
         </ModalBody>
-
-        <ModalFooter>
+        <ModalFooter
+          borderTop="1px"
+          borderColor={borderColor}
+          boxShadow="rgba(0, 0, 0, 0.06) 0 -1px 3px 0"
+        >
           <Button colorScheme={"gray"} onClick={onClose} mr={3}>
             Cancel
           </Button>
@@ -189,3 +197,12 @@ export default function UploadModal({
     </Modal>
   );
 }
+
+UploadModal.propTypes = {
+  sequence: PropTypes.array,
+  bpm: PropTypes.number,
+  image: PropTypes.string,
+  themeColor: PropTypes.string,
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+};

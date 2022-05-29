@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import MySequencer from "../components/squencer/MySequencer";
-import { PlayerProvider } from "../components/PlayerProvider";
+import Sequencer from "../components/sequencer/Sequencer";
 import {
   Text,
   Modal,
@@ -15,39 +14,38 @@ import {
   Code,
   Heading,
   Button,
-  Box,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { BsFillCameraFill } from "react-icons/bs";
 import onboardingVisual from "../asset/illustration/visualsound.png";
 
 import JoyRide from "react-joyride";
 
 export default function Main() {
-  // const TOUR_STEPS = [
-  //   {
-  //     target: "#tour-player",
-  //     title: "Record the Music",
-  //     content: "Record music by clicking Record button",
-  //   },
-  //   {
-  //     target: "#tour-edit-panel",
-  //     title: "Edit your Recording",
-  //     content: "Edit your recording and change colors with editing panel",
-  //   },
-  //   {
-  //     target: "#tour-screenshot",
-  //     title: "Choose a Cover",
-  //     content:
-  //       "Before Uploading, remember to take a screenshot as the cover of your recording",
-  //   },
-  //   {
-  //     target: "#tour-upload",
-  //     title: "Share with Public",
-  //     content:
-  //       "Add description to your recording, and share with the Visual Sound community",
-  //   },
-  // ];
-
+  const TOUR_STEPS = [
+    {
+      target: "#tour-player",
+      title: "Record the Music",
+      content: "Record music by clicking the Record button",
+    },
+    {
+      target: "#tour-edit-panel",
+      title: "Edit your Recording",
+      content: "Edit your recording and change colors with the editing panel",
+    },
+    {
+      target: "#tour-screenshot",
+      title: "Choose a Cover",
+      content:
+        "Before Uploading, remember to take a screenshot as the cover of your recording",
+    },
+    {
+      target: "#tour-upload",
+      title: "Share with Others",
+      content:
+        "Add a description to your recording, and share it with the Visual Sound community",
+    },
+  ];
+  const [breakPoint] = useMediaQuery("(max-width: 767px)");
   const [runTour, setRunTour] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -74,23 +72,34 @@ export default function Main() {
         toast({
           position: "top",
           isClosable: true,
-          duration: 4000,
+          duration: 3000,
           render: () => (
-            <Box w="100vw">
-              <Button
-                mt="40vh"
-                mx="auto"
-                colorScheme="purple"
-                transform="translateX(55%)"
-              >
-                Press A to Z, and turn up speakers
-              </Button>
-            </Box>
+            <Button
+              mt="40vh"
+              mx="auto"
+              colorScheme="purple"
+              w="300px"
+              textAlign="center"
+              h={breakPoint ? "65px" : "40px"}
+            >
+              {breakPoint ? (
+                <>
+                  <>Open edit panel, press a button,</>
+                  <br />
+                  <> and turn up speakers </>
+                </>
+              ) : (
+                "Press A to Z, and turn up speakers"
+              )}
+            </Button>
           ),
         });
+        if (JSON.parse(localStorage.getItem("hasRuntour"))) return;
+        if (breakPoint) return;
         setTimeout(() => {
           setRunTour(true);
         }, 10000);
+        localStorage.setItem("hasRuntour", "true");
         isMounted.current = false;
       }
     } else {
@@ -100,12 +109,12 @@ export default function Main() {
 
   return (
     <>
-      {/* <JoyRide
+      <JoyRide
         run={runTour}
         steps={TOUR_STEPS}
         continuous={true}
         showSkipButton={true}
-        // showProgress={true}
+        showProgress={true}
         styles={{
           options: {
             primaryColor: "#805ad5",
@@ -125,38 +134,54 @@ export default function Main() {
           last: "End tour",
           skip: "Skip",
         }}
-      /> */}
+      />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(2px) " />
         <ModalContent textAlign="center" mt="10vh">
           <ModalHeader></ModalHeader>
           <ModalBody>
-            <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+            <Heading as="h4" fontSize="21px">
               Welcom to Visual Sound
             </Heading>
             <Text mt={2}>
-              Press any key, <Code>A</Code> to <Code>Z</Code>, and turn up
-              speakers
+              {breakPoint ? (
+                <>
+                  <>Open edit panel, press a button,</>
+                  <br />
+                  <> and turn up speakers </>
+                </>
+              ) : (
+                <>
+                  Press any key, <Code>A</Code> to <Code>Z</Code>, and turn up
+                  speakers
+                </>
+              )}
             </Text>
-            <Image src={onboardingVisual} w="100%" mx="auto" mt={4} mb={8} />
-            <Button colorScheme="purple" onClick={onClose}>
-              Start
+            <Image
+              src={onboardingVisual}
+              w={["60%", "60%", "100%"]}
+              mx="auto"
+              mt={4}
+            />
+            {breakPoint && (
+              <Text mt={4}>
+                Swith to <strong>desktop</strong> for best experience
+              </Text>
+            )}
+            <Button colorScheme="purple" onClick={onClose} mt={8}>
+              {breakPoint ? "Keep using mobile" : "Start"}
             </Button>
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
-      <PlayerProvider>
-        {({ soundPlayer }) => (
-          <MySequencer
-            player={soundPlayer}
-            playing={playing}
-            setPlaying={setPlaying}
-            recording={recording}
-            setRecording={setRecording}
-          />
-        )}
-      </PlayerProvider>
+
+      <Sequencer
+        playing={playing}
+        setPlaying={setPlaying}
+        recording={recording}
+        setRecording={setRecording}
+      />
     </>
   );
 }

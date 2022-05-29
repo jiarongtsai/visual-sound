@@ -1,8 +1,5 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Firebase } from "../utils/firebase";
-import { AuthContext } from "../components/auth/Auth";
-import Gallery from "../components/Gallery";
 import {
   Flex,
   Grid,
@@ -15,27 +12,32 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Firebase } from "../utils/firebase";
+import { AuthContext } from "../components/auth/Auth";
+import IntersectionGallery from "../components/gallery/IntersectionGallery";
 import UsersModal from "../components/UsersModal";
+import Loader from "../components/Loader";
+import AlertModal from "../components/AlertModal";
 
 export default function User() {
+  const { uid } = useParams();
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [action, setAction] = useState({});
-
-  const [user, loading, error] = useContext(AuthContext);
-  const { uid } = useParams();
   const [profile, setProfile] = useState({});
-  const [userWorks, setUserWorks] = useState([]);
-  const navigate = useNavigate();
-  const [isShown, setIsShown] = useState([]);
-  const endofPageRef = useRef();
-  const pagingRef = useRef(null);
-  let isFetching = false;
+  const [user, loading, error] = useContext(AuthContext);
+  const bgColor = useColorModeValue("gray.200", "gray.800");
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
 
   useEffect(() => {
     if (user?.uid === uid) {
       navigate(`/profile`);
     }
-  }, [user]);
+  }, [user, uid]);
 
   useEffect(() => {
     const snapshot = Firebase.onSnapshotProfile(uid, (data) => {
@@ -45,38 +47,13 @@ export default function User() {
     return () => {
       snapshot();
     };
-  }, [user]);
-
-  useEffect(() => {
-    const pagingObserver = new IntersectionObserver((entries) => {
-      if (entries[0].intersectionRatio <= 0) return;
-      if (isFetching) return;
-      if (typeof pagingRef.current === "undefined") return;
-      isFetching = true;
-      Firebase.getWorks(pagingRef.current, null, uid).then(
-        ({ fetchWorks, lastVisibleWork }) => {
-          setUserWorks((pre) => [...pre, ...fetchWorks]);
-          setIsShown((pre) => [
-            ...pre,
-            ...Array(fetchWorks.length).fill(false),
-          ]);
-          pagingRef.current = lastVisibleWork;
-          isFetching = false;
-        }
-      );
-    });
-    pagingObserver.observe(endofPageRef.current);
-    return () => {
-      endofPageRef.current && pagingObserver.unobserve(endofPageRef.current);
-    };
-  }, []);
-
-  //fix me : navigate to userpage doesn't work
-  // const chat = (userID) => {
-  //   navigate(`/message/${userID}`);
-  // };
+  }, [user, uid]);
 
   const chat = async (userID) => {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     const mid = await Firebase.getChatroom(user?.uid, userID);
     navigate(`/message/${mid}`);
   };
@@ -92,7 +69,7 @@ export default function User() {
       name: "Follower List",
       userList: FollowerListWithInfo,
       invokeFunction: chat,
-      buttonText: "Message",
+      buttonText: "Chat",
     });
     onOpen();
   }
@@ -108,12 +85,16 @@ export default function User() {
       name: "Following List",
       userList: FollowingListWithInfo,
       invokeFunction: chat,
-      buttonText: "Message",
+      buttonText: "Chat",
     });
     onOpen();
   }
 
   function handleFollow() {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     if (!profile.followers?.includes(user?.uid)) {
       Firebase.followUser(user.uid, uid);
       return;
@@ -121,18 +102,26 @@ export default function User() {
     Firebase.unfollowUser(user.uid, uid);
   }
 
-  function handleChat() {
+  function handleOpenCharoomt() {
+    if (!user) {
+      onAlertOpen();
+      return;
+    }
     Firebase.getChatroom(user.uid, uid).then((mid) => {
       navigate(`/message/${mid}`);
     });
   }
+  if (loading) return <Loader />;
 
-  //link bug
   return (
     <>
       <UsersModal isOpen={isOpen} onClose={onClose} action={action} />
-
-      <Flex mt={20} direction="column" align="center">
+      <AlertModal
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        content="Only Registered users could interact with others."
+      />
+      <Flex mt={[10, 10, 20]} direction="column" align="center">
         <Flex
           direction={["column", "column", "row"]}
           justify="center"
@@ -157,22 +146,28 @@ export default function User() {
             gap={3}
             alignItems="center"
             justifyItems={["center", "center", "flex-start"]}
-            mb={12}
           >
             <GridItem colSpan={[3, 3, 2]}>
-              <Heading fontSize="xl">{profile.user_name}</Heading>
+              <Heading fontSize="xl" mt={[3, 3, 0]}>
+                {profile.user_name}
+              </Heading>
             </GridItem>
             <GridItem colSpan={[3, 3, 1]}>
               <Flex>
-                <Button colorScheme="purple" onClick={handleChat} mr={2}>
-                  Message
+                <Button
+                  colorScheme="purple"
+                  onClick={handleOpenCharoomt}
+                  mr={2}
+                  w="80px"
+                >
+                  Chat
                 </Button>
                 <Button
                   w="92px"
                   variant={"outline"}
                   _hover={{
                     textDecoration: "none",
-                    bg: useColorModeValue("gray.200", "gray.800"),
+                    bg: { bgColor },
                   }}
                   onClick={handleFollow}
                 >
@@ -183,7 +178,6 @@ export default function User() {
               </Flex>
             </GridItem>
             <GridItem colSpan={1} d="flex">
-              {/* need real data */}
               <Text fontWeight="600" mr={2} minWidth="15px">
                 {profile.works_count || 0}
               </Text>
@@ -212,12 +206,13 @@ export default function User() {
               <Text>Following</Text>
             </GridItem>
             <GridItem rowSpan={2} colSpan={3} alignSelf="flex-start">
-              <Text>{profile.user_bio}</Text>
+              <Box h={["60px", "60px", "120px"]} overflow="auto" w="100%">
+                <Text>{profile.user_bio}</Text>
+              </Box>
             </GridItem>
           </Grid>
         </Flex>
-        <Gallery works={userWorks} isShown={isShown} setIsShown={setIsShown} />
-        <div ref={endofPageRef}></div>
+        <IntersectionGallery term={null} currentUserID={uid} />
       </Flex>
     </>
   );

@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Modal,
   ModalOverlay,
@@ -10,10 +11,15 @@ import {
   Flex,
   VStack,
   Spacer,
+  Text,
+  Box,
 } from "@chakra-ui/react";
-import { UserWithName } from "./UserVariants";
+import { UserWithName } from "./userVariants/UserWithName";
+import { useContext } from "react";
+import { AuthContext } from "./auth/Auth";
 
 export default function UsersModal({ isOpen, onClose, action }) {
+  const [user, loading, error] = useContext(AuthContext);
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -22,24 +28,44 @@ export default function UsersModal({ isOpen, onClose, action }) {
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing={4} h={"60vh"} overflowY={"scroll"} pr={4}>
-            {action.userList?.map((user) => {
-              return (
-                <Flex key={user.author_id} justify="space-between" w="100%">
-                  <UserWithName
-                    id={user.author_id}
-                    name={user.author_name}
-                    thumbnail={user.author_thumbnail}
-                  />
-                  <Spacer />
-                  <Button
-                    colorScheme="purple"
-                    onClick={() => action.invokeFunction(user.author_id)}
+            {action.userList?.length === 0 ? (
+              <Text>It is empty</Text>
+            ) : (
+              action.userList?.map((renderUser) => {
+                return (
+                  <Flex
+                    key={renderUser.author_id}
+                    align="center"
+                    justify="space-between"
+                    w="100%"
                   >
-                    {action.buttonText}
-                  </Button>
-                </Flex>
-              );
-            })}
+                    <Box onClick={onClose}>
+                      <UserWithName
+                        id={renderUser.author_id}
+                        name={renderUser.author_name}
+                        thumbnail={renderUser.author_thumbnail}
+                      />
+                    </Box>
+                    <Spacer />
+                    {renderUser.author_id === user.uid ? (
+                      <Button minW="80px" pointerEvents="none">
+                        You
+                      </Button>
+                    ) : (
+                      <Button
+                        colorScheme="purple"
+                        minW="80px"
+                        onClick={() =>
+                          action.invokeFunction(renderUser.author_id)
+                        }
+                      >
+                        {action.buttonText}
+                      </Button>
+                    )}
+                  </Flex>
+                );
+              })
+            )}
           </VStack>
         </ModalBody>
 
@@ -48,3 +74,14 @@ export default function UsersModal({ isOpen, onClose, action }) {
     </Modal>
   );
 }
+
+UsersModal.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  action: PropTypes.shape({
+    name: PropTypes.string,
+    userList: PropTypes.array,
+    invokeFunction: PropTypes.func,
+    buttonText: PropTypes.string,
+  }),
+};

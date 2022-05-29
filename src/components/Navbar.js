@@ -1,4 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import {
   Heading,
   Box,
@@ -16,56 +18,37 @@ import {
   useColorMode,
   useColorModeValue,
   Divider,
-  Slide,
   Stack,
-  Fade,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  CloseButton,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link, useLocation, useMatch, useResolvedPath } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { getAuth, signOut } from "firebase/auth";
-import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "./auth/Auth";
+import NavLink from "./NavLink";
 
 const Links = [
+  { value: "", label: "Create" },
   { value: "community", label: "Community" },
   { value: "explore", label: "Explore" },
   { value: "message", label: "Message" },
 ];
 
-function CustomLink({ children, to, ...props }) {
-  let resolved = useResolvedPath(to);
-  let match = useMatch({ path: resolved.pathname, end: true });
-  const bgDefault = useColorModeValue("gray.100", "gray.600");
-
-  return (
-    <Box
-      px={[6, 6, 3]}
-      py={[4, 4, 2]}
-      rounded={"md"}
-      fontWeight={[400, 400, 600]}
-      _hover={{
-        bg: bgDefault,
-      }}
-    >
-      <Link
-        style={{
-          borderBottom: match ? "2px solid #805ad5" : "",
-        }}
-        to={to}
-        {...props}
-      >
-        {children}
-      </Link>
-    </Box>
-  );
-}
-
 export default function Navbar() {
   const [user, loading, error] = useContext(AuthContext);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [breakPoint] = useMediaQuery("(max-width: 767px)");
+
+  useEffect(() => {
+    if (!breakPoint) {
+      onClose();
+    }
+  }, [breakPoint]);
 
   function UserSignOut() {
     const auth = getAuth();
@@ -94,7 +77,7 @@ export default function Navbar() {
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
             display={{ md: "none" }}
-            onClick={onToggle}
+            onClick={onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
@@ -106,16 +89,16 @@ export default function Navbar() {
                 variant={"ghost"}
                 href={"/"}
               >
-                <Heading as="h4" fontSize="21px" fontFamily="Exo 2, sans-serif">
+                <Heading as="h4" fontSize="21px">
                   Visual Sound
                 </Heading>
               </Button>
             </Box>
             <HStack as={"nav"} display={{ base: "none", md: "flex" }}>
               {Links.map((link, i) => (
-                <CustomLink key={i} to={link.value}>
+                <NavLink key={i} to={link.value}>
                   {link.label}
-                </CustomLink>
+                </NavLink>
               ))}
             </HStack>
           </HStack>
@@ -161,72 +144,58 @@ export default function Navbar() {
             </Box>
           </Flex>
         </Flex>
-
-        <Fade in={isOpen}>
-          <Box
-            w="100vw"
-            h="100vh"
-            bg="blackAlpha.600"
-            position="fixed"
-            top="0"
-            left="0"
-            display={{ md: "none" }}
-            style={{ zIndex: 50 }}
-          />
-        </Fade>
-        <Slide
-          direction="left"
-          in={isOpen}
-          style={{ zIndex: 97 }}
-          onClick={onToggle}
-        >
-          <Box
-            mt="64px"
-            bg={useColorModeValue("gray.200", "gray.700")}
-            shadow="base"
-            w="45vw"
-            h="100vh"
-            display={{ md: "none" }}
-          >
-            <Stack as={"nav"}>
-              {Links.map((link, i) => (
-                <CustomLink key={i} to={link.value}>
-                  {link.label}
-                </CustomLink>
-              ))}
-              <Divider />
-              {user ? (
-                <>
-                  <CustomLink to="/profile">Profile</CustomLink>
-                  <CustomLink to="/profile/collection">
-                    My Collection
-                  </CustomLink>
-                  <Divider />
+        <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <Box
+              bg={useColorModeValue("gray.200", "gray.700")}
+              shadow="base"
+              h="100vh"
+              display={{ md: "none" }}
+            >
+              <CloseButton onClick={onClose} p={1} m={4} ml="80%" />
+              <Stack as={"nav"}>
+                {Links.map((link, i) => (
+                  <NavLink key={i} to={link.value} onClick={onClose}>
+                    {link.label}
+                  </NavLink>
+                ))}
+                <Divider />
+                {user ? (
+                  <>
+                    <NavLink to="/profile" onClick={onClose}>
+                      Profile
+                    </NavLink>
+                    <NavLink to="/profile/collection" onClick={onClose}>
+                      My Collection
+                    </NavLink>
+                    <Divider />
+                    <Button
+                      justifyContent="flex-start"
+                      pl={6}
+                      fontWeight={600}
+                      variant={"ghost"}
+                      onClick={UserSignOut}
+                    >
+                      Log out
+                    </Button>
+                  </>
+                ) : (
                   <Button
+                    as={"a"}
                     justifyContent="flex-start"
                     pl={6}
                     fontWeight={600}
                     variant={"ghost"}
-                    onClick={UserSignOut}
+                    href={"/login"}
                   >
-                    Log out
+                    Sign In
                   </Button>
-                </>
-              ) : (
-                <Button
-                  as={"a"}
-                  justifyContent="flex-start"
-                  pl={6}
-                  fontWeight={600}
-                  variant={"ghost"}
-                  href={"/login"}
-                >
-                  Sign In
-                </Button>
-              )}
-            </Stack>
-          </Box>
-        </Slide>
+                )}
+              </Stack>
+            </Box>
+          </DrawerContent>
+        </Drawer>
       </Box>
 
       <Box
