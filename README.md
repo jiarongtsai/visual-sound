@@ -11,8 +11,6 @@
 - Members could browse others’ creations, and interact by **liking**, **commenting**, or **saving to collections**. 
 - **Following** and sending **direct messages** are also supported.
 
-<br/>
-
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -67,7 +65,7 @@ Home(Create)
 - Change theme color and bpm.
 - Upload works.
 
-![visual sound demo create](./asset/visaulsound_demo_create.gif)
+![visual sound demo create](./asset/visualsound_demo_create.gif)
 
 
 ### Social Interaction
@@ -99,8 +97,6 @@ Register/Login
 RWD/Dark mode
 
   <img style="height: 300px;" src="./asset/visualsound_demo_mobile.gif" alt="sound demo RWD and Dark mode">
-
-<br/>
 
 [Features Demo Video](https://drive.google.com/file/d/1miDf0MIJI1NZqVNSte1aQ9Osrxpnb5uM/view?usp=sharing) (Mandarin)
 
