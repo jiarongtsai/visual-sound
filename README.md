@@ -90,8 +90,14 @@ Profile
 
 ![visual sound demo profile](./asset/visualsound_demo_profile.gif)
 
+Message
+- Chat with other users.
+- Open chatrooms.
+
+![visual sound demo message](./asset/visualsound_demo_message.gif)
+
 Register / Login
-- Validation
+- Validation.
 
 ![visual sound demo login](./asset/visualsound_demo_login.gif)
 
