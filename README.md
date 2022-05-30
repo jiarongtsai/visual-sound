@@ -80,6 +80,7 @@ Explore
 ![visual sound demo explore](./asset/visualsound_demo_explore.gif)
 
 Community
+- Interact with works and users instantly.
 
 ![visual sound demo community](./asset/visualsound_demo_community.gif)
 
@@ -89,12 +90,12 @@ Profile
 
 ![visual sound demo profile](./asset/visualsound_demo_profile.gif)
 
-Register/Login
+Register / Login
 - Validation
 
 ![visual sound demo login](./asset/visualsound_demo_login.gif)
 
-RWD/Dark mode
+RWD / Dark mode
 
   <img style="height: 300px;" src="./asset/visualsound_demo_mobile.gif" alt="sound demo RWD and Dark mode">
 
