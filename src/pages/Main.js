@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Sequencer from "../components/sequencer/Sequencer";
 import {
+  Box,
   Text,
   Modal,
   ModalOverlay,
@@ -139,7 +140,7 @@ export default function Main() {
         <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(2px) " />
         <ModalContent textAlign="center" mt="10vh">
           <ModalHeader></ModalHeader>
-          <ModalBody>
+          <ModalBody h="100%">
             <Heading as="h4" fontSize="21px">
               Welcom to Visual Sound
             </Heading>
@@ -157,12 +158,15 @@ export default function Main() {
                 </>
               )}
             </Text>
+
             <Image
               src={onboardingVisual}
-              w={["60%", "60%", "100%"]}
+              alt="cover iamge of Visual Sound"
+              h={["30vh", "40vh", "50vh"]}
               mx="auto"
               mt={4}
             />
+
             {breakPoint && (
               <Text mt={4}>
                 Swith to <strong>desktop</strong> for best experience
