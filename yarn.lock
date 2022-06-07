@@ -2,14 +2,6 @@
 # yarn lockfile v1
 
 
-"@ajna/pagination@^1.4.17":
-  version "1.4.17"
-  resolved "https://registry.yarnpkg.com/@ajna/pagination/-/pagination-1.4.17.tgz#e9c273c3e939cfaae7982a7fd6bc143dcaa3e862"
-  integrity sha512-sPeJuo4Hg5MGJXYaHyAo2EncxdARrAvVXItbdQtXJ2+EXdZqSMVxrpNJu4T5oadSayMHRM3IqkbgpD0LLbSKLg==
-  dependencies:
-    framer-motion "^6.2.8"
-    lodash.union "^4.6.0"
-
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.2.0.tgz#56c133824780de3174aed5ab6834f3026790154d"
@@ -5869,7 +5861,7 @@ fraction.js@^4.2.0:
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.2.0.tgz#448e5109a313a3527f5a3ab2119ec4cf0e0e2950"
   integrity sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==
 
-framer-motion@^6, framer-motion@^6.2.8:
+framer-motion@^6.3.10:
   version "6.3.10"
   resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-6.3.10.tgz#e71f8c4ee09612de8328725c4fb1a1c204ae451f"
   integrity sha512-modFplFb1Fznsm0MrmRAJUC32UDA5jbGU9rDvkGzhAHksru2tnoKbU/Pa3orzdsJI0CJviG4NGBrmwGveU98Cg==
@@ -7470,11 +7462,6 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==
-
-lodash.union@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
-  integrity sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw==
 
 lodash.uniq@^4.5.0:
   version "4.5.0"

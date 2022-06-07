@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ajna/pagination": "^1.4.17",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.8",
     "@emotion/react": "^11",
@@ -14,7 +13,7 @@
     "chakra-react-select": "^3.3.3",
     "dayjs": "^1.11.3",
     "firebase": "^9.6.10",
-    "framer-motion": "^6",
+    "framer-motion": "^6.3.10",
     "html2canvas": "^1.4.1",
     "prop-types": "^15.8.1",
     "react": "17.0.2",

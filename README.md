@@ -42,7 +42,7 @@
   - [React.js](https://reactjs.org/) (Hooks)
   - [React Router](https://reactrouter.com/) 
   - [Tone.js](https://tonejs.github.io/)
-  - [Chakra-ui](https://chakra-ui.com/) / [Emotion](https://emotion.sh/docs/styled) / [React-spring](https://react-spring.io/) 
+  - [Chakra-ui](https://chakra-ui.com/) / [Emotion](https://emotion.sh/docs/styled) / [Framer-motion](https://www.framer.com/motion/) 
   - [Html2canvas](https://html2canvas.hertzen.com/)
 ### Packages
   - [React-icons](https://react-icons.github.io/react-icons/)
@@ -50,7 +50,8 @@
   - [React-firebase-hooks](https://firebaseopensource.com/projects/csfrequency/react-firebase-hooks/)
   - [Prop-types](https://www.npmjs.com/package/prop-types)
   - [Day.js](https://day.js.org/en/)
-  - [@ajna/pagination](https://www.npmjs.com/package/@ajna/pagination) / [Framer-motion](https://www.framer.com/motion/) / [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
+  - [React-spring](https://react-spring.io/) 
+  - [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
 
 Development tools  
   - [Prettier](https://prettier.io/) / [Husky](https://typicode.github.io/husky/#/)
