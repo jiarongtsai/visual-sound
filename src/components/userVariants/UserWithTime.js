@@ -1,16 +1,7 @@
 import { Stack, Avatar, Text, useColorModeValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import moment from "moment";
+import { getReadableTime } from "../../utils/helper";
 import PropTypes from "prop-types";
-
-function getReadableTime(timestamp) {
-  const cur = Math.floor(Date.now() / 1000);
-  const base = (cur - timestamp) / 86400;
-  if (base < 1) {
-    return moment.unix(timestamp).fromNow();
-  }
-  return moment.unix(timestamp).calendar();
-}
 
 export const UserWithTime = ({ id, name, thumbnail, timestamp }) => {
   return (

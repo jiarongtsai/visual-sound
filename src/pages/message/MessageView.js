@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import moment from "moment";
+import { getReadableTime, getDetailTime } from "../../utils/helper";
 import {
   VStack,
   Text,
@@ -76,17 +76,6 @@ export default function MessageView({
     sendMessage();
   }
 
-  function getReadableTime(timestamp) {
-    const cur = Math.floor(Date.now() / 1000);
-    const base = (cur - timestamp) / 86400;
-
-    if (base < 1) {
-      return moment.unix(timestamp).fromNow();
-    }
-
-    return moment.unix(timestamp).calendar();
-  }
-
   if (loading) return <Loader />;
 
   if (!mid)
@@ -130,11 +119,7 @@ export default function MessageView({
         {chats.map((chat, i) => {
           return (
             <Flex key={i} direction="column" w="100%" alignItems="center">
-              <Tooltip
-                label={moment
-                  .unix(chat.created_time.seconds)
-                  .format("MMMM Do YYYY, h:mm:ss a")}
-              >
+              <Tooltip label={getDetailTime(chat.created_time.seconds)}>
                 <Text color="gray.500" fontSize="sm" cursor="default">
                   {getReadableTime(chat.created_time.seconds)}
                 </Text>

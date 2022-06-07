@@ -49,7 +49,7 @@
   - [React-joyride](https://react-joyride.com/)
   - [React-firebase-hooks](https://firebaseopensource.com/projects/csfrequency/react-firebase-hooks/)
   - [Prop-types](https://www.npmjs.com/package/prop-types)
-  - [Moment](https://momentjs.com/)
+  - [Day.js](https://day.js.org/en/)
   - [@ajna/pagination](https://www.npmjs.com/package/@ajna/pagination) / [Framer-motion](https://www.framer.com/motion/) / [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
 
 Development tools  
