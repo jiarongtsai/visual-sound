@@ -10,7 +10,6 @@ import {
   Text,
   Heading,
   Image,
-  IconButton,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -18,13 +17,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
-  Spacer,
 } from "@chakra-ui/react";
 
 import {
@@ -46,7 +41,7 @@ import usePlayer from "../../customHook/usePlayer";
 import useKeyboardBindings from "../../customHook/useKeybroadBindings";
 import { useScreenshot } from "../../customHook/useScreenshot";
 
-import UploadModal from "../UploadModal";
+import { UploadModal } from "../UploadModal";
 import AlertModal from "../AlertModal";
 
 import { colorTheme } from "../motion/colorTheme";
