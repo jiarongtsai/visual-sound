@@ -10,7 +10,7 @@ import { BsCursorFill } from "react-icons/bs";
 import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
-import AlertModal from "../AlertModal";
+import { AlertModal } from "../AlertModal";
 
 export default function Comment({
   i,

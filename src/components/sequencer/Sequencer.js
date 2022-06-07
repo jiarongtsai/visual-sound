@@ -41,7 +41,7 @@ import useKeyboardBindings from "../../customHook/useKeybroadBindings";
 import { useScreenshot } from "../../customHook/useScreenshot";
 
 import { UploadModal } from "../UploadModal";
-import AlertModal from "../AlertModal";
+import { AlertModal } from "../AlertModal";
 
 import { colorTheme } from "../motion/colorTheme";
 import { MotionWrapper } from "../motion/MotionWrapper";
