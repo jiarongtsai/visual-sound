@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef, useContext } from "react";
+import React, { useState, useEffect, createRef, useContext, memo } from "react";
 import {
   Flex,
   Button,
@@ -62,7 +62,7 @@ import Grid from "./Grid";
 import { sequenceConfig } from "../../config";
 import { AuthContext } from "../auth/Auth";
 
-const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
+const Sequencer = memo(({ playing, setPlaying, recording, setRecording }) => {
   const [user, isloading, error] = useContext(AuthContext);
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
     pagesCount: 3,
@@ -105,6 +105,8 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const ButtonBackground = useColorModeValue("gray.100", "gray.600");
   const ButtonBackgroundHover = useColorModeValue("gray.200", "gray.700");
+
+  console.log("re-render is awful");
 
   const toggleStep = (line, step) => {
     if (currentPage === 2) line = line + 9;
@@ -651,6 +653,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
       </Flex>
     </>
   );
-};
+});
 
 export default Sequencer;

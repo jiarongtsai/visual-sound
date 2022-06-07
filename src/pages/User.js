@@ -15,7 +15,7 @@ import {
 import { Firebase } from "../utils/firebase";
 import { AuthContext } from "../components/auth/Auth";
 import IntersectionGallery from "../components/gallery/IntersectionGallery";
-import UsersModal from "../components/UsersModal";
+import { UsersModal } from "../components/UsersModal";
 import Loader from "../components/Loader";
 import AlertModal from "../components/AlertModal";
 

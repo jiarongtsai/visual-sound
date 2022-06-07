@@ -5,7 +5,7 @@ import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../../components/auth/Auth";
 import MessageList from "./MessageList";
 import MessageView from "./MessageView";
-import UsersModal from "../../components/UsersModal";
+import { UsersModal } from "../../components/UsersModal";
 import Loader from "../../components/Loader";
 
 export default function Message() {
