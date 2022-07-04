@@ -23,13 +23,15 @@ export default function Community({ followingWorks, setFollowingWorks }) {
   const [recommendUsers, setRecommendUsers] = useState([]);
   const bg = useColorModeValue("white", "gray.700");
 
+  const [fetching, setFetching] = useState(true);
+
   const [follow, setFollow] = useState([]);
 
   useEffect(() => {
     Firebase.getFollowingWorks(user.uid).then((data) => {
       setFollowingWorks(data);
+      setFetching(false);
     });
-
     Firebase.getRecommendFollower(user.uid).then((data) => {
       setRecommendUsers(data);
       setFollow(Array(data.length).fill(false));
@@ -37,17 +39,6 @@ export default function Community({ followingWorks, setFollowingWorks }) {
   }, []);
 
   if (loading && followingWorks.length === 0) return <Loader />;
-
-  if (followingWorks.length === 0)
-    return (
-      <Box mt="30vh">
-        <EmptyHandle
-          showText="No works from following users yet."
-          buttonText="Go Explore"
-          link="/explore"
-        />
-      </Box>
-    );
 
   async function handleFollow(i) {
     if (follow[i]) {
@@ -63,19 +54,29 @@ export default function Community({ followingWorks, setFollowingWorks }) {
       mx="auto"
       justify={{ base: "center", lg: "flex-start" }}
     >
-      <Box w={["100%", "100%", "initial"]}>
-        <Container>
-          {followingWorks.map((work, i) => (
-            <CommunityCard
-              i={i}
-              key={work.id}
-              work={work}
-              location={location}
-              followingWorks={followingWorks}
-              setFollowingWorks={setFollowingWorks}
+      <Box w={["100%", "100%", "initial"]} minW="70%">
+        {!fetching && followingWorks.length === 0 ? (
+          <Box mt="30vh">
+            <EmptyHandle
+              showText="No works from following users yet."
+              buttonText="Go Explore"
+              link="/explore"
             />
-          ))}
-        </Container>
+          </Box>
+        ) : (
+          <Container>
+            {followingWorks.map((work, i) => (
+              <CommunityCard
+                i={i}
+                key={work.id}
+                work={work}
+                location={location}
+                followingWorks={followingWorks}
+                setFollowingWorks={setFollowingWorks}
+              />
+            ))}
+          </Container>
+        )}
       </Box>
       <Box ml={2}>
         <VStack
