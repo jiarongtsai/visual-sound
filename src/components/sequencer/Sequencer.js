@@ -53,7 +53,7 @@ import { MusicButton } from "./helper/MusicButton";
 import ChainSpring from "./helper/ChainSpring";
 import ScaleSpring from "./helper/ScaleSpring";
 
-import BpmController from "./BpmController";
+import { BpmController } from "./BpmController";
 import { IconStack } from "./IconStack";
 import Grid from "./Grid";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, memo } from "react";
 import PropTypes from "prop-types";
 import {
   Slider,
@@ -9,8 +9,19 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 
-export default function BpmController({ BpmValue, setBpmValue }) {
+export const BpmController = memo(({ BpmValue, setBpmValue }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  let changing = false;
+
+  function changeBpmValue(v) {
+    if (changing) return;
+    changing = true;
+    setBpmValue(v);
+
+    setTimeout(() => {
+      changing = false;
+    }, 2000);
+  }
 
   return (
     <Slider
@@ -21,7 +32,7 @@ export default function BpmController({ BpmValue, setBpmValue }) {
       max={200}
       colorScheme="purple"
       value={BpmValue}
-      onChange={(v) => setBpmValue(v)}
+      onChange={(v) => changeBpmValue(v)}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
     >
@@ -49,7 +60,7 @@ export default function BpmController({ BpmValue, setBpmValue }) {
       </Tooltip>
     </Slider>
   );
-}
+});
 
 BpmController.propTypes = {
   BpmValue: PropTypes.number,
