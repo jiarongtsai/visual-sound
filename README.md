@@ -33,7 +33,6 @@
 <br/>
 
 ## Technologies
-<hr/>
 
 ### Front-End Fundamental
   - HTML / CSS / JavaScript
@@ -63,7 +62,6 @@
 
 
 ## Performance Tuning 
-<hr/>
 
 - Reduce bundle size. ( from 2.1MB to 1.9MB )
 - Implement code-splitting. ( with `Suspend` and `lazy()` )
@@ -78,13 +76,11 @@
 <br/>
 
 ## Flow Chart
-<hr/>
 
 ![flow chart visual sound](./asset/visualsound_flowChart.png)
 <br/>
 
 ## Features 
-<hr/>
 
 ### Music Production 
 Home (Create Page)
@@ -138,7 +134,6 @@ RWD / Dark mode
 
 
 ## Future Improvement
-<hr/>
 
 ### Visual 
 - Trigger music by screen touching.
@@ -159,14 +154,11 @@ RWD / Dark mode
 
 ##  Acknowledgements
 
-<hr/>
-
 inspired by [patatap](https://patatap.com/) and [beact](https://beact.herokuapp.com/).
 
 <br/>
 
 ##  Contact
-<hr/>
 
 Welcome for any suggestion or collaboration, feel free to contact me! 
 
