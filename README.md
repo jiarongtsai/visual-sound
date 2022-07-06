@@ -19,6 +19,9 @@
     <li>
       <a href="#technologies">Technologies</a>
     </li>
+    <li>
+      <a href="#performance-tuning">Performance Tuning</a>
+    </li>
     <li><a href="#flow-chart">Flow Chart</a></li>
     <li><a href="#features">Features</a><ul>
         <li><a href="#music-production">Music Production</a></li>
@@ -57,6 +60,22 @@
 
 ### Development tools  
   - [Prettier](https://prettier.io/) / [Husky](https://typicode.github.io/husky/#/) 
+
+<br/>
+
+
+## Performance Tuning 
+<hr/>
+
+- Reduce bundle size. ( from 2.1MB to 1.9MB )
+- Implement code-splitting. ( with `Suspend` and `lazy()` )
+- Use `React.memo` to reduce unnecessary re-render.
+- Apply **debounce** method on BPM Value controller.
+
+### Web Vital 
+- Set minimum height for images. ( Cumulative Layout Shift, CLS )
+- Added `alt` tags for all images. (SEO)
+
 
 <br/>
 
@@ -121,20 +140,6 @@ RWD / Dark mode
 
 <br/>
 
-## Performance Tuning 
-<hr/>
-
-- Reduce bundle size. ( from 2.1MB to 1.9MB )
-- Implement code-splitting. ( with `Suspend` and `lazy()` )
-- Use `React.memo` to reduce unnecessary re-render.
-- Apply **debounce** method on BPM Value controller.
-
-### Web Vital 
-- Set minimum height for images. ( Cumulative Layout Shift, CLS )
-- Added `alt` tags for all images. (SEO)
-
-
-<br/>
 
 ## Future Improvement
 <hr/>
