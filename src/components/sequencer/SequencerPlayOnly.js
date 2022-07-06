@@ -6,8 +6,6 @@ import { MotionWrapper } from "../motion/MotionWrapper";
 import { MotionElements } from "../motion/MotionElements";
 import { colorTheme } from "../motion/colorTheme";
 import usePlayer from "../../customHook/usePlayer";
-//sequence
-
 import { sequenceConfig } from "../../config";
 
 export default function SequencePlayer({

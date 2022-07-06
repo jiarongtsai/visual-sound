@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef, useContext } from "react";
+import React, { useState, useEffect, createRef, useContext, memo } from "react";
 import {
   Flex,
   Button,
@@ -10,7 +10,6 @@ import {
   Text,
   Heading,
   Image,
-  IconButton,
   Drawer,
   DrawerOverlay,
   DrawerContent,
@@ -18,13 +17,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
-  Spacer,
 } from "@chakra-ui/react";
 
 import {
@@ -39,15 +34,14 @@ import {
   BsMusicNote,
 } from "react-icons/bs";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { usePagination } from "@ajna/pagination";
 import { ThemeProvider } from "@emotion/react";
 
 import usePlayer from "../../customHook/usePlayer";
 import useKeyboardBindings from "../../customHook/useKeybroadBindings";
 import { useScreenshot } from "../../customHook/useScreenshot";
 
-import UploadModal from "../UploadModal";
-import AlertModal from "../AlertModal";
+import { UploadModal } from "../UploadModal";
+import { AlertModal } from "../AlertModal";
 
 import { colorTheme } from "../motion/colorTheme";
 import { MotionWrapper } from "../motion/MotionWrapper";
@@ -59,20 +53,17 @@ import { MusicButton } from "./helper/MusicButton";
 import ChainSpring from "./helper/ChainSpring";
 import ScaleSpring from "./helper/ScaleSpring";
 
-import BpmController from "./BpmController";
-import { Pagination } from "./Pagination";
+import { BpmController } from "./BpmController";
 import { IconStack } from "./IconStack";
 import Grid from "./Grid";
 
 import { sequenceConfig } from "../../config";
 import { AuthContext } from "../auth/Auth";
 
-const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
+const Sequencer = memo(({ playing, setPlaying, recording, setRecording }) => {
   const [user, isloading, error] = useContext(AuthContext);
-  const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
-    pagesCount: 3,
-    initialState: { currentPage: 1 },
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const pages = [1, 2, 3];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -110,6 +101,8 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   const ButtonBackground = useColorModeValue("gray.100", "gray.600");
   const ButtonBackgroundHover = useColorModeValue("gray.200", "gray.700");
+
+  const togglePage = toggleLine !== null && Math.ceil((toggleLine + 1) / 9);
 
   const toggleStep = (line, step) => {
     if (currentPage === 2) line = line + 9;
@@ -216,6 +209,9 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
 
   function handleCleanUp() {
     setNewSequence(sequenceConfig.getSequenceState());
+  }
+  function handleChangePages(page) {
+    setCurrentPage(page);
   }
 
   return (
@@ -642,13 +638,20 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
                 </HStack>
               </Flex>
               <Flex p={4}>
-                <Pagination
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  pagesCount={pagesCount}
-                  pages={pages}
-                  toggleLine={toggleLine}
-                />
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    m="3px"
+                    borderBottom="2px"
+                    borderColor={
+                      currentPage === page ? "purple.500" : "transparent"
+                    }
+                    onClick={() => handleChangePages(page)}
+                    opacity={togglePage === page ? 0.7 : 1}
+                  >
+                    {page}
+                  </Button>
+                ))}
               </Flex>
             </Flex>
           </DrawerContent>
@@ -656,6 +659,6 @@ const Sequencer = ({ playing, setPlaying, recording, setRecording }) => {
       </Flex>
     </>
   );
-};
+});
 
 export default Sequencer;

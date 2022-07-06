@@ -1,3 +1,4 @@
+import { memo } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,7 +12,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-export default function AlertModal({ isOpen, onClose, content }) {
+export const AlertModal = memo(({ isOpen, onClose, content }) => {
   const navigate = useNavigate();
 
   return (
@@ -32,7 +33,7 @@ export default function AlertModal({ isOpen, onClose, content }) {
       </ModalContent>
     </Modal>
   );
-}
+});
 
 AlertModal.propTypes = {
   onClose: PropTypes.func,

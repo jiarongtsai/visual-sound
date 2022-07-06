@@ -20,28 +20,6 @@ import { ReactComponent as TomLarge } from "../../../asset/react_icon/icon_tomLa
 import { ReactComponent as SnareSide } from "../../../asset/react_icon/icon_snareSide.svg";
 import { ReactComponent as CrashCymbal } from "../../../asset/react_icon/icon_crashCymbal.svg";
 
-export {
-  IconClap,
-  IconHiHat,
-  IconOpenHat,
-  IconRideCymbal,
-  IconKick,
-  IconBoom,
-  IconSnare,
-  IconTom,
-  IconTink,
-  IconBrush,
-  IconCrashCymbal,
-  IconCymbal,
-  IconMaracas,
-  IconReverse,
-  IconScratch,
-  IconSnareSide,
-  IconTomLarge,
-  IconUnknown,
-  IconXylophone,
-};
-
 const IconWrapper = ({ children }) => {
   const bgColor = useColorModeValue("gray.100", "gray.400");
   const activeColor = useColorModeValue("gray.300", "gray.100");
@@ -177,3 +155,25 @@ const IconBoom = () => (
     <Boom width="25px" aria-label="boom" opacity="0.7" />
   </IconWrapper>
 );
+
+export {
+  IconClap,
+  IconHiHat,
+  IconOpenHat,
+  IconRideCymbal,
+  IconKick,
+  IconBoom,
+  IconSnare,
+  IconTom,
+  IconTink,
+  IconBrush,
+  IconCrashCymbal,
+  IconCymbal,
+  IconMaracas,
+  IconReverse,
+  IconScratch,
+  IconSnareSide,
+  IconTomLarge,
+  IconUnknown,
+  IconXylophone,
+};

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import moment from "moment";
+import { getDetailTime } from "../../utils/helper";
 import {
   Flex,
   Spacer,
@@ -132,9 +132,7 @@ export default function WorkView({ setFollowingWorks }) {
               ))}
             </Flex>
             <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
-              {`Created at ${moment
-                .unix(work.created_time?.seconds)
-                .calendar()}`}
+              {`Created at ${getDetailTime(work.created_time?.seconds)}`}
             </Text>
 
             {comments.map((comment) => {

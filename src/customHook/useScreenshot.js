@@ -1,7 +1,6 @@
 import { useState } from "react";
 import html2canvas from "html2canvas";
 
-//dont understand
 const useScreenshot = ({ type, quality } = {}) => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState(null);

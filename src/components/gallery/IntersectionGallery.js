@@ -69,18 +69,6 @@ export default function IntersectionGallery({
       </>
     );
 
-  if (works.length === 0)
-    return (
-      <>
-        <EmptyHandle
-          showText="No works found"
-          buttonText="Back to Explore"
-          link="/explore"
-        />
-        <div ref={endofPageRef}></div>
-      </>
-    );
-
   return (
     <>
       <Gallery works={works} isShown={isShown} setIsShown={setIsShown} />

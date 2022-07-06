@@ -17,6 +17,9 @@
     <li>
       <a href="#technologies">Technologies</a>
     </li>
+    <li>
+      <a href="#performance-tuning">Performance Tuning</a>
+    </li>
     <li><a href="#flow-chart">Flow Chart</a></li>
     <li><a href="#features">Features</a><ul>
         <li><a href="#music-production">Music Production</a></li>
@@ -30,6 +33,7 @@
 <br/>
 
 ## Technologies
+<hr/>
 
 ### Front-End Fundamental
   - HTML / CSS / JavaScript
@@ -40,27 +44,50 @@
   - [React.js](https://reactjs.org/) (Hooks)
   - [React Router](https://reactrouter.com/) 
   - [Tone.js](https://tonejs.github.io/)
-  - [Chakra-ui](https://chakra-ui.com/) / [Emotion](https://emotion.sh/docs/styled) / [React-spring](https://react-spring.io/) 
+  - [Chakra-ui](https://chakra-ui.com/) / [Emotion](https://emotion.sh/docs/styled) / [Framer-motion](https://www.framer.com/motion/) 
   - [Html2canvas](https://html2canvas.hertzen.com/)
 ### Packages
   - [React-icons](https://react-icons.github.io/react-icons/)
   - [React-joyride](https://react-joyride.com/)
   - [React-firebase-hooks](https://firebaseopensource.com/projects/csfrequency/react-firebase-hooks/)
   - [Prop-types](https://www.npmjs.com/package/prop-types)
-  - [Moment](https://momentjs.com/)
-  - [@ajna/pagination](https://www.npmjs.com/package/@ajna/pagination) / [Framer-motion](https://www.framer.com/motion/) / [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
+  - [React-spring](https://react-spring.io/) 
+  - [Chakra-react-select](https://www.npmjs.com/package/chakra-react-select)
+  - Replaced [Moment](https://momentjs.com/) with [Day.js](https://day.js.org/en/) (2022/06)
+  - Replaced [@ajna/pagination](https://www.npmjs.com/package/@ajna/pagination) with Chakra-ui components (2022/06)
 
-Development tools  
-  - [Prettier](https://prettier.io/) / [Husky](https://typicode.github.io/husky/#/)
+### Development tools  
+  - [Prettier](https://prettier.io/) / [Husky](https://typicode.github.io/husky/#/) 
+
+<br/>
+
+
+## Performance Tuning 
+<hr/>
+
+- Reduce bundle size. ( from 2.1MB to 1.9MB )
+- Implement code-splitting. ( with `Suspend` and `lazy()` )
+- Use `React.memo` to reduce unnecessary re-render.
+- Apply **debounce** method on BPM Value controller.
+
+### Web Vital 
+- Set minimum height for images. ( Cumulative Layout Shift, CLS )
+- Added `alt` tags for all images. (SEO)
+
+
+<br/>
 
 ## Flow Chart
+<hr/>
 
 ![flow chart visual sound](./asset/visualsound_flowChart.png)
+<br/>
 
 ## Features 
+<hr/>
 
 ### Music Production 
-Home(Create)
+Home (Create Page)
 - Record music by pressing a key or button.
 - Change theme color and bpm.
 - Upload works.
@@ -70,7 +97,7 @@ Home(Create)
 
 ### Social Interaction
 
-Explore
+Explore Page
 - Browse works and search works by tags.
 - Interact with works.
 - View other users.
@@ -79,18 +106,18 @@ Explore
 
 ![visual sound demo explore](./asset/visualsound_demo_explore.gif)
 
-Community
+Community Page
 - Interact with works and users instantly.
 
 ![visual sound demo community](./asset/visualsound_demo_community.gif)
 
-Profile
+Profile Page
 - Check the profile page.
 - View the collection.
 
 ![visual sound demo profile](./asset/visualsound_demo_profile.gif)
 
-Message
+Message Page
 - Chat with other users.
 - Open chatrooms.
 
@@ -107,7 +134,11 @@ RWD / Dark mode
 
 [Features Demo Video](https://drive.google.com/file/d/1miDf0MIJI1NZqVNSte1aQ9Osrxpnb5uM/view?usp=sharing) (Mandarin)
 
+<br/>
+
+
 ## Future Improvement
+<hr/>
 
 ### Visual 
 - Trigger music by screen touching.
@@ -124,13 +155,18 @@ RWD / Dark mode
 - Share works on message.
 - Co-editing.
 
+<br/>
 
 ##  Acknowledgements
 
+<hr/>
+
 inspired by [patatap](https://patatap.com/) and [beact](https://beact.herokuapp.com/).
 
-##  Contact
+<br/>
 
+##  Contact
+<hr/>
 
 Welcome for any suggestion or collaboration, feel free to contact me! 
 

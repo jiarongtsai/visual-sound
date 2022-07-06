@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import { Firebase } from "../../utils/firebase";
 import { AuthContext } from "../../components/auth/Auth";
-import UsersModal from "../../components/UsersModal";
+import { UsersModal } from "../../components/UsersModal";
 import EditProfileModal from "./EditProfileModal";
 import {
   Flex,

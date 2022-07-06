@@ -28,6 +28,7 @@ export default function Gallery({ works, isShown, setIsShown }) {
                   />
                 </VideoWrapper>
                 <CoverImage
+                  alt={`preview picture of sound`}
                   src={work.image_url}
                   onMouseEnter={() =>
                     setIsShown((pre) => [

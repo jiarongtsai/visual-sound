@@ -1,3 +1,4 @@
+import { memo, useContext } from "react";
 import PropTypes from "prop-types";
 import {
   Modal,
@@ -15,11 +16,11 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { UserWithName } from "./userVariants/UserWithName";
-import { useContext } from "react";
 import { AuthContext } from "./auth/Auth";
 
-export default function UsersModal({ isOpen, onClose, action }) {
+export const UsersModal = memo(({ isOpen, onClose, action }) => {
   const [user, loading, error] = useContext(AuthContext);
+  //Q: close modal 的function 是否需要useCallback？
   return (
     <Modal size="lg" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -68,12 +69,11 @@ export default function UsersModal({ isOpen, onClose, action }) {
             )}
           </VStack>
         </ModalBody>
-
         <ModalFooter></ModalFooter>
       </ModalContent>
     </Modal>
   );
-}
+});
 
 UsersModal.propTypes = {
   isOpen: PropTypes.bool,

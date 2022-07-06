@@ -4,7 +4,7 @@ import { IconButton, useDisclosure } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { AuthContext } from "../auth/Auth";
 import { Firebase } from "../../utils/firebase";
-import AlertModal from "../AlertModal";
+import { AlertModal } from "../AlertModal";
 
 export default function Like({ i, id, likedList, setFollowingWorks }) {
   const [user, loading, error] = useContext(AuthContext);

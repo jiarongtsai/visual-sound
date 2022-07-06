@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
+import { getDetailTime } from "../../utils/helper";
 import {
   Modal,
   ModalOverlay,
@@ -159,9 +159,7 @@ export default function WorkModal({ followingWorks, setFollowingWorks }) {
                     ))}
                   </Flex>
                   <Text color={"gray.500"} fontSize="sm" width="100%" py={2}>
-                    {`Created at ${moment
-                      .unix(work.created_time?.seconds)
-                      .calendar()}`}
+                    {`Created at ${getDetailTime(work.created_time?.seconds)}`}
                   </Text>
                   {comments.map((comment) => {
                     return (
